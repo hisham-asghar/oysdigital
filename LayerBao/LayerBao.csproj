@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Gmail.v1" Version="1.44.1.1859" />
+    <PackageReference Include="MimeKit" Version="2.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Generics\Generics.csproj" />
+    <ProjectReference Include="..\LayerDao\LayerDao.csproj" />
+  </ItemGroup>
+
+</Project>

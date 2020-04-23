@@ -1,0 +1,154 @@
+.show_on_mobile {
+	display: none !important;
+}
+
+@media (max-width: 767px) {
+  .show_on_mobile {
+    display: block !important;
+  }
+
+  .hide_on_mobile {
+    display: none !important;
+  }
+
+	.logo {
+		  max-width: 65px !important;
+	}
+
+	.first_logo {
+		max-width: 175px !important;
+	}
+
+  .container {
+    width: 100%;
+  }
+
+	.category_container .single-about {
+		height: 150px;
+	}
+
+	.product-container .col-xs-6 {
+	  width: 50% !important;
+	}
+
+	.category_container {
+		padding-top: 10px !important;
+	}
+
+	.category_container .header-color {
+		font-weight: bold;
+		margin-bottom: 20px;
+	}
+
+	#child_category_modal .single-about {
+		height: 150px;
+	}
+
+  /* SLIDER */
+  .slider-wrapper {
+    margin-bottom: 0;
+  }
+
+  /* NAV ICON */
+  .nav_icon a {
+    margin-top: 20px;
+    display: block;
+  }
+
+	.header-top-menu .popover {
+		max-width: 100%;
+		min-width: 100%;
+		left: 0 !important;
+	}
+
+  /* CATEGORY CONTAINER */
+	.category_container {
+		padding-top: 50px;
+	}
+  .category_container .all-about, .corporate-about {
+    background: #F7F6F6 !important;
+  }
+  .category_container .col-2 {
+    width: 33.33333% !important;
+  }
+
+	.category_container h6 {
+    font-size: 12px !important;
+    padding: 6px;
+	}
+
+	.category_container .img-containter {
+		height: 65px !important;
+	}
+
+.category_container .img-containter img {
+		max-height: 55px !important;
+		margin-top: 10px;
+	}
+
+  /* CART ICON */
+	.mini-cart-area > ul > li {
+		padding-top: 10px !important;
+	}
+
+	#gotoCart .cbadge {
+		position: absolute;
+		font-size: 10px;
+		border-radius: 50%;
+		line-height: 20px;
+		height: 20px;
+		width: 20px;
+		background: #000;
+		right: 0px;
+		color: #FFF;
+		font-weight: bold;
+		font-style: normal;
+	}
+
+	/*.cd-cart {
+		width: 95% !important;
+	}*/
+
+  .cd-cart-trigger, .cd-cart {
+    bottom: 10%;
+    right: 5% !important;
+  }
+
+	.cd-cart .price, .cd-cart h3 a {
+		font-size: 18px;
+	}
+
+	.product-content > h2 {
+		font-size: 20px !important;
+	}
+
+	.product-price > .new-price {
+		font-size: 18px !important;
+	}
+
+	/* CHECKOUT */
+	.table-responsive {
+		border: none;
+	}
+
+	.powered-by-img {
+		text-align: center !important;
+	}
+
+	.maintenance-package {
+		padding-top: 0 !important;
+	}
+
+	.heading-banner h1 {
+		font-size: 26px;
+	}
+
+	.blogs .card {
+		margin-bottom: 20px;
+	}
+
+	.col-xs-12 {
+		width: 100% !important;
+	}
+
+}

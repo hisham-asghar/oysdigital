@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "_BaseLayout";
+}
+<!-- Page Loader -->
+<partial name="LayoutPartials/_PageLoader.cshtml" />
+<!-- Overlay For Sidebars -->
+<div class="overlay"></div>
+
+<!-- Main Search -->
+<partial name="LayoutPartials/_MainSearch.cshtml" />
+
+<!-- Right Icon menu Sidebar -->
+<partial name="LayoutPartials/_RightIconMenuSidebar.cshtml" />
+
+<!-- Left Sidebar -->
+<partial name="LayoutPartials/_LeftSidebar.cshtml" />
+
+<!-- Right Sidebar -->
+<partial name="LayoutPartials/_RightSidebar.cshtml" />
+
+<!-- Main Content -->
+<section class="content">
+    <div class="body_scroll">
+        @RenderBody()
+    </div>
+</section>
+@section Scripts
+{
+    @RenderSection("Scripts", required: false)
+}
