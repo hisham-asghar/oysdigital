@@ -1,0 +1,76 @@
+﻿@model Generics.DataModels.AdminModels.Platforms
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="body">
+                <h1>Delete</h1>
+
+                <h3>Are you sure you want to delete this?</h3>
+                <div>
+                    <h4>Customer</h4>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.PlatformId)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.PlatformId)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.Name)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.IsActive)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.IsActive)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.CreatedBy)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.CreatedBy)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.ModifiedBy)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.ModifiedBy)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.OnCreated)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.OnCreated)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.OnModified)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.OnModified)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.IconUrl)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.IconUrl)
+                        </dd>
+                    </dl>
+
+                    <a href="/Platform/ConfirmDelete/@Model.PlatformId" class="btn btn-raised btn-danger btn-round waves-effect">
+                        Delete
+                    </a>|
+                    <a asp-action="Index" class="btn btn-raised btn-primary btn-round waves-effect">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -13,7 +13,7 @@ namespace Admin.Controllers
 {
     public class PlatformController : Controller
     {
-        public readonly IHostingEnvironment _currentEnvironment;
+        ImageUploader i;
         public IActionResult Index()
         {
             return View(PlatformBao.GetAll());
@@ -48,15 +48,22 @@ namespace Admin.Controllers
                 {
                     if (file != null)
                     {
-                        
-                        platform.IconUrl= UploadedFile(file);
+                        platform.OnCreated = DateTime.Now;
+                        platform.IconUrl= i.SaveImage(file);
                     }
                     PlatformBao.Insert(platform);
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                   
+                    
+                    platform.OnModified = DateTime.Now;
+                    if (file != null)
+                    {
+                        i.DeleteImage(platform.IconUrl);
+                        platform.IconUrl = i.SaveImage(file);
+                    }
+                    
                     PlatformBao.Update(platform);
                     return RedirectToAction("Index");
                 }
@@ -67,22 +74,7 @@ namespace Admin.Controllers
             }
             return View(platform);
         }
-        private string UploadedFile(IFormFile file)
-        {
-            string uniqueFileName = null;
-
-            if (file != null)
-            {
-                string uploadsFolder = Path.Combine(_currentEnvironment.WebRootPath, "uploads");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    file.CopyTo(fileStream);
-                }
-            }
-            return uniqueFileName;
-        }
+        
         public IActionResult Delete(long id)
         {
             if (id != 0)
