@@ -1,4 +1,6 @@
-﻿namespace Generics.DataModels.AdminModels
+﻿using System;
+
+namespace Generics.DataModels.AdminModels
 {
     public class Customer
     {

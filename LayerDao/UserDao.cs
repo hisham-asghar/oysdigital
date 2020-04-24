@@ -1,24 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Generics.DataModels.AdminModels;
+using LayerBao;
 
 namespace LayerDao
 {
     public class UserDao
     {
-        public static list<Customer> GetAllCustomer(Customer dto)
+        public partial class Customers
         {
-            return UserDao.GetAllCustomer();
+            public static List<Customer> GetAll()
+            {
+                return UserBao.CustomerBao.GetAll();
+            }
         }
 
-        public static Customer GetUser(string id)
+        public static Customer GetUser(long id)
         {
-            return UserDao.GetUser(id);
+            return UserBao.CustomerBao.GetById(id);
         }
 
-        public static bool UpdateUser(AspNetUsers dto)
-        {
-            return UserDao.UpdateUser(dto);
-        }
+        //public static bool UpdateUser(AspNetUsers dto)
+        //{
+        //    return UserBao.UpdateUser(dto);
+        //}
     }
 }

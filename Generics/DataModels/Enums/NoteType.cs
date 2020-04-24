@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Generics.DataModels.Enums
 {
-    public static enum NoteType
+    public enum NoteType
     {
         Admin = 0,
         Manager = 1,

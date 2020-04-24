@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Generics.DataModels.Enums
 {
-    public static enum ProjectMessageType
+    public enum ProjectMessageType
     {
         General = 0,
         Task = 1,

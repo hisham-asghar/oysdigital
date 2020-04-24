@@ -6,6 +6,8 @@
 
   <ItemGroup>
 
+    <PackageReference Include="AWSSDK.S3" Version="3.3.110.55" />
+
     <PackageReference Include="Google.Apis.Gmail.v1" Version="1.44.1.1859" />
 
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
