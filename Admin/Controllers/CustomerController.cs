@@ -17,13 +17,6 @@ namespace Admin.Controllers
         {           
             return View(UserDao.Customers.GetAll());
         }
-        
-        //public IActionResult Create()
-        //{
-        //    Customer c = new Customer();
-        //    c.Name = "";c.PhoneNumber = "";c.CustomerId = 0;c.Email = "";c.Address = "";
-        //    return View(c);
-        //}
         [HttpGet]
         public IActionResult Create(long Id)
         {
@@ -88,8 +81,12 @@ namespace Admin.Controllers
             }
             return RedirectToAction("Index");
         }
-        public IActionResult Detail()
+        public IActionResult Detail(long id)
         {
+            if (id != 0)
+            {
+                return View(UserDao.Customers.GetById(id));
+            }
             return View();
         }
     }
