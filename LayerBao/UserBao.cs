@@ -9,7 +9,7 @@ namespace LayerBao
 {
     public class UserBao
     {
-        public partial class CustomerBao
+        public class CustomerBao
         {
             public static List<Customer> GetAll()
             {
@@ -18,30 +18,30 @@ namespace LayerBao
             }
             public static Customer GetById(long Id)
             {
-                string sql = $"SELECT * FROM dbo.Customer WHERE CustomerId = '{Id}';";
-                return QueryExecutor.FirstOrDefault<TemplateClass<Customer>>(sql).Result;
+                string sql = $"SELECT * FROM dbo.Customer WHERE CustomerId = {Id};";
+                return QueryExecutor.FirstOrDefault<Customer>(sql);
             }
             public static bool Insert(Customer c)
             {
-                string sql = $"Insert Into dbo.Customer (CustomerId,Guid,Email,PhoneNumber,Address,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
+                string sql = $"Insert Into dbo.Customer (Name,Guid,Email,PhoneNumber,Address,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
                     $" output INSERTED.CustomerId as Result VALUES " +
-                    $"('{c.CustomerId}','{c.Guid}','{c.Email}','{c.PhoneNumber}','{c.Address}','{c.IsActive}','{c.CreatedBy}','{c.ModifiedBy}','{c.OnCreated}','{c.OnModified}');";
+                    $"('{c.Name}','{c.Guid}','{c.Email}','{c.PhoneNumber}','{c.Address}','{c.IsActive}','{c.CreatedBy}','{c.ModifiedBy}','{c.OnCreated}','{c.OnModified}');";
 
                long data=QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result;
                 return data == 0 ? true : false;
             }
-            //public static bool Update(Customer c)
-            //{
-            //    string sql = $"UPDATE dbo.Customer (Guid='{c.Guid}',Email'{c.Email}',PhoneNumber'{c.PhoneNumber}" +
-            //        $",Address'{c.Address}',IsActive='{c.IsActive}',CreatedBy='{c.CreatedBy}',ModifiedBy'{c.ModifiedBy}',OnCreated'{c.OnCreated}',OnModified='{c.OnModified}') where CustomerId='{c.CustomerId}'";
-
-            //    return QueryExecutor.FirstOrDefault<TemplateClass<Customer>>(sql).Result;
-            //}
-            //public static bool Delete(long Id)
-            //{
-            //    string sql = $"DELETE FROM dbo.Customer WHERE CustomerId = '{Id}';";
-            //    return QueryExecutor.FirstOrDefault<TemplateClass<Customer>>(sql).Result;
-            //}
+            public static bool Update(Customer c)
+            {
+                string sql = $"UPDATE dbo.Customer Set Name='{c.Name}',Email='{c.Email}',PhoneNumber='{c.PhoneNumber}'" +
+                    $",Address='{c.Address}',IsActive='{c.IsActive}',ModifiedBy='{c.ModifiedBy}',OnModified='{c.OnModified}' output inserted.CustomerId as Result where (CustomerId={c.CustomerId})";
+                return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
+            }
+            public static bool Delete(long Id)
+            {
+                string sql = $"DELETE FROM dbo.Customer output deleted.CustomerId as Result WHERE CustomerId = {Id};";
+                var data=QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result==0?false:true;
+                return data;
+            }
         }
         //public partial class MobileBao
         //{

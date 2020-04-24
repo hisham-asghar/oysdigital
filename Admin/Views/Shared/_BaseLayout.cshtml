@@ -12,15 +12,32 @@
     <link rel="stylesheet" href="/css/style.min.css">
     <link rel="stylesheet" href="/css/site.css" />
 
+    <!-- JQuery DataTable Css -->
+    <link rel="stylesheet" href="/plugins/jquery-datatable/dataTables.bootstrap4.min.css">
+    <!-- SweetAlert Plugin Js -->
+    <link rel="stylesheet" href="assets/plugins/sweetalert/sweetalert.css" />
+
 </head>
 
 <body class="theme-blush @(ViewData["BodyClass"])">
-    @RenderBody()    
+    @RenderBody()
     <!-- Jquery Core Js -->
     <script src="/bundles/libscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
     <script src="/bundles/vendorscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
     <script src="/bundles/mainscripts.bundle.js"></script>
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="/bundles/datatablescripts.bundle.js"></script>
+    <script src="/plugins/jquery-datatable/buttons/dataTables.buttons.min.js"></script>
+    <script src="/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js"></script>
+    <script src="/plugins/jquery-datatable/buttons/buttons.colVis.min.js"></script>
+    <script src="/plugins/jquery-datatable/buttons/buttons.flash.min.js"></script>
+    <script src="/plugins/jquery-datatable/buttons/buttons.html5.min.js"></script>
+    <script src="/plugins/jquery-datatable/buttons/buttons.print.min.js"></script>
 
+    <script src="/bundles/mainscripts.bundle.js"></script><!-- Custom Js -->
+    <script src="/js/pages/tables/jquery-datatable.js"></script>
+    <!-- SweetAlert Plugin Js -->
+    <script src="assets/plugins/sweetalert/sweetalert.min.js"></script>
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
     <script src="~/js/site.js" asp-append-version="true"></script>

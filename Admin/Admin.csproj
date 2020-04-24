@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="MimeKit" Version="2.5.1" />
     <PackageReference Include="WebMarkupMin.AspNetCore3" Version="2.8.2" />
   </ItemGroup>
@@ -21,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Generics\Generics.csproj" />
     <ProjectReference Include="..\LayerBao\LayerBao.csproj" />
+    <ProjectReference Include="..\LayerDao\LayerDao.csproj" />
   </ItemGroup>
 
 </Project>
