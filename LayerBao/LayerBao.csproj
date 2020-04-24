@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Generics\Generics.csproj" />
+    <ProjectReference Include="..\LayerDao\LayerDao.csproj" />
   </ItemGroup>
 
 </Project>

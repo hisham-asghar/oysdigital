@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Generics\Generics.csproj" />
-    <ProjectReference Include="..\LayerBao\LayerBao.csproj" />
   </ItemGroup>
 
 </Project>

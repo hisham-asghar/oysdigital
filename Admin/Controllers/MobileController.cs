@@ -1,25 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace Admin.Controllers
 {
-    public class CustomerController : Controller
+    public class MobileController : Controller
     {
-        // GET: /<controller>/
         public IActionResult Index()
-        {           
-            return View(CustomerBao.GetAll());
+        {
+            return View(MobileBao.GetAll());
         }
         [HttpGet]
         public IActionResult Create(long Id)
         {
             if (Id != 0)
             {
-                var data = CustomerBao.GetById(Id);
+                var data = MobileBao.GetById(Id);
                 if (data != null)
                 {
                     return View(data);
@@ -28,29 +28,28 @@ namespace Admin.Controllers
             }
             else
             {
-                Customer c =new Customer();
-                c.Name = ""; c.PhoneNumber = ""; c.CustomerId = 0; c.Email = ""; c.Address = "";
-                return View(c);
+                Mobile m = new Mobile();
+                m.Name = "";m.MobileId = 0;m.IsActive=false;
+                return View(m);
             }
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Customer customer)
+        public IActionResult Create(Mobile mobile)
         {
             try
             {
 
-                if (customer.CustomerId == 0)
+                if (mobile.MobileId == 0)
                 {
-                    customer.OnCreated = DateTime.Now;
-                    customer.Guid = Guid.NewGuid().ToString();
-                    CustomerBao.Insert(customer);
+                    mobile.OnCreated = DateTime.Now;
+                    MobileBao.Insert(mobile);
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    customer.OnModified = DateTime.Now;
-                    CustomerBao.Update(customer);
+                    mobile.OnModified = DateTime.Now;
+                    MobileBao.Update(mobile);
                     return RedirectToAction("Index");
                 }
             }
@@ -58,23 +57,23 @@ namespace Admin.Controllers
             {
 
             }
-            return View(customer);
+            return View(mobile);
         }
 
         public IActionResult Delete(long id)
         {
             if (id != 0)
             {
-                return View(CustomerBao.GetById(id));
+                return View(MobileBao.GetById(id));
             }
             return View();
         }
-      
+
         public IActionResult ConfirmDelete(long id)
         {
             if (id != 0)
             {
-                CustomerBao.Delete(id);
+                MobileBao.Delete(id);
             }
             return RedirectToAction("Index");
         }
@@ -82,7 +81,7 @@ namespace Admin.Controllers
         {
             if (id != 0)
             {
-                return View(CustomerBao.GetById(id));
+                return View(MobileBao.GetById(id));
             }
             return View();
         }
