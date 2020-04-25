@@ -11,12 +11,12 @@ namespace LayerDao
     {
         public static List<ProjectMembers> GetAll()
         {
-            string sql = $"SELECT * FROM dbo.ProjectMembers;";
+            string sql = $"SELECT * FROM dbo.ProjectMembers JOIN dbo.ProjectMemberTypes ON ProjectMembers.ProjectMemberTypesId = ProjectMemberTypes.ProjectMemberTypesId Join dbo.Project On Project.ProjectId=ProjectMembers.ProjectId;";
             return QueryExecutor.List<ProjectMembers>(sql);
         }
         public static ProjectMembers GetById(long Id)
         {
-            string sql = $"SELECT * FROM dbo.ProjectMembers WHERE ProjectMembersId = {Id};";
+            string sql = $"SELECT * FROM dbo.ProjectMembers JOIN dbo.ProjectMemberTypes ON ProjectMembers.ProjectMemberTypesId = ProjectMemberTypes.ProjectMemberTypesId Join dbo.Project On Project.ProjectId=ProjectMembers.ProjectId WHERE ProjectMembersId = {Id};";
             return QueryExecutor.FirstOrDefault<ProjectMembers>(sql);
         }
         public static bool Insert(ProjectMembers p)

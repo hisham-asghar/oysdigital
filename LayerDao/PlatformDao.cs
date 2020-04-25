@@ -21,14 +21,14 @@ namespace LayerDao
         }
         public static bool Insert(Platforms p)
         {
-            string sql = $"Insert Into dbo.Platforms (Name,IconUrl,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
+            string sql = $"Insert Into dbo.Platforms (PlatformName,IconUrl,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
                 $" output INSERTED.PlatformId as Result VALUES " +
-                $"('{p.Name}','{p.IconUrl}','{p.IsActive}','{p.CreatedBy}','{p.ModifiedBy}','{p.OnCreated}','{p.OnModified}');";
+                $"('{p.PlatformName}','{p.IconUrl}','{p.IsActive}','{p.CreatedBy}','{p.ModifiedBy}','{p.OnCreated}','{p.OnModified}');";
             return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
         }
         public static bool Update(Platforms p)
         {
-            string sql = $"UPDATE dbo.Platforms Set Name='{p.Name}',IconUrl='{p.IconUrl}',IsActive='{p.IsActive}',ModifiedBy='{p.ModifiedBy}',OnModified='{p.OnModified}' output INSERTED.PlatformId as Result where (PlatformId={p.PlatformId})";
+            string sql = $"UPDATE dbo.Platforms Set PlatformName='{p.PlatformName}',IconUrl='{p.IconUrl}',IsActive='{p.IsActive}',ModifiedBy='{p.ModifiedBy}',OnModified='{p.OnModified}' output INSERTED.PlatformId as Result where (PlatformId={p.PlatformId})";
 
             return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true; ;
         }

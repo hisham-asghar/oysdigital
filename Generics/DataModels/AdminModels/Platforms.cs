@@ -9,7 +9,7 @@ namespace Generics.DataModels.AdminModels
     {
         
         public long PlatformId { get; set; }
-        public string Name { get; set; }
+        public string PlatformName { get; set; }
         public string IconUrl { get; set; }
         public bool IsActive { get; set; }
         public string CreatedBy { get; set; }

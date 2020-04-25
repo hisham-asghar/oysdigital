@@ -21,16 +21,16 @@ namespace LayerDao
         }
         public static bool Insert(Customer c)
         {
-            string sql = $"Insert Into dbo.Customer (Name,Guid,Email,PhoneNumber,Address,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
+            string sql = $"Insert Into dbo.Customer (CustomerName,Guid,Email,PhoneNumber,Address,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
                 $" output INSERTED.CustomerId as Result VALUES " +
-                $"('{c.Name}','{c.Guid}','{c.Email}','{c.PhoneNumber}','{c.Address}','{c.IsActive}','{c.CreatedBy}','{c.ModifiedBy}','{c.OnCreated}','{c.OnModified}');";
+                $"('{c.CustomerName}','{c.Guid}','{c.Email}','{c.PhoneNumber}','{c.Address}','{c.IsActive}','{c.CreatedBy}','{c.ModifiedBy}','{c.OnCreated}','{c.OnModified}');";
 
             long data = QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result;
             return data == 0 ? true : false;
         }
         public static bool Update(Customer c)
         {
-            string sql = $"UPDATE dbo.Customer Set Name='{c.Name}',Email='{c.Email}',PhoneNumber='{c.PhoneNumber}'" +
+            string sql = $"UPDATE dbo.Customer Set CustomerName='{c.CustomerName}',Email='{c.Email}',PhoneNumber='{c.PhoneNumber}'" +
                 $",Address='{c.Address}',IsActive='{c.IsActive}',ModifiedBy='{c.ModifiedBy}',OnModified='{c.OnModified}' output inserted.CustomerId as Result where (CustomerId={c.CustomerId})";
             return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
         }

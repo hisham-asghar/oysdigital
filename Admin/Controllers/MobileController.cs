@@ -29,7 +29,7 @@ namespace Admin.Controllers
             else
             {
                 Mobile m = new Mobile();
-                m.Name = "";m.MobileId = 0;m.IsActive=false;
+                m.MobileName = "";m.MobileId = 0;m.IsActive=false;
                 return View(m);
             }
             return View();

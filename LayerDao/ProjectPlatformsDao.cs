@@ -11,23 +11,23 @@ namespace LayerDao
     {
         public static List<ProjectPlatforms> GetAll()
         {
-            string sql = $"SELECT * FROM dbo.ProjectPlatforms;";
+            string sql = $"SELECT * FROM dbo.ProjectPlatforms JOIN dbo.Project ON ProjectPlatforms.ProjectId = Project.ProjectId Join dbo.Platforms ON Platforms.PlatformId=ProjectPlatforms.PlatformId Join dbo.MobileSpaces ON MobileSpaces.MobileSpacesId=ProjectPlatforms.MobileSpacesId;";
             return QueryExecutor.List<ProjectPlatforms>(sql);
         }
         public static ProjectPlatforms GetById(long Id)
         {
-            string sql = $"SELECT * FROM dbo.ProjectPlatforms WHERE ProjectPlatformsId = {Id};";
+            string sql = $"SELECT * FROM dbo.ProjectPlatforms JOIN dbo.Project ON ProjectPlatforms.ProjectId = Project.ProjectId Join dbo.Platforms ON Platforms.PlatformId=ProjectPlatforms.PlatformId Join dbo.MobileSpaces ON MobileSpaces.MobileSpacesId=ProjectPlatforms.MobileSpacesId WHERE ProjectPlatformsId = {Id};";
             return QueryExecutor.FirstOrDefault<ProjectPlatforms>(sql);
         }
         public static bool Insert(ProjectPlatforms c)
         {
             string sql = $"Insert Into dbo.ProjectPlatforms (PlatformLink,ProjectId,PlatformId,PostPerDay" +
-                $",PostPerWeek,PostPerMonth,PostSchedulingTime,StoriesPerDay,StoriesPerWeek,StoriesMonth,StoriesSchedulingTime,MobileSpacesId" +
+                $",PostPerWeek,PostPerMonth,PostSchedulingTime,StoriesPerDay,StoriesPerWeek,StoriesPerMonth,StoriesSchedulingTime,MobileSpacesId" +
                 $",IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
-                $" output INSERTED.ProjectPlatformsId as Result VALUES " +
-                $"('{c.PlatformLink}',{c.ProjectId},{c.PlatformId},{c.PostPerDay}," +
-                $"({c.PostPerWeek},{c.PostPerMonth},'{c.PostSchedulingTime}',{c.StoriesPerDay}," +
-                $"({c.StoriesPerWeek},{c.StoriesMonth},'{c.StoriesSchedulingTime}',{c.MobileSpacesId}," +
+                $" output INSERTED.ProjectPlatformsId as Result VALUES (" +
+                $"'{c.PlatformLink}',{c.ProjectId},{c.PlatformId},{c.PostPerDay}," +
+                $"{c.PostPerWeek},{c.PostPerMonth},'{c.PostSchedulingTime}',{c.StoriesPerDay}," +
+                $"{c.StoriesPerWeek},{c.StoriesPerMonth},'{c.StoriesSchedulingTime}',{c.MobileSpacesId}," +
                 $"'{c.IsActive}','{c.CreatedBy}','{c.ModifiedBy}','{c.OnCreated}','{c.OnModified}');";
 
             long data = QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result;
@@ -37,7 +37,7 @@ namespace LayerDao
         {
             string sql = $"UPDATE dbo.ProjectPlatforms Set PlatformLink='{c.PlatformLink}',ProjectId={c.ProjectId},PlatformId={c.PlatformId},PostPerDay={c.PostPerDay}" +
                 $",PostPerWeek={c.PostPerWeek},PostPerMonth={c.PostPerMonth},PostSchedulingTime='{c.PostSchedulingTime}',StoriesPerDay={c.StoriesPerDay}" +
-                $",StoriesPerWeek={c.StoriesPerWeek},StoriesMonth={c.StoriesMonth},StoriesSchedulingTime='{c.StoriesSchedulingTime}',MobileSpacesId={c.MobileSpacesId}" +
+                $",StoriesPerWeek={c.StoriesPerWeek},StoriesPerMonth={c.StoriesPerMonth},StoriesSchedulingTime='{c.StoriesSchedulingTime}',MobileSpacesId={c.MobileSpacesId}" +
                 $",IsActive='{c.IsActive}',ModifiedBy='{c.ModifiedBy}',OnModified='{c.OnModified}' output inserted.ProjectPlatformsId as Result where (ProjectPlatformsId={c.ProjectPlatformsId})";
             return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
         }

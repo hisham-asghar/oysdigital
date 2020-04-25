@@ -13,14 +13,11 @@
                         <h2 class="card-inside-title">Customer Detail</h2>
                         <form method="post" enctype="multipart/form-data" asp-controller="Customer" asp-action="Create">
                             <input type="hidden" name="CustomerId" value="@Model.CustomerId" />
-                            @*<input type="hidden" name="CreatedBy" value="@Model.CreatedBy" />
-                            <input type="hidden" name="Guid" value="@Model.Guid" />
-                            <input type="hidden" name="OnCreated" value="@Model.OnCreated" />*@
                             <div class="row clearfix">
                                 <div class="col-sm-6">
                                     <label for="email_address">Name</label>
                                     <div class="form-group">
-                                        <input type="text" name="Name" class="form-control" placeholder="Name" value="@Model.Name" />
+                                        <input type="text" name="CustomerName" class="form-control" placeholder="Name" value="@Model.CustomerName" />
                                     </div>
                                 </div>
                                 <div class="col-sm-6">

@@ -50,7 +50,7 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@item.Name</td>
+                                    <td>@item.CustomerName</td>
                                     <td>@item.Email</td>
                                     <td>@item.PhoneNumber</td>
                                     <td>@item.Address</td>
@@ -59,7 +59,8 @@
                                         <a href="/Customer/Create/@item.CustomerId" class="btn btn-raised btn-warning btn-round waves-effect">Edit</a>
                                         <a href="/Customer/Detail/@item.CustomerId" class="btn btn-raised btn-info btn-round waves-effect">Detail</a>
                                         <a href="/Customer/Delete/@item.CustomerId" class="btn btn-raised btn-danger btn-round waves-effect">Delete</a>
-                                </td>
+                                        <a href="/Project/Create/@item.CustomerId" class="btn btn-raised btn-success btn-round waves-effect">Add Projects</a>
+                                    </td>
                                 </tr>
                             }
                         </tbody>

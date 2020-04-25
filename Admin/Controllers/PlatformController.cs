@@ -33,7 +33,7 @@ namespace Admin.Controllers
             else
             {
                 Platforms p = new Platforms();
-                p.Name = ""; p.PlatformId = 0; p.IconUrl = ""; p.IsActive=false;
+                p.PlatformName = ""; p.PlatformId = 0; p.IconUrl = ""; p.IsActive=false;
                 return View(p);
             }
             return View();

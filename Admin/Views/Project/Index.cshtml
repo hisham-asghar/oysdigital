@@ -1,16 +1,14 @@
-﻿@model IEnumerable<Generics.DataModels.AdminModels.MobileSpaces>
+﻿@model IEnumerable<Generics.DataModels.AdminModels.Project>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <div class="row clearfix">
     <div class="col-lg-12">
 
         <div class="card">
             <div class="header">
-                <a href="/MobileSpaces/Create" class="btn btn-raised btn-success btn-round waves-effect">Add</a>
-                <ul class="header-dropdown">
+                    <ul class="header-dropdown">
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="zmdi zmdi-more"></i> </a>
                         <ul class="dropdown-menu dropdown-menu-right slideUp">
@@ -29,8 +27,8 @@
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Space Name</th>
+                                <th>Project Name</th>
+                                <th>Customer Name</th>
                                 <th>Created Date</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -38,8 +36,8 @@
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Name</th>
-                                <th>Space Name</th>
+                                <th>Project Name</th>
+                                <th>Customer Name</th>
                                 <th>Created Date</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -49,14 +47,16 @@
                             @foreach (var item in Model)
                             {
                             <tr>
-                                <td>@item.MobileName</td>
-                                <td>@item.SpaceName</td>
+                                <td>@item.ProjectName</td>
+                                <td>@item.CustomerName</td>
                                 <td>@item.OnCreated.Date</td>
                                 <td>@item.IsActive</td>
                                 <td>
-                                    <a href="/MobileSpaces/Create/@item.MobileSpacesId" class="btn btn-raised btn-warning btn-round waves-effect">Edit</a>
-                                    <a href="/MobileSpaces/Detail/@item.MobileSpacesId" class="btn btn-raised btn-info btn-round waves-effect">Detail</a>
-                                    <a href="/MobileSpaces/Delete/@item.MobileSpacesId" class="btn btn-raised btn-danger btn-round waves-effect">Delete</a>
+                                    <a href="/Project/Create/@item.ProjectId" class="btn btn-raised btn-warning btn-round waves-effect">Edit</a>
+                                    <a href="/Project/Detail/@item.ProjectId" class="btn btn-raised btn-info btn-round waves-effect">Detail</a>
+                                    <a href="/Project/Delete/@item.ProjectId" class="btn btn-raised btn-danger btn-round waves-effect">Delete</a>
+                                    <a href="/ProjectPlatform/Create/@item.ProjectId" class="btn btn-raised btn-success btn-round waves-effect">Add Platforms</a>
+                                    <a href="/ProjectMembers/Create/@item.ProjectId" class="btn btn-raised btn-primary btn-round waves-effect">Add Members</a>
                                 </td>
                             </tr>
                             }

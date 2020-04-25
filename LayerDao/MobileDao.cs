@@ -21,14 +21,14 @@ namespace LayerDao
         }
         public static bool Insert(Mobile c)
         {
-            string sql = $"Insert Into dbo.Mobile (Name,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
+            string sql = $"Insert Into dbo.Mobile (MobileName,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
                 $" output INSERTED.MobileId as Result VALUES " +
-                $"('{c.Name}','{c.IsActive}','{c.CreatedBy}','{c.ModifiedBy}','{c.OnCreated}','{c.OnModified}');";
+                $"('{c.MobileName}','{c.IsActive}','{c.CreatedBy}','{c.ModifiedBy}','{c.OnCreated}','{c.OnModified}');";
             return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
         }
         public static bool Update(Mobile c)
         {
-            string sql = $"UPDATE dbo.Mobile Set Name='{c.Name}',IsActive='{c.IsActive}',ModifiedBy='{c.ModifiedBy}',OnModified='{c.OnModified}' output INSERTED.MobileId as Result where (MobileId = {c.MobileId})";
+            string sql = $"UPDATE dbo.Mobile Set MobileName='{c.MobileName}',IsActive='{c.IsActive}',ModifiedBy='{c.ModifiedBy}',OnModified='{c.OnModified}' output INSERTED.MobileId as Result where (MobileId = {c.MobileId})";
 
             return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
         }

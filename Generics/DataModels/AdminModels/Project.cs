@@ -10,10 +10,9 @@ namespace Generics.DataModels.AdminModels
        
         public long ProjectId { get; set; }
         public string Guid { get; set; }
-        public string Name { get; set; }
-        public int ProjectStatusId { get; set; }
+        public string ProjectName { get; set; }
         public long CustomerId { get; set; }
-        public virtual Customer Customer { get; set; }
+        public string CustomerName { get; set; }
         public bool IsActive { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }

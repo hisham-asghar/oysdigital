@@ -9,7 +9,7 @@ namespace Generics.DataModels.AdminModels
     {
        
         public long MobileId { get; set; }
-        public string Name { get; set; }
+        public string MobileName { get; set; }
         public bool IsActive { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }

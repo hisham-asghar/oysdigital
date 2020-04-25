@@ -21,14 +21,14 @@ namespace LayerDao
         }
         public static bool Insert(ProjectMemberTypes p)
         {
-            string sql = $"Insert Into dbo.ProjectMemberTypes (Name,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
+            string sql = $"Insert Into dbo.ProjectMemberTypes (ProjectMemberTypeName,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
                 $" output INSERTED.ProjectMemberTypesId as Result VALUES " +
-                $"('{p.Name}','{p.IsActive}','{p.CreatedBy}','{p.ModifiedBy}','{p.OnCreated}','{p.OnModified}');";
+                $"('{p.ProjectMemberTypeName}','{p.IsActive}','{p.CreatedBy}','{p.ModifiedBy}','{p.OnCreated}','{p.OnModified}');";
             return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
         }
         public static bool Update(ProjectMemberTypes p)
         {
-            string sql = $"UPDATE dbo.ProjectMemberTypes Set Name='{p.Name}',IsActive='{p.IsActive}',ModifiedBy='{p.ModifiedBy}',OnModified='{p.OnModified}' output INSERTED.ProjectMemberTypesId as Result where (ProjectMemberTypesId={p.ProjectMemberTypesId})";
+            string sql = $"UPDATE dbo.ProjectMemberTypes Set ProjectMemberTypeName='{p.ProjectMemberTypeName}',IsActive='{p.IsActive}',ModifiedBy='{p.ModifiedBy}',OnModified='{p.OnModified}' output INSERTED.ProjectMemberTypesId as Result where (ProjectMemberTypesId={p.ProjectMemberTypesId})";
 
             return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true; ;
         }

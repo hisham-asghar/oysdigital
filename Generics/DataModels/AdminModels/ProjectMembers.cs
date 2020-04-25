@@ -9,9 +9,9 @@ namespace Generics.DataModels.AdminModels
     {
         public long ProjectMembersId { get; set; }
         public long ProjectMemberTypesId { get; set; }
-        public virtual ProjectMemberTypes ProjectMemberTypes { get; set; }
+        public string ProjectMemberTypeName { get; set; }
         public long ProjectId { get; set; }
-        public virtual Project Project { get; set; }
+        public string ProjectName { get; set; }
         public bool IsActive { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }

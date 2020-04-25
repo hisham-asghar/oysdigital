@@ -29,7 +29,7 @@ namespace Admin.Controllers
             else
             {
                 ProjectMemberTypes m = new ProjectMemberTypes();
-                m.Name = ""; m.ProjectMemberTypesId = 0; m.IsActive = false;
+                m.ProjectMemberTypeName = ""; m.ProjectMemberTypesId = 0; m.IsActive = false;
                 return View(m);
             }
             return View();
