@@ -1,4 +1,4 @@
-﻿@model Generics.DataModels.AdminModels.Platforms
+﻿@model Generics.DataModels.AdminModels.MobileSpaces
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,22 +10,19 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="body">
-                    <h2 class="card-inside-title">Platform Detail</h2>
-                    <form method="post" enctype="multipart/form-data" asp-controller="Platform" asp-action="Create">
-                        <input type="hidden" name="PlatformId" value="@Model.PlatformId" />
-                        <input type="hidden" name="IconUrl" value="@Model.IconUrl" />
+                    <h2 class="card-inside-title">Mobile Space Detail</h2>
+                    <form method="post" enctype="multipart/form-data" asp-controller="MobileSpaces" asp-action="Create">
+                        <input type="hidden" name="MobileSpacesId" value="@Model.MobileSpacesId" />
                         <div class="row clearfix">
                             <div class="col-sm-12">
                                 <label for="email_address">Name</label>
                                 <div class="form-group">
-                                    <input type="text" name="Name" class="form-control" placeholder="Name" value="@Model.Name" />
+                                    <input type="text" name="SpaceName" class="form-control" placeholder="Name" value="@Model.SpaceName" />
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <label for="email_address">Icon</label>
-                                <div class="form-group">
-                                    <input type="file" name="file" class="form-control" value="@Model.IconUrl" />
-                                </div>
+                                <select asp-for="MobileId" asp-items="ViewBag.MobileId" class="form-control show-tick">
+                                </select>
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group form-check">
@@ -34,10 +31,9 @@
                                     </label>
                                 </div>
                             </div>
-
                         </div>
-                        <button type="submit" class="btn btn-raised btn-primary btn-round waves-effect">Add</button>
-                    </form>
+                    <button type="submit" class="btn btn-raised btn-primary btn-round waves-effect">Add</button>
+                  </form>
 
                 </div>
             </div>

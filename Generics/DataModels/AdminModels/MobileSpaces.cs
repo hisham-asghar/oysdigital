@@ -10,7 +10,7 @@ namespace Generics.DataModels.AdminModels
         
         public long MobileSpacesId { get; set; }
         public long MobileId { get; set; }
-        public virtual Mobile Mobile { get; set; }
+        public string Name { get; set; }
         public string SpaceName { get; set; }
         public bool IsActive { get; set; }
         public string CreatedBy { get; set; }
@@ -18,4 +18,5 @@ namespace Generics.DataModels.AdminModels
         public DateTime OnCreated { get; set; }
         public DateTime OnModified { get; set; }
     }
+
 }

@@ -1,4 +1,4 @@
-﻿@model Generics.DataModels.AdminModels.Platforms
+﻿@model Generics.DataModels.AdminModels.ProjectMemberTypes
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,21 +10,14 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="body">
-                    <h2 class="card-inside-title">Platform Detail</h2>
-                    <form method="post" enctype="multipart/form-data" asp-controller="Platform" asp-action="Create">
-                        <input type="hidden" name="PlatformId" value="@Model.PlatformId" />
-                        <input type="hidden" name="IconUrl" value="@Model.IconUrl" />
+                    <h2 class="card-inside-title">Project Member Type Detail</h2>
+                    <form method="post" enctype="multipart/form-data" asp-controller="ProjectMemberType" asp-action="Create">
+                        <input type="hidden" name="ProjectMemberTypesId" value="@Model.ProjectMemberTypesId" />
                         <div class="row clearfix">
                             <div class="col-sm-12">
                                 <label for="email_address">Name</label>
                                 <div class="form-group">
                                     <input type="text" name="Name" class="form-control" placeholder="Name" value="@Model.Name" />
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <label for="email_address">Icon</label>
-                                <div class="form-group">
-                                    <input type="file" name="file" class="form-control" value="@Model.IconUrl" />
                                 </div>
                             </div>
                             <div class="col-sm-12">

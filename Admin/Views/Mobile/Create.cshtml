@@ -20,11 +20,10 @@
                                     <input type="text" name="Name" class="form-control" placeholder="Name" value="@Model.Name" />
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="checkbox">
-                                    <input id="remember_me" name="IsActive" type="checkbox" value="@Model.IsActive">
-                                    <label for="remember_me">
-                                        Is Active
+                            <div class="col-sm-12">
+                                <div class="form-group form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
                                     </label>
                                 </div>
                             </div>
