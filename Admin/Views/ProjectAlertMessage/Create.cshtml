@@ -1,0 +1,98 @@
+﻿@model Generics.DataModels.AdminModels.ProjectAlertMessage
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <!-- Input -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card">
+                <div class="body">
+                    <h2 class="card-inside-title">Project Detail</h2>
+                    <form id="myform" name="myform" method="post" enctype="multipart/form-data" asp-controller="ProjectAlertMessage" asp-action="Create">
+                        <input type="hidden" name="ProjectAlertMessageId" value="@Model.ProjectAlertMessageId" />
+                        <div class="row clearfix">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <select class="form-control show-tick" name="ProjectMessageTypeId">
+                                        <option value="">-- Please select --</option>
+                                        <option value="0">General</option>
+                                        <option value="1">Task</option>
+                                        <option value="2">CustomerInstruction</option>
+                                    </select>
+                                </div>
+                            </div>
+                            @*<div class="col-sm-12">
+                                    <select asp-for="NoteTypeId" asp-items="ViewBag.NoteTypeId" class="form-control show-tick">
+                                    </select>
+                                </div>*@
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <textarea rows="4" name="Message" class="form-control no-resize required" value="@Model.Message" placeholder="Please type what you want..."></textarea>
+                                    </div>
+                                    <label for="Message" class="error">This must be a valid Message</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <button type="submit" class="btn btn-raised btn-primary btn-round waves-effect">Add</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            // Initialize form validation on the registration form.
+            // It has the name attribute "registration"
+            $("form[name='myform']").validate({
+                // Specify validation rules
+                rules: {
+                    // The key name on the left side is the name attribute
+                    // of an input field. Validation rules are defined
+                    // on the right side
+                    Message: "required",
+                    lastname: "required",
+                    //email: {
+                    //    required: true,
+                    //    // Specify that email should be validated
+                    //    // by the built-in "email" rule
+                    //    email: true
+                    //},
+                    //password: {
+                    //    required: true,
+                    //    minlength: 5
+                    //}
+                },
+                // Specify validation error messages
+                messages: {
+                    firstname: "Please enter your firstname",
+                    lastname: "Please enter your lastname",
+                    //password: {
+                    //    required: "Please provide a password",
+                    //    minlength: "Your password must be at least 5 characters long"
+                    //},
+                    //email: "Please enter a valid email address"
+                },
+                // Make sure the form is submitted to the destination defined
+                // in the "action" attribute of the form when valid
+                submitHandler: function (form) {
+                    form.submit();
+                }
+            });
+        });
+    </script>
+}
