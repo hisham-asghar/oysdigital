@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 
 namespace Generics.DataModels.AdminModels
 {
@@ -18,5 +19,8 @@ namespace Generics.DataModels.AdminModels
         public string ModifiedBy { get; set; }
         public DateTime OnCreated { get; set; }
         public DateTime OnModified { get; set; }
+        public List<ProjectPlatforms> ProjectPlatforms { get; set; }
+        public List<ProjectMembers> ProjectMembers { get; set; }
+        public List<MobileSpaces> MobileSpaces { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
 using LayerBao;
@@ -28,6 +29,7 @@ namespace Admin.Controllers
                 {
                     ViewData["MobileSpacesId"] = new SelectList(MobileSpacesBao.GetAll(), "MobileSpacesId", "SpaceName",data.MobileSpacesId);
                     ViewData["PlatformId"] = new SelectList(PlatformBao.GetAll(), "PlatformId", "PlatformName",data.PlatformId);
+                    
                     return View(data);
                 }
 
@@ -35,7 +37,7 @@ namespace Admin.Controllers
                 ViewData["PlatformId"] = new SelectList(PlatformBao.GetAll(), "PlatformId", "PlatformName");
 
                 ProjectPlatforms m = new ProjectPlatforms();
-                m.ProjectPlatformsId = 0; m.ProjectId = Id; m.IsActive = false;m.PostsQuantity = 0;m.StoriesQuantity = 0;
+                m.ProjectPlatformsId = 0; m.ProjectId = Id; m.IsActive = false;m.PostsQuantity = 1;m.StoriesQuantity = 1;
                 return View(m);
             }
             else
@@ -49,6 +51,7 @@ namespace Admin.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (projectplatform.PostPerDay == 0)
                 {
                     projectplatform.PostPerDay = projectplatform.PostsQuantity;
@@ -82,12 +85,14 @@ namespace Admin.Controllers
                 if (projectplatform.ProjectPlatformsId == 0)
                 {
                     projectplatform.OnCreated = DateTime.Now;
+                    projectplatform.CreatedBy = userId;
                     ProjectPlatformsBao.Insert(projectplatform);
                     return RedirectToAction("Index");
                 }
                 else
                 {
                     projectplatform.OnModified = DateTime.Now;
+                    projectplatform.ModifiedBy = userId;
                     ProjectPlatformsBao.Update(projectplatform);
                     return RedirectToAction("Index");
                 }

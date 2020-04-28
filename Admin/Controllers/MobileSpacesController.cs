@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
 using LayerBao;
@@ -25,7 +26,7 @@ namespace Admin.Controllers
             if (Id != 0)
             {
                 var data = MobileSpacesBao.GetById(Id);
-                ViewData["MobileId"] = new SelectList(MobileBao.GetAll(), "MobileId", "Name", data.MobileId);
+                ViewData["MobileId"] = new SelectList(MobileBao.GetAll(), "MobileId", "MobileName", data.MobileId);
                 if (data != null)
                 {
                     return View(data);
@@ -36,7 +37,7 @@ namespace Admin.Controllers
             {
                 MobileSpaces m = new MobileSpaces();
                 m.SpaceName = ""; m.MobileId = 0; m.MobileSpacesId = 0; m.IsActive = false;
-                ViewData["MobileId"] = new SelectList(MobileBao.GetAll(), "MobileId", "Name");
+                ViewData["MobileId"] = new SelectList(MobileBao.GetAll(), "MobileId", "MobileName");
                 return View(m);
             }
             return View();
@@ -44,18 +45,21 @@ namespace Admin.Controllers
         [HttpPost]
         public IActionResult Create(MobileSpaces mobilespaces)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             try
             {
 
                 if (mobilespaces.MobileSpacesId == 0)
                 {
                     mobilespaces.OnCreated = DateTime.Now;
+                    mobilespaces.CreatedBy = userId;
                     MobileSpacesBao.Insert(mobilespaces);
                     return RedirectToAction("Index");
                 }
                 else
                 {
                     mobilespaces.OnModified = DateTime.Now;
+                    mobilespaces.ModifiedBy = userId;
                     MobileSpacesBao.Update(mobilespaces);
                     return RedirectToAction("Index");
                 }

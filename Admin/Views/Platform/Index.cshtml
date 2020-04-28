@@ -49,7 +49,11 @@
                             @foreach (var item in Model)
                             {
                             <tr>
-                                <td>@item.IconUrl</td>
+                                <td>
+                                    <img src="~/uploads/@item.IconUrl"
+                                         class="img-circle" alt="Responsive Image"
+                                         width="50" height="60" /> 
+                                    </td>
                                 <td>@item.PlatformName</td>
                                 <td>@item.OnCreated.Date</td>
                                 <td>@item.IsActive</td>

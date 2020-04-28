@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="body">
                     <h2 class="card-inside-title">Project Detail</h2>
-                    <form method="post" enctype="multipart/form-data" asp-controller="ProjectPlatform" asp-action="Create">
+                    <form method="post" name="ProjectPlatform_Form" enctype="multipart/form-data" asp-controller="ProjectPlatform" asp-action="Create">
                         <input type="hidden" name="ProjectPlatformsId" value="@Model.ProjectPlatformsId" />
                         <input type="hidden" name="ProjectId" value="@Model.ProjectId" />
                         <div class="row clearfix">
@@ -26,7 +26,7 @@
                             <div class="col-sm-4">
                                 <label for="email_address">Platform Link</label>
                                 <div class="form-group">
-                                    <input type="text" asp-for="PlatformLink" class="form-control" placeholder="Post Quantity" />
+                                    <input type="text" asp-for="PlatformLink" class="form-control" placeholder="Platform Link" />
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -39,8 +39,8 @@
                             <div class="col-sm-4">
                                 <label for="email_address">Post Plan</label>
                                 <div class="form-group">
-                                    <select asp-for="PostPerDay" class="form-control show-tick">
-                                        <option value="">-- Select Post Plan --</option>
+                                    <select asp-for="PostPerDay" name="PostPerDay" class="form-control show-tick">
+                                        <option value="" selected>-- Select Post Plan --</option>
                                         <option value="0">Post Per Day</option>
                                         <option value="1">Post Per Week</option>
                                         <option value="2">Post Per Month</option>
@@ -50,7 +50,7 @@
                             <div class="col-sm-4">
                                 <label for="email_address">Post Quantity</label>
                                 <div class="form-group">
-                                    <input type="number" asp-for="PostsQuantity" value="@Model.PostsQuantity" class="form-control" placeholder="Post Quantity" />
+                                    <input type="number" asp-for="PostsQuantity" name="PostsQuantity" value="@Model.PostsQuantity" class="form-control" placeholder="Post Quantity" />
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -60,15 +60,15 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="zmdi zmdi-time"></i></span>
                                         </div>
-                                        <input type="text" asp-for="PostSchedulingTime" class="form-control timepicker" placeholder="Please choose a time...">
+                                        <input type="text" asp-for="PostSchedulingTime" name="PostSchedulingTime" class="form-control timepicker" placeholder="Please choose a time...">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <label for="email_address">Status/Story Plan</label>
                                 <div class="form-group">
-                                    <select asp-for="StoriesPerDay" class="form-control show-tick">
-                                        <option value="">-- Select status/story Plan --</option>
+                                    <select asp-for="StoriesPerDay" name="StoriesPerDay" class="form-control show-tick">
+                                        <option value="" selected>-- Select status/story Plan --</option>
                                         <option value="0">Story Per Day</option>
                                         <option value="1">Story Per Week</option>
                                         <option value="2">Story Per Month</option>
@@ -78,7 +78,7 @@
                             <div class="col-sm-4">
                                 <label for="email_address">Status/Story Quantity</label>
                                 <div class="form-group">
-                                    <input type="number" asp-for="StoriesQuantity" value="@Model.StoriesQuantity" class="form-control" placeholder="Name" />
+                                    <input type="number" asp-for="StoriesQuantity" name="StoriesQuantity" value="@Model.StoriesQuantity" class="form-control" placeholder="Name" />
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -88,7 +88,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="zmdi zmdi-time"></i></span>
                                         </div>
-                                        <input type="text" asp-for="StoriesSchedulingTime" class="form-control timepicker" placeholder="Please choose a time...">
+                                        <input type="text" asp-for="StoriesSchedulingTime" name="StoriesSchedulingTime" class="form-control timepicker" placeholder="Please choose a time...">
                                     </div>
                                 </div>
                             </div>
@@ -109,3 +109,9 @@
         </div>
     </div>
 </div>
+@section Scripts {
+<script>
+    $('[StoriesPerDay=options]').val(@Model.StoriesPerDay);
+</script>
+    <partial name="_ValidationScriptsPartial" />
+}

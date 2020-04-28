@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="body">
                     <h2 class="card-inside-title">Project Detail</h2>
-                    <form method="post" enctype="multipart/form-data" asp-controller="ProjectNotes" asp-action="Create">
+                    <form method="post" name="ProjectNotes_Form" enctype="multipart/form-data" asp-controller="ProjectNotes" asp-action="Create">
                         <input type="hidden" name="ProjectNotesId" value="@Model.ProjectNotesId" />
                         <div class="row clearfix">
                             <div class="col-sm-6">
@@ -24,10 +24,6 @@
                                     </select>
                                 </div>
                             </div>
-                            @*<div class="col-sm-12">
-                                <select asp-for="NoteTypeId" asp-items="ViewBag.NoteTypeId" class="form-control show-tick">
-                                </select>
-                            </div>*@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <div class="form-line">
@@ -52,3 +48,6 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

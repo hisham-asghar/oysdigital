@@ -29,8 +29,7 @@
 
 <body class="theme-blush @(ViewData["BodyClass"])">
     @RenderBody()
-    <script src="/lib/jquery/dist/jquery.js"></script>
-    <script src="/lib/jquery-validation/dist/jquery.validate.js"></script>
+
     <!-- Jquery Core Js -->
     <script src="/bundles/libscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
     <script src="/bundles/vendorscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
@@ -52,12 +51,11 @@
     <!-- Bootstrap Material Datetime Picker Plugin Js -->
     <script src="/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
 
+
     <!-- Basi formElements Js -->
     <script src="/js/pages/forms/basic-form-elements.js"></script>
 
-
-    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    <script src="~/ValidationScripts/FormsValidation.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>

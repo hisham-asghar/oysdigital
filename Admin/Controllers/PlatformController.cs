@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
 using LayerBao;
@@ -13,7 +14,12 @@ namespace Admin.Controllers
 {
     public class PlatformController : Controller
     {
-        ImageUploader i;
+        public ImageUploader i;
+        private readonly IHostingEnvironment _environment;
+        public PlatformController(IHostingEnvironment environment)
+        {
+            _environment = environment ?? throw new ArgumentNullException(nameof(environment));
+        }
         public IActionResult Index()
         {
             return View(PlatformBao.GetAll());
@@ -41,6 +47,8 @@ namespace Admin.Controllers
         [HttpPost]
         public IActionResult Create(Platforms platform ,IFormFile file)
         {
+            
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             try
             {
 
@@ -49,7 +57,8 @@ namespace Admin.Controllers
                     if (file != null)
                     {
                         platform.OnCreated = DateTime.Now;
-                        platform.IconUrl= i.SaveImage(file);
+                        platform.IconUrl= SaveImage(file);
+                        platform.CreatedBy = userId;
                     }
                     PlatformBao.Insert(platform);
                     return RedirectToAction("Index");
@@ -60,8 +69,9 @@ namespace Admin.Controllers
                     platform.OnModified = DateTime.Now;
                     if (file != null)
                     {
-                        i.DeleteImage(platform.IconUrl);
-                        platform.IconUrl = i.SaveImage(file);
+                        DeleteImage(platform.IconUrl);
+                        platform.IconUrl = SaveImage(file);
+                        platform.ModifiedBy = userId;
                     }
                     
                     PlatformBao.Update(platform);
@@ -74,7 +84,47 @@ namespace Admin.Controllers
             }
             return View(platform);
         }
-        
+        public string SaveImage(IFormFile file)
+        {
+            // do other validations on your model as needed
+            var uploads = Path.Combine(_environment.WebRootPath, "uploads");
+            var uniquefileName = GetUniqueFileName(file.FileName);
+            if (file.Length > 0)
+            {
+                using (var fileStream = new FileStream(Path.Combine(uploads, uniquefileName), FileMode.Create))
+                {
+                    file.CopyToAsync(fileStream);
+                }
+                return uniquefileName;
+            }
+            return null;
+            // to do  : Return something
+        }
+        private string GetUniqueFileName(string fileName)
+        {
+            fileName = Path.GetFileName(fileName);
+            return Path.GetFileNameWithoutExtension(fileName)
+                      + "_"
+                      + Guid.NewGuid().ToString().Substring(0, 4)
+                      + Path.GetExtension(fileName);
+        }
+        public bool DeleteImage(string file)
+        {
+            var uploads = Path.Combine(_environment.WebRootPath, "uploads");
+            string fileName = Path.Combine(uploads, file);
+
+            if (fileName != null || fileName != string.Empty)
+            {
+                if ((System.IO.File.Exists(fileName)))
+                {
+                    System.IO.File.Delete(fileName);
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
         public IActionResult Delete(long id)
         {
             if (id != 0)

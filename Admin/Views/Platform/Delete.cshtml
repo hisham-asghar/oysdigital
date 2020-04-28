@@ -61,7 +61,9 @@
                             @Html.DisplayNameFor(model => model.IconUrl)
                         </dt>
                         <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.IconUrl)
+                            <img src="~/uploads/@Model.IconUrl"
+                                 class="img-rounded" alt="Responsive Image"
+                                 width="307" height="240" />
                         </dd>
                     </dl>
 

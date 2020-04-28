@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="body">
                     <h2 class="card-inside-title">Customer Detail</h2>
-                    <form method="post" enctype="multipart/form-data" asp-controller="Mobile" asp-action="Create">
+                    <form method="post" name="Mobile_Form" enctype="multipart/form-data" asp-controller="Mobile" asp-action="Create">
                         <input type="hidden" name="MobileId" value="@Model.MobileId" />
                         <div class="row clearfix">
                             <div class="col-sm-12">
@@ -37,3 +37,6 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

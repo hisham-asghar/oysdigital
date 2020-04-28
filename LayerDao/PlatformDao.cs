@@ -19,6 +19,11 @@ namespace LayerDao
             string sql = $"SELECT * FROM dbo.Platforms WHERE PlatformId = {Id};";
             return QueryExecutor.FirstOrDefault<Platforms>(sql);
         }
+        public static List<Platforms> GetByProjectId(long Id)
+        {
+            string sql = $"SELECT * FROM dbo.Platforms WHERE ProjectId = {Id};";
+            return QueryExecutor.List<Platforms>(sql);
+        }
         public static bool Insert(Platforms p)
         {
             string sql = $"Insert Into dbo.Platforms (PlatformName,IconUrl,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +

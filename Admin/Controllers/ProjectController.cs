@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
 using LayerBao;
@@ -36,6 +37,7 @@ namespace Admin.Controllers
         [HttpPost]
         public IActionResult Create(Project project)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             try
             {
 
@@ -43,12 +45,14 @@ namespace Admin.Controllers
                 {
                     project.OnCreated = DateTime.Now;
                     project.Guid = Guid.NewGuid().ToString();
+                    project.CreatedBy = userId;
                     ProjectBao.Insert(project);
                     return RedirectToAction("Index");
                 }
                 else
                 {
                     project.OnModified = DateTime.Now;
+                    project.ModifiedBy = userId;
                     ProjectBao.Update(project);
                     return RedirectToAction("Index");
                 }

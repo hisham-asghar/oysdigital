@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="body">
                     <h2 class="card-inside-title">Project Detail</h2>
-                    <form id="myform" name="myform" method="post" enctype="multipart/form-data" asp-controller="ProjectAlertMessage" asp-action="Create">
+                    <form name="ProjectMessages_Form" method="post" enctype="multipart/form-data" asp-controller="ProjectAlertMessage" asp-action="Create">
                         <input type="hidden" name="ProjectAlertMessageId" value="@Model.ProjectAlertMessageId" />
                         <div class="row clearfix">
                             <div class="col-sm-6">
@@ -24,16 +24,11 @@
                                     </select>
                                 </div>
                             </div>
-                            @*<div class="col-sm-12">
-                                    <select asp-for="NoteTypeId" asp-items="ViewBag.NoteTypeId" class="form-control show-tick">
-                                    </select>
-                                </div>*@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <div class="form-line">
                                         <textarea rows="4" name="Message" class="form-control no-resize required" value="@Model.Message" placeholder="Please type what you want..."></textarea>
                                     </div>
-                                    <label for="Message" class="error">This must be a valid Message</label>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -54,45 +49,5 @@
     </div>
 </div>
 @section Scripts {
-    <script type="text/javascript">
-        $(function () {
-            // Initialize form validation on the registration form.
-            // It has the name attribute "registration"
-            $("form[name='myform']").validate({
-                // Specify validation rules
-                rules: {
-                    // The key name on the left side is the name attribute
-                    // of an input field. Validation rules are defined
-                    // on the right side
-                    Message: "required",
-                    lastname: "required",
-                    //email: {
-                    //    required: true,
-                    //    // Specify that email should be validated
-                    //    // by the built-in "email" rule
-                    //    email: true
-                    //},
-                    //password: {
-                    //    required: true,
-                    //    minlength: 5
-                    //}
-                },
-                // Specify validation error messages
-                messages: {
-                    firstname: "Please enter your firstname",
-                    lastname: "Please enter your lastname",
-                    //password: {
-                    //    required: "Please provide a password",
-                    //    minlength: "Your password must be at least 5 characters long"
-                    //},
-                    //email: "Please enter a valid email address"
-                },
-                // Make sure the form is submitted to the destination defined
-                // in the "action" attribute of the form when valid
-                submitHandler: function (form) {
-                    form.submit();
-                }
-            });
-        });
-    </script>
+    <partial name="_ValidationScriptsPartial" />
 }

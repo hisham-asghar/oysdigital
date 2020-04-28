@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
 using LayerBao;
@@ -18,16 +19,11 @@ namespace Admin.Controllers
         [HttpGet]
         public IActionResult Create(long Id)
         {
-            Dictionary<string, int> noteTypeList = new Dictionary<string, int>();
-            noteTypeList.Add("Admin",0);
-            noteTypeList.Add("Manager",1);
-            noteTypeList.Add("Member",2);
-            if (Id != 0)
+             if (Id != 0)
             {
                 var data = ProjectNotesBao.GetById(Id);
                 if (data != null)
                 {
-                    ViewData["NoteTypeId"] = new SelectList(noteTypeList, "Value", "Key", data.NoteTypeId);
                     return View(data);
                 }
 
@@ -36,8 +32,7 @@ namespace Admin.Controllers
             {
                 ProjectNotes m = new ProjectNotes();
                 m.Message = ""; m.ProjectNotesId = 0; m.IsActive = false;
-                ViewData["NoteTypeId"] = new SelectList(noteTypeList, "NoteTypeId", "Name");
-                return View(m);
+               return View(m);
             }
             return View();
         }
@@ -46,16 +41,18 @@ namespace Admin.Controllers
         {
             try
             {
-
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (projectNotes.ProjectNotesId == 0)
                 {
                     projectNotes.OnCreated = DateTime.Now;
+                    projectNotes.CreatedBy = userId;
                     ProjectNotesBao.Insert(projectNotes);
                     return RedirectToAction("Index");
                 }
                 else
                 {
                     projectNotes.OnModified = DateTime.Now;
+                    projectNotes.ModifiedBy = userId;
                     ProjectNotesBao.Update(projectNotes);
                     return RedirectToAction("Index");
                 }

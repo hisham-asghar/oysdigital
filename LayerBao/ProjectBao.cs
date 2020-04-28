@@ -16,6 +16,11 @@ namespace LayerBao
         {
             return ProjectDao.GetById(id);
         }
+        public static List<Project> GetByCustomerId(long id)
+        {
+            return ProjectDao.GetByCustomerId(id);
+        }
+        
         public static bool Insert(Project c)
         {
             return ProjectDao.Insert(c);

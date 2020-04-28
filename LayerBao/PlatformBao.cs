@@ -16,6 +16,10 @@ namespace LayerBao
         {
             return PlatformDao.GetById(id);
         }
+        public static List<Platforms> GetByProjectId(long id)
+        {
+            return PlatformDao.GetByProjectId(id);
+        }
         public static bool Insert(Platforms c)
         {
             return PlatformDao.Insert(c);

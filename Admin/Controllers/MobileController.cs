@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Generics.Data;
 using Generics.DataModels.AdminModels;
 using LayerBao;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Admin.Controllers
@@ -37,18 +40,21 @@ namespace Admin.Controllers
         [HttpPost]
         public IActionResult Create(Mobile mobile)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             try
             {
 
                 if (mobile.MobileId == 0)
                 {
                     mobile.OnCreated = DateTime.Now;
+                    mobile.CreatedBy = userId;
                     MobileBao.Insert(mobile);
                     return RedirectToAction("Index");
                 }
                 else
                 {
                     mobile.OnModified = DateTime.Now;
+                    mobile.ModifiedBy = userId;
                     MobileBao.Update(mobile);
                     return RedirectToAction("Index");
                 }

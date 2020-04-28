@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="body">
                     <h2 class="card-inside-title">Mobile Space Detail</h2>
-                    <form method="post" enctype="multipart/form-data" asp-controller="MobileSpaces" asp-action="Create">
+                    <form method="post" name="MobileSpaces_Form" enctype="multipart/form-data" asp-controller="MobileSpaces" asp-action="Create">
                         <input type="hidden" name="MobileSpacesId" value="@Model.MobileSpacesId" />
                         <div class="row clearfix">
                             <div class="col-sm-12">
@@ -21,7 +21,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <select asp-for="MobileId" asp-items="ViewBag.MobileId" class="form-control show-tick">
+                                <select asp-for="MobileId" name="MobileId" asp-items="ViewBag.MobileId" class="form-control show-tick">
                                 </select>
                             </div>
                             <div class="col-sm-12">
@@ -32,11 +32,14 @@
                                 </div>
                             </div>
                         </div>
-                    <button type="submit" class="btn btn-raised btn-primary btn-round waves-effect">Add</button>
-                  </form>
+                        <button type="submit" class="btn btn-raised btn-primary btn-round waves-effect">Add</button>
+                    </form>
 
                 </div>
             </div>
         </div>
     </div>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

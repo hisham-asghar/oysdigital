@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="body">
                     <h2 class="card-inside-title">Mobile Space Detail</h2>
-                    <form method="post" enctype="multipart/form-data" asp-controller="ProjectMembers" asp-action="Create">
+                    <form method="post" name="ProjectMember_Form" enctype="multipart/form-data" asp-controller="ProjectMembers" asp-action="Create">
                         <input type="hidden" name="ProjectMembersId" value="@Model.ProjectMembersId" />
                         <input type="hidden" name="ProjectId" value="@Model.ProjectId" />
                         <div class="row clearfix">
@@ -38,3 +38,6 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

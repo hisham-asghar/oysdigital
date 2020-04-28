@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
 using LayerBao;
@@ -39,16 +40,19 @@ namespace Admin.Controllers
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 if (projectMemberType.ProjectMemberTypesId == 0)
                 {
                     projectMemberType.OnCreated = DateTime.Now;
+                    projectMemberType.CreatedBy = userId;
                     ProjectMemberTypeBao.Insert(projectMemberType);
                     return RedirectToAction("Index");
                 }
                 else
                 {
                     projectMemberType.OnModified = DateTime.Now;
+                    projectMemberType.ModifiedBy = userId;
                     ProjectMemberTypeBao.Update(projectMemberType);
                     return RedirectToAction("Index");
                 }

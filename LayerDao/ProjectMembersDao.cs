@@ -19,6 +19,11 @@ namespace LayerDao
             string sql = $"SELECT * FROM dbo.ProjectMembers JOIN dbo.ProjectMemberTypes ON ProjectMembers.ProjectMemberTypesId = ProjectMemberTypes.ProjectMemberTypesId Join dbo.Project On Project.ProjectId=ProjectMembers.ProjectId WHERE ProjectMembersId = {Id};";
             return QueryExecutor.FirstOrDefault<ProjectMembers>(sql);
         }
+        public static List<ProjectMembers> GetByProjectId(long Id)
+        {
+            string sql = $"SELECT * FROM dbo.ProjectMembers WHERE ProjectId = {Id};";
+            return QueryExecutor.List<ProjectMembers>(sql);
+        }
         public static bool Insert(ProjectMembers p)
         {
             string sql = $"Insert Into dbo.ProjectMembers (ProjectMemberTypesId,ProjectId,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +

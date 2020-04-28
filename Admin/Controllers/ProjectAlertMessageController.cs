@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
 using LayerBao;
@@ -18,16 +19,11 @@ namespace Admin.Controllers
         [HttpGet]
         public IActionResult Create(long Id)
         {
-            Dictionary<string, int> noteTypeList = new Dictionary<string, int>();
-            noteTypeList.Add("Admin", 0);
-            noteTypeList.Add("Manager", 1);
-            noteTypeList.Add("Member", 2);
             if (Id != 0)
             {
                 var data = ProjectAlertMessageBao.GetById(Id);
                 if (data != null)
                 {
-                    ViewData["NoteTypeId"] = new SelectList(noteTypeList, "Value", "Key", data.ProjectAlertMessageId);
                     return View(data);
                 }
 
@@ -36,7 +32,6 @@ namespace Admin.Controllers
             {
                 ProjectAlertMessage m = new ProjectAlertMessage();
                 m.Message = ""; m.ProjectAlertMessageId = 0; m.IsActive = false;
-                ViewData["NoteTypeId"] = new SelectList(noteTypeList, "NoteTypeId", "Name");
                 return View(m);
             }
             return View();
@@ -44,18 +39,21 @@ namespace Admin.Controllers
         [HttpPost]
         public IActionResult Create(ProjectAlertMessage projectAlertMessage)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             try
             {
 
                 if (projectAlertMessage.ProjectAlertMessageId == 0)
                 {
                     projectAlertMessage.OnCreated = DateTime.Now;
+                    projectAlertMessage.CreatedBy = userId;
                     ProjectAlertMessageBao.Insert(projectAlertMessage);
                     return RedirectToAction("Index");
                 }
                 else
                 {
                     projectAlertMessage.OnModified = DateTime.Now;
+                    projectAlertMessage.ModifiedBy = userId;
                     ProjectAlertMessageBao.Update(projectAlertMessage);
                     return RedirectToAction("Index");
                 }

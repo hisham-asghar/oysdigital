@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="body">
                     <h2 class="card-inside-title">Project Member Type Detail</h2>
-                    <form method="post" enctype="multipart/form-data" asp-controller="ProjectMemberType" asp-action="Create">
+                    <form method="post" name="ProjectMemberType_Form" enctype="multipart/form-data" asp-controller="ProjectMemberType" asp-action="Create">
                         <input type="hidden" name="ProjectMemberTypesId" value="@Model.ProjectMemberTypesId" />
                         <div class="row clearfix">
                             <div class="col-sm-12">
@@ -37,3 +37,6 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
