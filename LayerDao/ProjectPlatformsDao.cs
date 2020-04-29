@@ -21,7 +21,7 @@ namespace LayerDao
         }
         public static List<ProjectPlatforms> GetByProjectId(long Id)
         {
-            string sql = $"SELECT * FROM dbo.ProjectPlatforms WHERE ProjectId = {Id};";
+            string sql = $"SELECT * FROM dbo.ProjectPlatforms JOIN dbo.Project ON ProjectPlatforms.ProjectId = {Id} Join dbo.Platforms ON Platforms.PlatformId=ProjectPlatforms.PlatformId Join dbo.MobileSpaces ON MobileSpaces.MobileSpacesId=ProjectPlatforms.MobileSpacesId;";
             return QueryExecutor.List<ProjectPlatforms>(sql);
         }
         public static bool Insert(ProjectPlatforms c)

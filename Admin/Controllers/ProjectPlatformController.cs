@@ -18,7 +18,10 @@ namespace Admin.Controllers
 
             return View(data);
         }
-
+        public IActionResult Create()
+        {
+            return View();
+        }
         [HttpGet]
         public IActionResult Create(long Id)
         {
@@ -27,8 +30,8 @@ namespace Admin.Controllers
                 var data = ProjectPlatformsBao.GetById(Id);
                 if (data != null)
                 {
-                    ViewData["MobileSpacesId"] = new SelectList(MobileSpacesBao.GetAll(), "MobileSpacesId", "SpaceName",data.MobileSpacesId);
-                    ViewData["PlatformId"] = new SelectList(PlatformBao.GetAll(), "PlatformId", "PlatformName",data.PlatformId);
+                    ViewData["MobileSpacesId"] = new SelectList(GetMobileSpacesSortedList(data.MobileSpacesId), "MobileSpacesId", "SpaceName",data.MobileSpacesId);
+                    ViewData["PlatformId"] = new SelectList(GetPlatformSortedList(data.PlatformId), "PlatformId", "PlatformName",data.PlatformId);
                     
                     return View(data);
                 }
@@ -46,8 +49,34 @@ namespace Admin.Controllers
             }
            // return View();
         }
+        public List<Platforms> GetPlatformSortedList(long id)
+        {
+            List<Platforms> pal = new List<Platforms>();
+            var platform = PlatformBao.GetAll();
+            foreach (var item in platform)
+            {
+                if (id != item.PlatformId)
+                {
+                    pal.Add(item);
+                }
+            }
+            return pal;
+        }
+        public List<MobileSpaces> GetMobileSpacesSortedList(long id)
+        {
+            List<MobileSpaces> mob = new List<MobileSpaces>();
+            var mobile = MobileSpacesBao.GetAll();
+            foreach (var item in mobile)
+            {
+                if (id != item.MobileSpacesId)
+                {
+                    mob.Add(item);
+                }
+            }
+            return mob;
+        }
         [HttpPost]
-        public IActionResult Create(ProjectPlatforms projectplatform)
+        public IActionResult Save(ProjectPlatforms projectplatform)
         {
             try
             {
