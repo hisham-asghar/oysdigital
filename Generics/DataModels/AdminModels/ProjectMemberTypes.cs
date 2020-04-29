@@ -5,15 +5,9 @@ using System.Threading.Tasks;
 
 namespace Generics.DataModels.AdminModels
 {
-    public class ProjectMemberTypes
+    public class ProjectMemberTypes:BaseEntity
     {
-        
-        public long ProjectMemberTypesId { get; set; }
-        public string ProjectMemberTypeName { get; set; }
+        public string Name { get; set; }
         public bool IsActive { get; set; }
-        public string CreatedBy { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTime OnCreated { get; set; }
-        public DateTime OnModified { get; set; }
     }
 }
