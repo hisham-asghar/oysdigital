@@ -35,7 +35,6 @@ namespace Admin.Controllers
                 // Dont Exist
             }
             ViewBag.IsEdit = id > 0;
-            ViewBag.IsSave = id > 0;
             return View(customer);
         }
         [Route("/Customer/Create")]
@@ -67,7 +66,6 @@ namespace Admin.Controllers
                 }
                 else
                 {
-                    ViewBag.IsSave = false;
                     return View(customer);
                 }
             }
@@ -82,11 +80,12 @@ namespace Admin.Controllers
         }
         public IActionResult Delete(long id)
         {
-            if (id != 0)
+            Customer customer = CustomerBao.GetById(id);
+            if (id > 0 && customer == null)
             {
-                return View(CustomerBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            return View(customer);
         }
       
         public IActionResult ConfirmDelete(long id)

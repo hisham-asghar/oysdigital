@@ -19,10 +19,10 @@
             <td>@item.OnCreated.ToString("MMM dd, yyyy")</td>
             <td>@item.IsActive.CheckTag()</td>
             <td>
-                @ButtonHelper.EditSmall("/Customer/Create/" + item.Id)
-                @ButtonHelper.DeleteSmall("/Customer/Delate/" + item.Id)
+                @ButtonHelper.EditSmall("/Customer/Edit/" + item.Id)
+                @ButtonHelper.DeleteSmall("/Customer/Delete/" + item.Id)
                 @ButtonHelper.DetailSmall("/Customer/Detail/" + item.Id)
-                @ButtonHelper.Create("/Project/Detail/" + item.Id)
+                @ButtonHelper.CreateSmall("/Project/Create/" + item.Id,"Add Project")
             </td>
         </tr>
         }

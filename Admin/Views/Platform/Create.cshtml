@@ -15,10 +15,10 @@
             @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
         }
         @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
-        <input type="file" name="file" class="form-control" />
+        @HtmlInputType.file.GenerateInputField("file", Model.IconUrl, "file")
         @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
-        @ButtonHelper.CreateSmall("/Platform/Index","Back to List")
+        @ButtonHelper.CreateSmall("/Platform/Index", "Back to List")
     </form>
 @CHtmlHelper.GetCardFooter()
 @section Scripts {

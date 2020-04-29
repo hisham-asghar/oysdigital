@@ -16,8 +16,8 @@
                 <td>@item.OnCreated.ToString("MMM dd, yyyy")</td>
                 <td>@item.IsActive.CheckTag()</td>
                 <td>
-                    @ButtonHelper.EditSmall("/Mobile/Create/" + item.Id)
-                    @ButtonHelper.DeleteSmall("/Mobile/Delate/" + item.Id)
+                    @ButtonHelper.EditSmall("/Mobile/Edit/" + item.Id)
+                    @ButtonHelper.DeleteSmall("/Mobile/Delete/" + item.Id)
                     @ButtonHelper.DetailSmall("/Mobile/Detail/" + item.Id)
                 </td>
             </tr>

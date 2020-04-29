@@ -8,7 +8,7 @@
 
 @CHtmlHelper.GenerateHeader(title, "/Project", "Back to Mobiles List")
 @CHtmlHelper.GetCardHeader(12, title)
-<form method="post" name="platform">
+<form method="post" name="project">
     @if (isEdit)
     {
         @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")

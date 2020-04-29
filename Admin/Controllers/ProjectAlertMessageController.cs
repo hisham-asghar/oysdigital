@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
+using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,55 +17,59 @@ namespace Admin.Controllers
         {
             return View(ProjectAlertMessageBao.GetAll());
         }
+        [Route("/ProjectAlertMessage/Create")]
+        [Route("/ProjectAlertMessage/Edit/{id}")]
         [HttpGet]
-        public IActionResult Create(long Id)
+        public IActionResult Create(long id = 0)
         {
-            if (Id != 0)
+            ProjectAlertMessage projectalertmessage = id <= 0 ? new ProjectAlertMessage() : ProjectAlertMessageBao.GetById(id);
+            if (id > 0 && projectalertmessage == null)
             {
-                var data = ProjectAlertMessageBao.GetById(Id);
-                if (data != null)
-                {
-                    return View(data);
-                }
-
+                // Dont Exist
             }
-            else
-            {
-                ProjectAlertMessage m = new ProjectAlertMessage();
-                m.Message = ""; m.Id = 0; m.IsActive = false;
-                return View(m);
-            }
-            return View();
+            ViewBag.IsEdit = id > 0;
+            return View(projectalertmessage);
         }
+        [Route("/ProjectAlertMessage/Create")]
+        [Route("/ProjectAlertMessage/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(ProjectAlertMessage projectAlertMessage)
+        public IActionResult Create(ProjectAlertMessage projectalertmessage, int id = 0)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            try
+            ProjectAlertMessage projectalertmessageDb = ProjectAlertMessageBao.GetById(id);
+            if (id > 0 && projectalertmessageDb == null)
             {
+                // Not Exists
+            }
 
-                if (projectAlertMessage.Id == 0)
+            var userId = User.GetUserId();
+
+            if (projectalertmessage == null)
+            {
+                projectalertmessageDb = projectalertmessageDb ?? new ProjectAlertMessage();
+                ViewBag.IsEdit = id > 0;
+                return View(projectalertmessageDb);
+            }
+            if (id == 0)
+            {
+                projectalertmessage.SetOnCreate(userId);
+                if (ProjectAlertMessageBao.Insert(projectalertmessage))
                 {
-                    projectAlertMessage.OnCreated = DateTime.Now;
-                    projectAlertMessage.CreatedBy = userId;
-                    ProjectAlertMessageBao.Insert(projectAlertMessage);
-                    return RedirectToAction("Index");
+                    //return RedirectToAction("Index");
                 }
                 else
                 {
-                    projectAlertMessage.OnModified = DateTime.Now;
-                    projectAlertMessage.ModifiedBy = userId;
-                    ProjectAlertMessageBao.Update(projectAlertMessage);
-                    return RedirectToAction("Index");
+                    return View(projectalertmessage);
                 }
             }
-            catch (Exception)
+            else
             {
-
+                projectalertmessage.SetOnUpdate(userId);
+                ProjectAlertMessageBao.Update(projectalertmessage);
             }
-            return View(projectAlertMessage);
-        }
 
+            return RedirectToAction("Index");
+
+        }
         public IActionResult Delete(long id)
         {
             if (id != 0)

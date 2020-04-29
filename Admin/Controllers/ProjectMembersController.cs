@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
+using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,71 +19,60 @@ namespace Admin.Controllers
 
             return View(data);
         }
+        [Route("/ProjectMembers/Create")]
+        [Route("/ProjectMembers/Edit/{id}")]
         [HttpGet]
-        public IActionResult Create(long Id)
+        public IActionResult Create(long id = 0)
         {
-
-            if (Id != 0)
+            ProjectMembers projectmembers = id <= 0 ? new ProjectMembers() : ProjectMembersBao.GetById(id);
+            if (id > 0 && projectmembers == null)
             {
-                var data = ProjectMembersBao.GetById(Id);
-                // if (data != null)
-                //{
-                //    ViewData["ProjectMemberTypesId"] = new SelectList(GetMembersSortedList(data.ProjectMemberTypesId), "ProjectMemberTypesId", "ProjectMemberTypeName", data.ProjectMemberTypesId);
-                //    return View(data);
-                //}
-                //ProjectMembers m = new ProjectMembers();
-                //m.Id = 0; m.ProjectMemberTypesId = 0; m.ProjectId = Id; m.IsActive = false;
-                //ViewData["ProjectMemberTypesId"] = new SelectList(GetMembersSortedList(Id), "ProjectMemberTypesId", "ProjectMemberTypeName");
-                return View();
+                // Dont Exist
             }
-            else
-            {
-                return RedirectToAction("Index");
-            }
-            //return View();
+            ViewBag.IsEdit = id > 0;
+            ViewBag.PMT = new SelectList(ProjectMemberTypeBao.GetAll(),"Name", "Id");
+            return View(projectmembers);
         }
-        public List<ProjectMembers> GetMembersSortedList(long id)
-        {
-            List<ProjectMembers> pal = new List<ProjectMembers>();
-            var projectMembers = ProjectMembersBao.GetAll();
-            foreach (var item in projectMembers)
-            {
-                //if (id != item.ProjectMemberTypesId)
-                //{
-                //    pal.Add(item);
-                //}
-            }
-            return pal;
-        }
+        [Route("/ProjectMembers/Create")]
+        [Route("/ProjectMembers/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(ProjectMembers projectmembers)
+        public IActionResult Create(ProjectMembers projectmembers, int id = 0)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            try
+            ProjectMembers projectmembersDb = ProjectMembersBao.GetById(id);
+            if (id > 0 && projectmembersDb == null)
             {
+                // Not Exists
+            }
 
-                if (projectmembers.Id == 0)
+            var userId = User.GetUserId();
+
+            if (projectmembers == null)
+            {
+                projectmembersDb = projectmembersDb ?? new ProjectMembers();
+                ViewBag.IsEdit = id > 0;
+                return View(projectmembersDb);
+            }
+            if (id == 0)
+            {
+                projectmembers.SetOnCreate(userId);
+                if (ProjectMembersBao.Insert(projectmembers))
                 {
-                    projectmembers.OnCreated = DateTime.Now;
-                    projectmembers.CreatedBy = userId;
-                    ProjectMembersBao.Insert(projectmembers);
-                    return RedirectToAction("Index");
+                    //return RedirectToAction("Index");
                 }
                 else
                 {
-                    projectmembers.OnModified = DateTime.Now;
-                    projectmembers.ModifiedBy = userId;
-                    ProjectMembersBao.Update(projectmembers);
-                    return RedirectToAction("Index");
+                    return View(projectmembers);
                 }
             }
-            catch (Exception)
+            else
             {
-
+                projectmembers.SetOnUpdate(userId);
+                ProjectMembersBao.Update(projectmembers);
             }
-            return View(projectmembers);
-        }
 
+            return RedirectToAction("Index");
+
+        }
         public IActionResult Delete(long id)
         {
             if (id != 0)

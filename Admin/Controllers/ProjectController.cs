@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
+using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,56 +15,65 @@ namespace Admin.Controllers
     {
         public IActionResult Index()
         {
-            var data = ProjectBao.GetAll();
-
-            return View(data);
+            var projects = ProjectBao.GetAll();
+            return View(projects);
         }
+        [Route("/Project/Create")]
+        [Route("/Project/Edit/{id}")]
         [HttpGet]
-        public IActionResult Create(long Id)
+        public IActionResult Create(long id = 0)
         {
-            if (Id != 0)
+            Project project = id <= 0 ? new Project() : ProjectBao.GetById(id);
+            if (id > 0 && project == null)
             {
-                var data = ProjectBao.GetById((long)Id);
-                if (data != null)
-                {
-                    return View(data);
-                }
-                Project m = new Project();
-                m.Id = 0; m.Id = Id; m.IsActive = false;
-                return View(m);
+                // Dont Exist
             }
-            return View();
+            ViewBag.IsEdit = id > 0;
+            ViewBag.IsSave = id > 0;
+            return View(project);
         }
+        [Route("/Project/Create")]
+        [Route("/Project/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(Project project)
+        public IActionResult Create(Project project, int id = 0)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            try
+            Project projectDb = ProjectBao.GetById(id);
+            if (id > 0 && projectDb == null)
             {
+                // Not Exists
+            }
 
-                if (project.Id == 0)
+            var userId = User.GetUserId();
+
+            if (project == null)
+            {
+                projectDb = projectDb ?? new Project();
+                ViewBag.IsEdit = id > 0;
+                return View(projectDb);
+            }
+            if (id == 0)
+            {
+                project.SetOnCreate(userId);
+                project.Guid = Guid.NewGuid().ToString();
+                if (ProjectBao.Insert(project))
                 {
-                    project.OnCreated = DateTime.Now;
-                    project.Guid = Guid.NewGuid().ToString();
-                    project.CreatedBy = userId;
-                    ProjectBao.Insert(project);
-                    return RedirectToAction("Index");
+                    //return RedirectToAction("Index");
                 }
                 else
                 {
-                    project.OnModified = DateTime.Now;
-                    project.ModifiedBy = userId;
-                    ProjectBao.Update(project);
-                    return RedirectToAction("Index");
+                    ViewBag.IsSave = false;
+                    return View(project);
                 }
             }
-            catch (Exception)
+            else
             {
-
+                project.SetOnUpdate(userId);
+                ProjectBao.Update(project);
             }
-            return View(project);
-        }
 
+            return RedirectToAction("Index");
+
+        }
         public IActionResult Delete(long id)
         {
             if (id != 0)
@@ -83,10 +93,26 @@ namespace Admin.Controllers
         }
         public IActionResult Detail(long id)
         {
-            if (id != 0)
-            {
-                return View(ProjectBao.GetById(id));
-            }
+            //if (id != 0)
+            //{
+            //    CustomerDetailView detail = new CustomerDetailView();
+            //    var data = ProjectBao.GetById(id);
+            //    detail.project = data;
+            //    if (data != null)
+            //    {
+            //        //var pro = ProjectBao.GetByCustomerId(data.Id);
+            //        //if (pro != null)
+            //        //{
+            //        //    foreach (var item in pro)
+            //        //    {
+            //        //        item.ProjectPlatforms = ProjectPlatformsBao.GetByProjectId(item.ProjectId);
+            //        //        item.ProjectMembers = ProjectMembersBao.GetByProjectId(item.ProjectId);
+            //        //    }
+            //        //}
+            //        //detail.Projects = pro;
+            //    }
+            //    return View(detail);
+            //}
             return View();
         }
     }

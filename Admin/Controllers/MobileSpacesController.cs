@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
+using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,56 +20,58 @@ namespace Admin.Controllers
             
             return View(data);
         }
+        [Route("/MobileSpaces/Create")]
+        [Route("/MobileSpaces/Edit/{id}")]
         [HttpGet]
-        public IActionResult Create(long Id)
+        public IActionResult Create(long id = 0)
         {
-            
-            if (Id != 0)
+            MobileSpaces mobilespaces = id <= 0 ? new MobileSpaces() : MobileSpacesBao.GetById(id);
+            if (id > 0 && mobilespaces == null)
             {
-                var data = MobileSpacesBao.GetById(Id);
-                ViewData["MobileId"] = new SelectList(MobileBao.GetAll(), "MobileId", "MobileName", data.MobileId);
-                if (data != null)
-                {
-                    return View(data);
-                }
-
+                // Dont Exist
             }
-            else
-            {
-                MobileSpaces m = new MobileSpaces();
-                m.Name = ""; m.MobileId = 0; m.Id = 0; m.IsActive = false;
-                ViewData["MobileId"] = new SelectList(MobileBao.GetAll(), "MobileId", "MobileName");
-                return View(m);
-            }
-            return View();
+            ViewBag.IsEdit = id > 0;
+            return View(mobilespaces);
         }
+        [Route("/MobileSpaces/Create")]
+        [Route("/MobileSpaces/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(MobileSpaces mobilespaces)
+        public IActionResult Create(MobileSpaces mobilespaces, int id = 0)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            try
+            MobileSpaces mobilespacesDb = MobileSpacesBao.GetById(id);
+            if (id > 0 && mobilespacesDb == null)
             {
+                // Not Exists
+            }
 
-                if (mobilespaces.Id == 0)
+            var userId = User.GetUserId();
+
+            if (mobilespaces == null)
+            {
+                mobilespacesDb = mobilespacesDb ?? new MobileSpaces();
+                ViewBag.IsEdit = id > 0;
+                return View(mobilespacesDb);
+            }
+            if (id == 0)
+            {
+                mobilespaces.SetOnCreate(userId);
+                if (MobileSpacesBao.Insert(mobilespaces))
                 {
-                    mobilespaces.OnCreated = DateTime.Now;
-                    mobilespaces.CreatedBy = userId;
-                    MobileSpacesBao.Insert(mobilespaces);
-                    return RedirectToAction("Index");
+                    //return RedirectToAction("Index");
                 }
                 else
                 {
-                    mobilespaces.OnModified = DateTime.Now;
-                    mobilespaces.ModifiedBy = userId;
-                    MobileSpacesBao.Update(mobilespaces);
-                    return RedirectToAction("Index");
+                    return View(mobilespaces);
                 }
             }
-            catch (Exception)
+            else
             {
-
+                mobilespaces.SetOnUpdate(userId);
+                MobileSpacesBao.Update(mobilespaces);
             }
-            return View(mobilespaces);
+
+            return RedirectToAction("Index");
+
         }
 
         public IActionResult Delete(long id)

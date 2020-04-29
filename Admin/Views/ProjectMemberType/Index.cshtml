@@ -7,7 +7,7 @@
 
 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
     @CHtmlHelper.TableHead("th", "Name", "Created", "Status", "Actions")
-    @CHtmlHelper.TableFoot("tf", "Name", "Created", "Status", "Actions")
+    @CHtmlHelper.TableFoot("th", "Name", "Created", "Status", "Actions")
     <tbody>
         @foreach (var item in Model)
         {
@@ -16,8 +16,8 @@
                 <td>@item.OnCreated.ToString("MMM dd, yyyy")</td>
                 <td>@item.IsActive.CheckTag()</td>
                 <td>
-                    @ButtonHelper.EditSmall("/ProjectMemberType/Create/" + item.Id)
-                    @ButtonHelper.DeleteSmall("/ProjectMemberType/Delate/" + item.Id)
+                    @ButtonHelper.EditSmall("/ProjectMemberType/Edit/" + item.Id)
+                    @ButtonHelper.DeleteSmall("/ProjectMemberType/Delete/" + item.Id)
                     @ButtonHelper.DetailSmall("/ProjectMemberType/Detail/" + item.Id)
                 </td>
             </tr>

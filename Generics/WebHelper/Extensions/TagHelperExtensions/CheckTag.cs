@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Html;
+﻿using Generics.DataModels;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.OpenApi.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +17,7 @@ namespace Generics.WebHelper.Extensions
         Checbox = 4,
         TextArea = 5,
         DropdownList = 6,
+        file = 7,
     };
     public enum HtmlButtonType
     {
@@ -35,6 +38,7 @@ namespace Generics.WebHelper.Extensions
                 HtmlInputType.Number => "number",
                 HtmlInputType.Hidden => "hidden",
                 HtmlInputType.Checbox => "checkbox",
+                HtmlInputType.file => "file",
                 _ => "",
             };
         }
@@ -118,27 +122,40 @@ namespace Generics.WebHelper.Extensions
             var tr = $"<tr>{tds}</tr>";
             return new HtmlString(tr);
         }
-        public static IHtmlContent Dl(params string[] items)
-        {
-            var tds = "";
-            if (items != null && items.Length > 0)
-            {
-                var type = "";
-                for (var i = 0; i < items.Length; i++)
-                {
-                    if (i == 0) type = items[i];
-                    else tds += $"<{type}>{items[i]}</{type}>";
-                }
-            }
-            var dl = $"<dl>{tds}</dl>";
-            return new HtmlString(dl);
-        }
+       
         public static IHtmlContent TableHead(params string[] items)
         {
             var start = ("<thead>");
             var end = ("</thead>");
             return new HtmlString(start + Tr(items) + end);
         }
+        public static IHtmlContent Dl(params string[] items)
+        {
+            var dls = "";
+            if (items != null && items.Length > 0)
+            {
+                var type = "";
+                var type2 = "";
+                for (var i = 0; i < items.Length; i++)
+                {
+                    if (i == 0) type = items[i];
+                    if (i == 1) type2 = items[i];
+                    if(i > 1)
+                    {
+                        dls += $"<{type}>{items[i]}</{type}>"+ $"<{type2}>{items[i]}</{type2}>";
+                    }
+                }
+            }
+            var dl = $"<dl>{dls}</dl>";
+            return new HtmlString(dl);
+        }
+        public static IHtmlContent DataList(params string[] items)
+        {
+            var start = ("<dl>");
+            var end = ("</dt>");
+            return new HtmlString(start + Dl(items) + end);
+        }
+
         public static IHtmlContent TableFoot(params string[] items)
         {
             var start = ("<tfoot>");
@@ -191,6 +208,10 @@ namespace Generics.WebHelper.Extensions
             else if (htmlInputType == HtmlInputType.Checbox)
             {
                 str = $"<div class='form-group'> <div class='checkbox'> <input id='{id}' {(value == "True" ? "checked=''" : "")} type='{htmlInputTypeValue}' name='{mappingName}' {value}> " +
+                    $"<label for='{id}' name='{mappingName}'>{displayName}</label></div></div>";
+            }else if (htmlInputType == HtmlInputType.file)
+            {
+                str = $"<div class='form-group'> <div class='file'> <input id='{id}' type='{htmlInputTypeValue}' name='{mappingName}' {value}> " +
                     $"<label for='{id}' name='{mappingName}'>{displayName}</label></div></div>";
             }
             else
@@ -250,7 +271,7 @@ namespace Generics.WebHelper.Extensions
         public static IHtmlContent DetailSmall(string link)
             => new HtmlString(string.Format(buttonTemplate, "Detail", link, "btn-sm btn-info", "zmdi-info-outline"));
         public static IHtmlContent CreateSmall(string link,string text)
-                   => new HtmlString(string.Format(buttonTemplate, text, link, "btn-sm btn-info", "zmdi-info-outline"));
+                   => new HtmlString(string.Format(buttonTemplate, text, link, "btn-sm btn-primary", "zmdi-plus"));
 
     }
 }

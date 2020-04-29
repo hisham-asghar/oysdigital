@@ -4,8 +4,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
+using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Admin.Controllers
 {
@@ -15,55 +17,59 @@ namespace Admin.Controllers
         {
             return View(ProjectMemberTypeBao.GetAll());
         }
+        [Route("/ProjectMemberType/Create")]
+        [Route("/ProjectMemberType/Edit/{id}")]
         [HttpGet]
-        public IActionResult Create(long Id)
+        public IActionResult Create(long id = 0)
         {
-            if (Id != 0)
+            ProjectMemberTypes projectmembertypes = id <= 0 ? new ProjectMemberTypes() : ProjectMemberTypeBao.GetById(id);
+            if (id > 0 && projectmembertypes == null)
             {
-                var data = ProjectMemberTypeBao.GetById(Id);
-                if (data != null)
-                {
-                    return View(data);
-                }
-
+                // Dont Exist
             }
-            else
-            {
-                ProjectMemberTypes m = new ProjectMemberTypes();
-                m.Name = ""; m.Id = 0; m.IsActive = false;
-                return View(m);
-            }
-            return View();
+            ViewBag.IsEdit = id > 0;
+            return View(projectmembertypes);
         }
+        [Route("/ProjectMemberType/Create")]
+        [Route("/ProjectMemberType/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(ProjectMemberTypes projectMemberType)
+        public IActionResult Create(ProjectMemberTypes projectmembertypes, int id = 0)
         {
-            try
+            ProjectMemberTypes projectmembertypeDb = ProjectMemberTypeBao.GetById(id);
+            if (id > 0 && projectmembertypeDb == null)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                // Not Exists
+            }
 
-                if (projectMemberType.Id == 0)
+            var userId = User.GetUserId();
+
+            if (projectmembertypes == null)
+            {
+                projectmembertypeDb = projectmembertypeDb ?? new ProjectMemberTypes();
+                ViewBag.IsEdit = id > 0;
+                return View(projectmembertypeDb);
+            }
+            if (id == 0)
+            {
+                projectmembertypes.SetOnCreate(userId);
+                if (ProjectMemberTypeBao.Insert(projectmembertypes))
                 {
-                    projectMemberType.OnCreated = DateTime.Now;
-                    projectMemberType.CreatedBy = userId;
-                    ProjectMemberTypeBao.Insert(projectMemberType);
-                    return RedirectToAction("Index");
+                    //return RedirectToAction("Index");
                 }
                 else
                 {
-                    projectMemberType.OnModified = DateTime.Now;
-                    projectMemberType.ModifiedBy = userId;
-                    ProjectMemberTypeBao.Update(projectMemberType);
-                    return RedirectToAction("Index");
+                    return View(projectmembertypes);
                 }
             }
-            catch (Exception)
+            else
             {
-
+                projectmembertypes.SetOnUpdate(userId);
+                ProjectMemberTypeBao.Update(projectmembertypes);
             }
-            return View(projectMemberType);
-        }
 
+            return RedirectToAction("Index");
+
+        }
         public IActionResult Delete(long id)
         {
             if (id != 0)

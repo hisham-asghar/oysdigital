@@ -1,15 +1,14 @@
 ﻿@model Generics.DataModels.AdminModels.Customer
 @{
     var isEdit = (bool)ViewBag.IsEdit;
-    var isSave = (bool)ViewBag.IsSave;
     var title = (isEdit ? "Edit " : "Create ") + " Customer";
     ViewData["Title"] = title;
 }
 
-@if (!isSave)
+@*@if (!isSave)
 {
     <h5 class="text-danger">Something went wrong while @(isEdit ? "Edit " : "Create ") + " Customer"</h5>
-}
+}*@
 @CHtmlHelper.GenerateHeader(title, "/Customer", "Back to Customers List")
 @CHtmlHelper.GetCardHeader(12, title)
 <form method="post" name="customer">

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.DataModels.AdminModels;
+using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,54 +17,59 @@ namespace Admin.Controllers
         {
             return View(ProjectNotesBao.GetAll());
         }
+        [Route("/ProjectNotes/Create")]
+        [Route("/ProjectNotes/Edit/{id}")]
         [HttpGet]
-        public IActionResult Create(long Id)
+        public IActionResult Create(long id = 0)
         {
-             if (Id != 0)
+            ProjectNotes projectnotes = id <= 0 ? new ProjectNotes() : ProjectNotesBao.GetById(id);
+            if (id > 0 && projectnotes == null)
             {
-                var data = ProjectNotesBao.GetById(Id);
-                if (data != null)
-                {
-                    return View(data);
-                }
-
+                // Dont Exist
             }
-            else
-            {
-                ProjectNotes m = new ProjectNotes();
-                m.Message = ""; m.Id = 0; m.IsActive = false;
-               return View(m);
-            }
-            return View();
+            ViewBag.IsEdit = id > 0;
+            return View(projectnotes);
         }
+        [Route("/ProjectNotes/Create")]
+        [Route("/ProjectNotes/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(ProjectNotes projectNotes)
+        public IActionResult Create(ProjectNotes projectnotes, int id = 0)
         {
-            try
+            ProjectNotes projectnotesDb = ProjectNotesBao.GetById(id);
+            if (id > 0 && projectnotesDb == null)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (projectNotes.Id == 0)
+                // Not Exists
+            }
+
+            var userId = User.GetUserId();
+
+            if (projectnotes == null)
+            {
+                projectnotesDb = projectnotesDb ?? new ProjectNotes();
+                ViewBag.IsEdit = id > 0;
+                return View(projectnotesDb);
+            }
+            if (id == 0)
+            {
+                projectnotes.SetOnCreate(userId);
+                if (ProjectNotesBao.Insert(projectnotes))
                 {
-                    projectNotes.OnCreated = DateTime.Now;
-                    projectNotes.CreatedBy = userId;
-                    ProjectNotesBao.Insert(projectNotes);
-                    return RedirectToAction("Index");
+                    //return RedirectToAction("Index");
                 }
                 else
                 {
-                    projectNotes.OnModified = DateTime.Now;
-                    projectNotes.ModifiedBy = userId;
-                    ProjectNotesBao.Update(projectNotes);
-                    return RedirectToAction("Index");
+                    return View(projectnotes);
                 }
             }
-            catch (Exception)
+            else
             {
-
+                projectnotes.SetOnUpdate(userId);
+                ProjectNotesBao.Update(projectnotes);
             }
-            return View(projectNotes);
-        }
 
+            return RedirectToAction("Index");
+
+        }
         public IActionResult Delete(long id)
         {
             if (id != 0)
