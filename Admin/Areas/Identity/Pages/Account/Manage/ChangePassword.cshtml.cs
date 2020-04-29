@@ -92,7 +92,7 @@ namespace Admin.Areas.Identity.Pages.Account.Manage
             }
             else
             {
-                //bool status = LayerBao.CustomerBao.UpdateUserPassword(user.CustomerId, Input.NewPassword);
+                //bool status = LayerBao.CustomerBao.UpdateUserPassword(user.Id, Input.NewPassword);
             }
 
             await _signInManager.RefreshSignInAsync(user);

@@ -31,7 +31,7 @@ namespace Admin.Controllers
             else
             {
                 ProjectNotes m = new ProjectNotes();
-                m.Message = ""; m.ProjectNotesId = 0; m.IsActive = false;
+                m.Message = ""; m.Id = 0; m.IsActive = false;
                return View(m);
             }
             return View();
@@ -42,7 +42,7 @@ namespace Admin.Controllers
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (projectNotes.ProjectNotesId == 0)
+                if (projectNotes.Id == 0)
                 {
                     projectNotes.OnCreated = DateTime.Now;
                     projectNotes.CreatedBy = userId;

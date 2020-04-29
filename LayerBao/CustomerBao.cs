@@ -16,13 +16,13 @@ namespace LayerBao
         {
             return CustomerDao.GetById(id);
         }
-        public static bool Insert(Customer c)
+        public static bool Insert(Customer customer)
         {
-            return CustomerDao.Insert(c);
+            return CustomerDao.Insert(customer);
         }
-        public static bool Update(Customer c)
+        public static bool Update(Customer customer)
         {
-            return CustomerDao.Update(c);
+            return CustomerDao.Update(customer);
         }
         public static bool Delete(long id)
         {

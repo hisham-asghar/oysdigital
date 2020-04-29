@@ -15,16 +15,16 @@
                     <hr />
                     <dl class="row">
                         <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.PlatformId)
+                            @Html.DisplayNameFor(model => model.Id)
                         </dt>
                         <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.PlatformId)
+                            @Html.DisplayFor(model => model.Id)
                         </dd>
                         <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.PlatformName)
+                            @Html.DisplayNameFor(model => model.Name)
                         </dt>
                         <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.PlatformName)
+                            @Html.DisplayFor(model => model.Name)
                         </dd>
                         <dt class="col-sm-2">
                             @Html.DisplayNameFor(model => model.IsActive)
@@ -69,7 +69,7 @@
                     </dl>
                 </div>
                 <div>
-                    @Html.ActionLink("Edit", "Create", new { id = Model.PlatformId }, new { @class = "btn btn-raised btn-warning btn-round waves-effect" }) |
+                    @Html.ActionLink("Edit", "Create", new { id = Model.Id }, new { @class = "btn btn-raised btn-warning btn-round waves-effect" }) |
                     <a asp-action="Index" class="btn btn-raised btn-primary btn-round waves-effect">Back to List</a>
                 </div>
             </div>

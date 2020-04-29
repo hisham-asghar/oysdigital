@@ -30,7 +30,7 @@ namespace Admin.Controllers
             else
             {
                 ProjectMemberTypes m = new ProjectMemberTypes();
-                m.ProjectMemberTypeName = ""; m.ProjectMemberTypesId = 0; m.IsActive = false;
+                m.Name = ""; m.Id = 0; m.IsActive = false;
                 return View(m);
             }
             return View();
@@ -42,7 +42,7 @@ namespace Admin.Controllers
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                if (projectMemberType.ProjectMemberTypesId == 0)
+                if (projectMemberType.Id == 0)
                 {
                     projectMemberType.OnCreated = DateTime.Now;
                     projectMemberType.CreatedBy = userId;

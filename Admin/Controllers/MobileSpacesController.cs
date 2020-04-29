@@ -36,7 +36,7 @@ namespace Admin.Controllers
             else
             {
                 MobileSpaces m = new MobileSpaces();
-                m.SpaceName = ""; m.MobileId = 0; m.MobileSpacesId = 0; m.IsActive = false;
+                m.Name = ""; m.MobileId = 0; m.Id = 0; m.IsActive = false;
                 ViewData["MobileId"] = new SelectList(MobileBao.GetAll(), "MobileId", "MobileName");
                 return View(m);
             }
@@ -49,7 +49,7 @@ namespace Admin.Controllers
             try
             {
 
-                if (mobilespaces.MobileSpacesId == 0)
+                if (mobilespaces.Id == 0)
                 {
                     mobilespaces.OnCreated = DateTime.Now;
                     mobilespaces.CreatedBy = userId;

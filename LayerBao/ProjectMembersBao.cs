@@ -16,17 +16,17 @@ namespace LayerBao
         {
             return ProjectMembersDao.GetById(id);
         }
-        public static List<ProjectMembers> GetByProjectId(long id)
+        //public static List<ProjectMembers> GetByProjectId(long id)
+        //{
+        //    return ProjectMembersDao.GetByProjectId(id);
+        //}
+        public static bool Insert(ProjectMembers projectmember)
         {
-            return ProjectMembersDao.GetByProjectId(id);
+            return ProjectMembersDao.Insert(projectmember);
         }
-        public static bool Insert(ProjectMembers c)
+        public static bool Update(ProjectMembers projectmember)
         {
-            return ProjectMembersDao.Insert(c);
-        }
-        public static bool Update(ProjectMembers c)
-        {
-            return ProjectMembersDao.Update(c);
+            return ProjectMembersDao.Update(projectmember);
         }
         public static bool Delete(long id)
         {

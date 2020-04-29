@@ -4,6 +4,7 @@ using System.Text;
 using Generics.DataModels;
 using Generics.DataModels.AdminModels;
 using Generics.Services.DatabaseService.AdoNet;
+using LayerDao.DatabaseInfo;
 
 namespace LayerDao
 {
@@ -11,33 +12,23 @@ namespace LayerDao
     {
         public static List<MobileSpaces> GetAll()
         {
-            string sql = $"SELECT * FROM dbo.MobileSpaces JOIN dbo.Mobile ON MobileSpaces.MobileId = Mobile.MobileId; ";
-            var data=QueryExecutor.List<MobileSpaces>(sql);
-            return data;
+            return TableConstants.MobileSpaces.SelectAll<MobileSpaces>();
         }
-        public static MobileSpaces GetById(long Id)
+        public static MobileSpaces GetById(long id)
         {
-            string sql = $"SELECT * FROM dbo.MobileSpaces JOIN dbo.Mobile ON MobileSpaces.MobileId = Mobile.MobileId WHERE MobileSpacesId = {Id};";
-            return QueryExecutor.FirstOrDefault<MobileSpaces>(sql);
+            return TableConstants.MobileSpaces.Select<MobileSpaces>((int)id);
         }
-        
-        public static bool Insert(MobileSpaces p)
+        public static bool Insert(MobileSpaces mobilespaces)
         {
-            string sql = $"Insert Into dbo.MobileSpaces (SpaceName,MobileId,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
-                $" output INSERTED.MobileSpacesId as Result VALUES " +
-                $"('{p.SpaceName}',{p.MobileId},'{p.IsActive}','{p.CreatedBy}','{p.ModifiedBy}','{p.OnCreated}','{p.OnModified}');";
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
+            return mobilespaces.Insert(TableConstants.MobileSpaces) > 0;
         }
-        public static bool Update(MobileSpaces p)
+        public static bool Update(MobileSpaces mobilespaces)
         {
-            string sql = $"UPDATE dbo.MobileSpaces Set SpaceName='{p.SpaceName}',MobileId='{p.MobileId}',IsActive='{p.IsActive}',ModifiedBy='{p.ModifiedBy}',OnModified='{p.OnModified}' output INSERTED.MobileSpacesId as Result where (MobileSpacesId={p.MobileSpacesId})";
-
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true; ;
+            return mobilespaces.Update(TableConstants.MobileSpaces, (int)mobilespaces.Id) > 0;
         }
-        public static bool Delete(long Id)
+        public static bool Delete(long id)
         {
-            string sql = $"DELETE FROM dbo.MobileSpaces output deleted.MobileSpacesId as Result WHERE MobileSpacesId = {Id};";
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true; ;
+            return TableConstants.MobileSpaces.Delete((int)id);
         }
     }
 }

@@ -1,45 +1,25 @@
-﻿@model Generics.DataModels.AdminModels.MobileSpaces
+﻿
+@model Generics.DataModels.AdminModels.MobileSpaces
 @{
-    ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    var isEdit = (bool)ViewBag.IsEdit;
+    var title = (isEdit ? "Edit " : "Create ") + " MobileSpaces";
+    ViewData["Title"] = title;
 }
 
-<div class="container-fluid">
-    <!-- Input -->
-    <div class="row clearfix">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="card">
-                <div class="body">
-                    <h2 class="card-inside-title">Mobile Space Detail</h2>
-                    <form method="post" name="MobileSpaces_Form" enctype="multipart/form-data" asp-controller="MobileSpaces" asp-action="Create">
-                        <input type="hidden" name="MobileSpacesId" value="@Model.MobileSpacesId" />
-                        <div class="row clearfix">
-                            <div class="col-sm-12">
-                                <label for="email_address">Name</label>
-                                <div class="form-group">
-                                    <input type="text" name="SpaceName" class="form-control" placeholder="Name" value="@Model.SpaceName" />
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <select asp-for="MobileId" name="MobileId" asp-items="ViewBag.MobileId" class="form-control show-tick">
-                                </select>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group form-check">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-raised btn-primary btn-round waves-effect">Add</button>
-                    </form>
 
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@CHtmlHelper.GenerateHeader(title, "/MobileSpaces", "Back to Mobiles List")
+@CHtmlHelper.GetCardHeader(12, title)
+<form method="post" name="mobilespaces">
+    @if (isEdit)
+    {
+        @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
+    }
+    @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
+    @*@HtmlInputType.DropdownList.GenerateInputField("Name", Model.MobileId, "MobileId")*@
+    @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
+    @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
+</form>
+@CHtmlHelper.GetCardFooter()
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

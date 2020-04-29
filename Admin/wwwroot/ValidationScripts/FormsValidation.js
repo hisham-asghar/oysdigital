@@ -2,16 +2,16 @@
     $(document).ready(function () {
         // Initialize form validation on the registration form.
         // It has the name attribute "registration"
-        $("form[name='Customer_form']").validate({
+        $("form[name='customer']").validate({
             rules: {
-                CustomerName: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z'.\\s]{1,40}$" },
+                Name: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z'.\\s]{1,40}$" },
                 Email: { required: true, regex: "^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z.]{2,5}$" },
                 Address: { required: true, minlength: 5, maxlength: 45 },
                 PhoneNumber: { required: true, minlength: 10, maxlength: 30, regex: "^[0-9'.\\s]+[0-9]{1,40}$" }
             },
             // Specify validation error messages
             messages: {
-                CustomerName: {
+                Name: {
                     required: "Please enter your Customer Name",
                     minlength: "Customer name must be at least 3 characters long",
                     maxlength: "Customer name must be at least 3 characters long",
@@ -39,12 +39,12 @@
                 form.submit();
             }
         });
-        $("form[name='Mobile_Form']").validate({
+        $("form[name='mobile']").validate({
             rules: {
-                MobileName: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.\\s]{1,25}$" }
+                Name: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.\\s]{1,25}$" }
             },
             messages: {
-                MobileName: {
+                Name: {
                     required: "Please enter your Mobile Name",
                     minlength: "Mobile name must be at least 3 characters long",
                     maxlength: "Mobile name must be at least 25 characters long",
@@ -57,13 +57,13 @@
                 form.submit();
             }
         });
-        $("form[name='MobileSpaces_Form']").validate({
+        $("form[name='mobilespaces']").validate({
             rules: {
-                SpaceName: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.\\s]{1,25}$" },
+                Name: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.\\s]{1,25}$" },
                 MobileId: "required"
             },
             messages: {
-                SpaceName: {
+                Name: {
                     required: "Please enter your Mobile Space Name",
                     minlength: "Mobile Space name must be at least 3 characters long",
                     maxlength: "Mobile Space name must be at least 25 characters long",
@@ -75,13 +75,13 @@
                 form.submit();
             }
         });
-        $("form[name='Platform_Form']").validate({
+        $("form[name='platform']").validate({
             rules: {
-                PlatformName: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.\\s]{3,25}$" },
+                Name: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.\\s]{3,25}$" },
                 file: "required"
             },
             messages: {
-                SpaceName: {
+                Name: {
                     required: "Please enter your platform name",
                     minlength: "Platform Space name must be at least 3 characters long",
                     maxlength: "Platform Space name must be at least 25 characters long",
@@ -93,7 +93,7 @@
                 form.submit();
             }
         });
-        $("form[name='ProjectMessages_Form']").validate({
+        $("form[name='projectmessages']").validate({
             rules: {
                 Message: { required: true, minlength: 10, maxlength: 150 },
                 ProjectMessageTypeId: "required"
@@ -110,12 +110,12 @@
                 form.submit();
             }
         });
-        $("form[name='Project_Form']").validate({
+        $("form[name='project']").validate({
             rules: {
-                ProjectName: { required: true, minlength: 3, maxlength: 150, regex: "^[a-zA-Z0-9'.\\s]{3,25}$" }
+                Name: { required: true, minlength: 3, maxlength: 150, regex: "^[a-zA-Z0-9'.\\s]{3,25}$" }
             },
             messages: {
-                ProjectName: {
+                Name: {
                     required: "Please enter your project name",
                     minlength: "Project name must be at least 3 characters long",
                     maxlength: "Project name be at least 25 characters long",
@@ -126,7 +126,7 @@
                 form.submit();
             }
         });
-        $("form[name='ProjectMember_Form']").validate({
+        $("form[name='projectmember']").validate({
             rules: {
                 ProjectMemberTypesId: "required"
             },
@@ -137,12 +137,12 @@
                 form.submit();
             }
         });
-        $("form[name='ProjectMemberType_Form']").validate({
+        $("form[name='projectmembertype']").validate({
             rules: {
-                ProjectMemberTypeName: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.\\s]{3,25}$" }
+                Name: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.\\s]{3,25}$" }
             },
             messages: {
-                ProjectMemberTypeName: {
+                Name: {
                     required: "Please enter your Project Member Type Name",
                     minlength: "Project Member Type Name must be at least 3 characters long",
                     maxlength: "Project Member Type Name be at least 25 characters long",
@@ -153,7 +153,7 @@
                 form.submit();
             }
         });
-        $("form[name='ProjectNotes_Form']").validate({
+        $("form[name='projectnotes']").validate({
             rules: {
                 Message: { required: true, minlength: 10, maxlength: 150 },
                 NoteTypeId: "required"
@@ -170,11 +170,11 @@
                 form.submit();
             }
         });
-        $("form[name='ProjectPlatform_Form']").validate({
+        $("form[name='projectplatform']").validate({
             rules: {
-                PlatformId: "required",
+                Id: "required",
                 PlatformLink: "required",
-                MobileSpacesId: "required",
+                Id: "required",
                 PostPerDay: "required",
                 PostsQuantity: { required: true, minlength: 1, maxlength: 150, regex: "^[0-9]{1,150}$" },
                 PostSchedulingTime: "required",
@@ -184,9 +184,9 @@
             },
             // Specify validation error messages
             messages: {
-                PlatformId: "Please select platform name",
+                Id: "Please select platform name",
                 PlatformLink: "Please enter your PlatformLink",
-                MobileSpacesId: "Please select mobile space name",
+                Id: "Please select mobile space name",
                 PostPerDay: "Please select posts plan",
                 PostsQuantity: {
                     required: "Please enter your post quantity",

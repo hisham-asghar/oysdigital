@@ -31,7 +31,7 @@ namespace Admin.Controllers
             else
             {
                 ProjectAlertMessage m = new ProjectAlertMessage();
-                m.Message = ""; m.ProjectAlertMessageId = 0; m.IsActive = false;
+                m.Message = ""; m.Id = 0; m.IsActive = false;
                 return View(m);
             }
             return View();
@@ -43,7 +43,7 @@ namespace Admin.Controllers
             try
             {
 
-                if (projectAlertMessage.ProjectAlertMessageId == 0)
+                if (projectAlertMessage.Id == 0)
                 {
                     projectAlertMessage.OnCreated = DateTime.Now;
                     projectAlertMessage.CreatedBy = userId;

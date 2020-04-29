@@ -1,72 +1,30 @@
 ﻿@model IEnumerable<Generics.DataModels.AdminModels.Customer>
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Customer";
+    Layout = "_TableLayout";
+    ViewBag.AddNewLink = "/Customer/Create";
 }
-<div class="row clearfix">
-    <div class="col-lg-12">
-        
-        <div class="card">
-            <div class="header">
-                <a href="/Customer/Create" class="btn btn-raised btn-success btn-round waves-effect">Add</a>
-                <ul class="header-dropdown">
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="zmdi zmdi-more"></i> </a>
-                        <ul class="dropdown-menu dropdown-menu-right slideUp">
-                            <li><a href="javascript:void(0);">Action</a></li>
-                            <li><a href="javascript:void(0);">Another action</a></li>
-                            <li><a href="javascript:void(0);">Something else</a></li>
-                        </ul>
-                    </li>
-                    <li class="remove">
-                        <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
-                    </li>
-                </ul>
-            </div>
-            <div class="body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Number</th>
-                                <th>Address</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Number</th>
-                                <th>Address</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>@item.CustomerName</td>
-                                    <td>@item.Email</td>
-                                    <td>@item.PhoneNumber</td>
-                                    <td>@item.Address</td>
-                                    <td>@item.IsActive</td>
-                                    <td>
-                                        <a href="/Customer/Create/@item.CustomerId" class="btn btn-raised btn-warning btn-round waves-effect">Edit</a>
-                                        <a href="/Customer/Detail/@item.CustomerId" class="btn btn-raised btn-info btn-round waves-effect">Detail</a>
-                                        <a href="/Customer/Delete/@item.CustomerId" class="btn btn-raised btn-danger btn-round waves-effect">Delete</a>
-                                        <a href="/Project/Create/@item.CustomerId" class="btn btn-raised btn-success btn-round waves-effect">Add Projects</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
+    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+    @CHtmlHelper.TableHead("th", "Name", "Email", "Number", "Address", "Created", "Status", "Actions")
+    @CHtmlHelper.TableFoot("th", "Name", "Email", "Number", "Address", "Created", "Status", "Actions")
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Email</td>
+            <td>@item.PhoneNumber</td>
+            <td>@item.Address</td>
+            <td>@item.OnCreated.ToString("MMM dd, yyyy")</td>
+            <td>@item.IsActive.CheckTag()</td>
+            <td>
+                @ButtonHelper.EditSmall("/Customer/Create/" + item.Id)
+                @ButtonHelper.DeleteSmall("/Customer/Delate/" + item.Id)
+                @ButtonHelper.DetailSmall("/Customer/Detail/" + item.Id)
+                @ButtonHelper.Create("/Project/Detail/" + item.Id)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

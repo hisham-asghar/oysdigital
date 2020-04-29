@@ -30,17 +30,17 @@ namespace Admin.Controllers
                 var data = ProjectPlatformsBao.GetById(Id);
                 if (data != null)
                 {
-                    ViewData["MobileSpacesId"] = new SelectList(GetMobileSpacesSortedList(data.MobileSpacesId), "MobileSpacesId", "SpaceName",data.MobileSpacesId);
-                    ViewData["PlatformId"] = new SelectList(GetPlatformSortedList(data.PlatformId), "PlatformId", "PlatformName",data.PlatformId);
+                    ViewData["Id"] = new SelectList(GetMobileSpacesSortedList(data.Id), "Id", "Name",data.Id);
+                    ViewData["Id"] = new SelectList(GetPlatformSortedList(data.Id), "Id", "Name",data.Id);
                     
                     return View(data);
                 }
 
-                ViewData["MobileSpacesId"] = new SelectList(MobileSpacesBao.GetAll(), "MobileSpacesId", "SpaceName");
-                ViewData["PlatformId"] = new SelectList(PlatformBao.GetAll(), "PlatformId", "PlatformName");
+                ViewData["Id"] = new SelectList(MobileSpacesBao.GetAll(), "Id", "Name");
+                ViewData["Id"] = new SelectList(PlatformBao.GetAll(), "Id", "Name");
 
                 ProjectPlatforms m = new ProjectPlatforms();
-                m.ProjectPlatformsId = 0; m.ProjectId = Id; m.IsActive = false;m.PostsQuantity = 1;m.StoriesQuantity = 1;
+                m.Id = 0; m.ProjectId = Id; m.IsActive = false;
                 return View(m);
             }
             else
@@ -49,13 +49,13 @@ namespace Admin.Controllers
             }
            // return View();
         }
-        public List<Platforms> GetPlatformSortedList(long id)
+        public List<Platform> GetPlatformSortedList(long id)
         {
-            List<Platforms> pal = new List<Platforms>();
+            List<Platform> pal = new List<Platform>();
             var platform = PlatformBao.GetAll();
             foreach (var item in platform)
             {
-                if (id != item.PlatformId)
+                if (id != item.Id)
                 {
                     pal.Add(item);
                 }
@@ -68,7 +68,7 @@ namespace Admin.Controllers
             var mobile = MobileSpacesBao.GetAll();
             foreach (var item in mobile)
             {
-                if (id != item.MobileSpacesId)
+                if (id != item.Id)
                 {
                     mob.Add(item);
                 }
@@ -80,51 +80,51 @@ namespace Admin.Controllers
         {
             try
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (projectplatform.PostPerDay == 0)
-                {
-                    projectplatform.PostPerDay = projectplatform.PostsQuantity;
-                    projectplatform.PostPerWeek = 0; projectplatform.PostPerMonth = 0;
-                }
-                if (projectplatform.PostPerDay == 1)
-                {
-                    projectplatform.PostPerWeek = projectplatform.PostsQuantity;
-                    projectplatform.PostPerDay = 0; projectplatform.PostPerMonth = 0;
-                }
-                if (projectplatform.PostPerDay == 2)
-                {
-                    projectplatform.PostPerMonth = projectplatform.PostsQuantity;
-                    projectplatform.PostPerWeek = 0; projectplatform.PostPerDay = 0;
-                }
-                if (projectplatform.StoriesPerDay == 0)
-                {
-                    projectplatform.StoriesPerDay = projectplatform.StoriesQuantity;
-                    projectplatform.StoriesPerWeek = 0; projectplatform.StoriesPerMonth = 0;
-                }
-                if (projectplatform.StoriesPerDay == 1)
-                {
-                    projectplatform.StoriesPerWeek = projectplatform.StoriesQuantity;
-                    projectplatform.StoriesPerDay = 0; projectplatform.StoriesPerMonth = 0;
-                }
-                if (projectplatform.StoriesPerDay == 2)
-                {
-                    projectplatform.StoriesPerMonth = projectplatform.StoriesQuantity;
-                    projectplatform.StoriesPerWeek = 0; projectplatform.StoriesPerDay = 0;
-                }
-                if (projectplatform.ProjectPlatformsId == 0)
-                {
-                    projectplatform.OnCreated = DateTime.Now;
-                    projectplatform.CreatedBy = userId;
-                    ProjectPlatformsBao.Insert(projectplatform);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    projectplatform.OnModified = DateTime.Now;
-                    projectplatform.ModifiedBy = userId;
-                    ProjectPlatformsBao.Update(projectplatform);
-                    return RedirectToAction("Index");
-                }
+                //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                //if (projectplatform.PostPerDay == 0)
+                //{
+                //    projectplatform.PostPerDay = projectplatform.PostsQuantity;
+                //    projectplatform.PostPerWeek = 0; projectplatform.PostPerMonth = 0;
+                //}
+                //if (projectplatform.PostPerDay == 1)
+                //{
+                //    projectplatform.PostPerWeek = projectplatform.PostsQuantity;
+                //    projectplatform.PostPerDay = 0; projectplatform.PostPerMonth = 0;
+                //}
+                //if (projectplatform.PostPerDay == 2)
+                //{
+                //    projectplatform.PostPerMonth = projectplatform.PostsQuantity;
+                //    projectplatform.PostPerWeek = 0; projectplatform.PostPerDay = 0;
+                //}
+                //if (projectplatform.StoriesPerDay == 0)
+                //{
+                //    projectplatform.StoriesPerDay = projectplatform.StoriesQuantity;
+                //    projectplatform.StoriesPerWeek = 0; projectplatform.StoriesPerMonth = 0;
+                //}
+                //if (projectplatform.StoriesPerDay == 1)
+                //{
+                //    projectplatform.StoriesPerWeek = projectplatform.StoriesQuantity;
+                //    projectplatform.StoriesPerDay = 0; projectplatform.StoriesPerMonth = 0;
+                //}
+                //if (projectplatform.StoriesPerDay == 2)
+                //{
+                //    projectplatform.StoriesPerMonth = projectplatform.StoriesQuantity;
+                //    projectplatform.StoriesPerWeek = 0; projectplatform.StoriesPerDay = 0;
+                //}
+                //if (projectplatform.ProjectPlatformsId == 0)
+                //{
+                //    projectplatform.OnCreated = DateTime.Now;
+                //    projectplatform.CreatedBy = userId;
+                //    ProjectPlatformsBao.Insert(projectplatform);
+                //    return RedirectToAction("Index");
+                //}
+                //else
+                //{
+                //    projectplatform.OnModified = DateTime.Now;
+                //    projectplatform.ModifiedBy = userId;
+                //    ProjectPlatformsBao.Update(projectplatform);
+                //    return RedirectToAction("Index");
+                //}
             }
             catch (Exception)
             {

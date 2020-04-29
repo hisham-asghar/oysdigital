@@ -29,7 +29,7 @@ namespace Admin.Controllers
                     return View(data);
                 }
                 Project m = new Project();
-                m.ProjectId = 0; m.CustomerId = Id; m.IsActive = false;
+                m.Id = 0; m.Id = Id; m.IsActive = false;
                 return View(m);
             }
             return View();
@@ -41,7 +41,7 @@ namespace Admin.Controllers
             try
             {
 
-                if (project.ProjectId == 0)
+                if (project.Id == 0)
                 {
                     project.OnCreated = DateTime.Now;
                     project.Guid = Guid.NewGuid().ToString();

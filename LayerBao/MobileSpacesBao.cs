@@ -16,13 +16,13 @@ namespace LayerBao
         {
             return MobileSpacesDao.GetById(id);
         }
-        public static bool Insert(MobileSpaces c)
+        public static bool Insert(MobileSpaces mobilespaces)
         {
-            return MobileSpacesDao.Insert(c);
+            return MobileSpacesDao.Insert(mobilespaces);
         }
-        public static bool Update(MobileSpaces c)
+        public static bool Update(MobileSpaces mobilespaces)
         {
-            return MobileSpacesDao.Update(c);
+            return MobileSpacesDao.Update(mobilespaces);
         }
         public static bool Delete(long id)
         {

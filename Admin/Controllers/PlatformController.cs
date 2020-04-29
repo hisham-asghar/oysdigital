@@ -39,7 +39,7 @@ namespace Admin.Controllers
             else
             {
                 Platform p = new Platform();
-                p.PlatformName = ""; p.PlatformId = 0; p.IconUrl = ""; p.IsActive=false;
+                p.Name = ""; p.Id = 0; p.IconUrl = ""; p.IsActive=false;
                 return View(p);
             }
             return View();
@@ -52,7 +52,7 @@ namespace Admin.Controllers
             try
             {
 
-                if (platform.PlatformId == 0)
+                if (platform.Id == 0)
                 {
                     if (file != null)
                     {

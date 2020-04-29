@@ -9,7 +9,6 @@ namespace Generics.DataModels.AdminModels
     {
         public long ProjectMemberTypeId { get; set; }
         public long ProjectId { get; set; }
-        public string ProjectName { get; set; }
         public bool IsActive { get; set; }
     }
 }

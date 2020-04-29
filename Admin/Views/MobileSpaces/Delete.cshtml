@@ -16,16 +16,16 @@
                     <hr />
                     <dl class="row">
                         <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.MobileSpacesId)
+                            @Html.DisplayNameFor(model => model.Id)
                         </dt>
                         <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.MobileSpacesId)
+                            @Html.DisplayFor(model => model.Id)
                         </dd>
                         <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.SpaceName)
+                            @Html.DisplayNameFor(model => model.Name)
                         </dt>
                         <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.SpaceName)
+                            @Html.DisplayFor(model => model.Name)
                         </dd>
                         <dt class="col-sm-2">
                             @Html.DisplayNameFor(model => model.MobileId)
@@ -34,10 +34,10 @@
                             @Html.DisplayFor(model => model.MobileId)
                         </dd>
                         <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.MobileName)
+                            @Html.DisplayNameFor(model => model.Name)
                         </dt>
                         <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.MobileName)
+                            @Html.DisplayFor(model => model.Name)
                         </dd>
                         <dt class="col-sm-2">
                             @Html.DisplayNameFor(model => model.IsActive)
@@ -71,7 +71,7 @@
                         </dd>
                     </dl>
 
-                    <a href="/MobileSpaces/ConfirmDelete/@Model.MobileSpacesId" class="btn btn-raised btn-danger btn-round waves-effect">
+                    <a href="/MobileSpaces/ConfirmDelete/@Model.Id" class="btn btn-raised btn-danger btn-round waves-effect">
                         Delete
                     </a>|
                     <a asp-action="Index" class="btn btn-raised btn-primary btn-round waves-effect">Back to List</a>

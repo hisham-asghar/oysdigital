@@ -14,7 +14,7 @@
                 <div>
                     <h4>Mobile</h4>
                     <hr />
-                    <dl class="row">
+                    @*<dl class="row">
                         <dt class="col-sm-2">
                             @Html.DisplayNameFor(model => model.ProjectPlatformsId)
                         </dt>
@@ -28,10 +28,10 @@
                             @Html.DisplayFor(model => model.ProjectName)
                         </dd>
                         <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.PlatformName)
+                            @Html.DisplayNameFor(model => model.Name)
                         </dt>
                         <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.PlatformName)
+                            @Html.DisplayFor(model => model.Name)
                         </dd>
                         <dt class="col-sm-2">
                             @Html.DisplayNameFor(model => model.PlatformLink)
@@ -40,10 +40,10 @@
                             @Html.DisplayFor(model => model.PlatformLink)
                         </dd>
                         <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.SpaceName)
+                            @Html.DisplayNameFor(model => model.Name)
                         </dt>
                         <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.SpaceName)
+                            @Html.DisplayFor(model => model.Name)
                         </dd>
 
 
@@ -131,9 +131,9 @@
                         <dd class="col-sm-10">
                             @Html.DisplayFor(model => model.OnModified)
                         </dd>
-                    </dl>
+                    </dl>*@
 
-                    <a href="/ProjectPlatform/ConfirmDelete/@Model.ProjectPlatformsId" class="btn btn-raised btn-danger btn-round waves-effect">
+                    <a href="/ProjectPlatform/ConfirmDelete/@Model.Id" class="btn btn-raised btn-danger btn-round waves-effect">
                         Delete
                     </a>|
                     <a asp-action="Index" class="btn btn-raised btn-primary btn-round waves-effect">Back to List</a>

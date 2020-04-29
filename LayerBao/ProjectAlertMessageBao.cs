@@ -16,13 +16,13 @@ namespace LayerBao
         {
             return ProjectAlertMessageDao.GetById(id);
         }
-        public static bool Insert(ProjectAlertMessage c)
+        public static bool Insert(ProjectAlertMessage projectalertmessage)
         {
-            return ProjectAlertMessageDao.Insert(c);
+            return ProjectAlertMessageDao.Insert(projectalertmessage);
         }
-        public static bool Update(ProjectAlertMessage c)
+        public static bool Update(ProjectAlertMessage projectalertmessage)
         {
-            return ProjectAlertMessageDao.Update(c);
+            return ProjectAlertMessageDao.Update(projectalertmessage);
         }
         public static bool Delete(long id)
         {

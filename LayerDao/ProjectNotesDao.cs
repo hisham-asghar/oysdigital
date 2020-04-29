@@ -4,6 +4,7 @@ using System.Text;
 using Generics.DataModels;
 using Generics.DataModels.AdminModels;
 using Generics.Services.DatabaseService.AdoNet;
+using LayerDao.DatabaseInfo;
 
 namespace LayerDao
 {
@@ -11,34 +12,23 @@ namespace LayerDao
     {
         public static List<ProjectNotes> GetAll()
         {
-            string sql = $"SELECT * FROM dbo.ProjectNotes;";
-            return QueryExecutor.List<ProjectNotes>(sql);
+            return TableConstants.ProjectNotes.SelectAll<ProjectNotes>();
         }
-        public static ProjectNotes GetById(long Id)
+        public static ProjectNotes GetById(long id)
         {
-            string sql = $"SELECT * FROM dbo.ProjectNotes WHERE ProjectNotesId = {Id};";
-            return QueryExecutor.FirstOrDefault<ProjectNotes>(sql);
+            return TableConstants.ProjectNotes.Select<ProjectNotes>((int)id);
         }
-        public static bool Insert(ProjectNotes c)
+        public static bool Insert(ProjectNotes projectnotes)
         {
-            string sql = $"Insert Into dbo.ProjectNotes (Message,NoteTypeId,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
-                $" output INSERTED.ProjectNotesId as Result VALUES " +
-                $"('{c.Message}',{c.NoteTypeId},'{c.IsActive}','{c.CreatedBy}','{c.ModifiedBy}','{c.OnCreated}','{c.OnModified}');";
-
-            long data = QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result;
-            return data == 0 ? true : false;
+            return projectnotes.Insert(TableConstants.ProjectNotes) > 0;
         }
-        public static bool Update(ProjectNotes c)
+        public static bool Update(ProjectNotes projectnotes)
         {
-            string sql = $"UPDATE dbo.ProjectNotes Set Message='{c.Message}',ProjectNotesId={c.ProjectNotesId}" +
-                $",IsActive='{c.IsActive}',ModifiedBy='{c.ModifiedBy}',OnModified='{c.OnModified}' output inserted.ProjectNotesId as Result where (ProjectNotesId={c.ProjectNotesId})";
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
+            return projectnotes.Update(TableConstants.ProjectNotes, (int)projectnotes.Id) > 0;
         }
-        public static bool Delete(long Id)
+        public static bool Delete(long id)
         {
-            string sql = $"DELETE FROM dbo.ProjectNotes output deleted.ProjectNotesId as Result WHERE ProjectNotesId = {Id};";
-            var data = QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
-            return data;
+            return TableConstants.ProjectNotes.Delete((int)id);
         }
     }
 }

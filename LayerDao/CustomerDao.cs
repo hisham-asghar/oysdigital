@@ -21,7 +21,7 @@ namespace LayerDao
         }
         public static bool Update(Customer customer)
         {
-            return customer.Update(TableConstants.Customer, (int)customer.CustomerId) > 0;
+            return customer.Update(TableConstants.Customer, (int)customer.Id) > 0;
         }
         public static bool Delete(long id)
         {

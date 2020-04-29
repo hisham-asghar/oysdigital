@@ -16,9 +16,9 @@ namespace LayerBao
         {
             return MobileDao.GetById(id);
         }
-        public static bool Insert(Mobile c)
+        public static bool Insert(Mobile mobile)
         {
-            return MobileDao.Insert(c);
+            return MobileDao.Insert(mobile);
         }
         public static bool Update(Mobile mobile)
         {

@@ -118,6 +118,21 @@ namespace Generics.WebHelper.Extensions
             var tr = $"<tr>{tds}</tr>";
             return new HtmlString(tr);
         }
+        public static IHtmlContent Dl(params string[] items)
+        {
+            var tds = "";
+            if (items != null && items.Length > 0)
+            {
+                var type = "";
+                for (var i = 0; i < items.Length; i++)
+                {
+                    if (i == 0) type = items[i];
+                    else tds += $"<{type}>{items[i]}</{type}>";
+                }
+            }
+            var dl = $"<dl>{tds}</dl>";
+            return new HtmlString(dl);
+        }
         public static IHtmlContent TableHead(params string[] items)
         {
             var start = ("<thead>");
@@ -232,6 +247,10 @@ namespace Generics.WebHelper.Extensions
             => new HtmlString(string.Format(buttonTemplate, "Edit", link, "btn-sm btn-default", "zmdi-edit"));
         public static IHtmlContent DeleteSmall(string link)
             => new HtmlString(string.Format(buttonTemplate, "Delete", link, "btn-sm btn-danger", "zmdi-delete"));
+        public static IHtmlContent DetailSmall(string link)
+            => new HtmlString(string.Format(buttonTemplate, "Detail", link, "btn-sm btn-info", "zmdi-info-outline"));
+        public static IHtmlContent CreateSmall(string link,string text)
+                   => new HtmlString(string.Format(buttonTemplate, text, link, "btn-sm btn-info", "zmdi-info-outline"));
 
     }
 }

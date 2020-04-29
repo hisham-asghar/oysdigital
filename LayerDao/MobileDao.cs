@@ -18,23 +18,17 @@ namespace LayerDao
         {
             return TableConstants.Mobile.Select<Mobile>((int)id);
         }
-        public static bool Insert(Mobile c)
+        public static bool Insert(Mobile mobile)
         {
-            string sql = $"Insert Into dbo.Mobile (MobileName,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
-                $" output INSERTED.MobileId as Result VALUES " +
-                $"('{c.MobileName}','{c.IsActive}','{c.CreatedBy}','{c.ModifiedBy}','{c.OnCreated}','{c.OnModified}');";
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
+            return mobile.Insert(TableConstants.Mobile) > 0;
         }
-        public static bool Update(Mobile c)
+        public static bool Update(Mobile mobile)
         {
-            string sql = $"UPDATE dbo.Mobile Set MobileName='{c.MobileName}',IsActive='{c.IsActive}',ModifiedBy='{c.ModifiedBy}',OnModified='{c.OnModified}' output INSERTED.MobileId as Result where (MobileId = {c.MobileId})";
-
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
+            return mobile.Update(TableConstants.Mobile, (int)mobile.Id) > 0;
         }
-        public static bool Delete(long Id)
+        public static bool Delete(long id)
         {
-            string sql = $"DELETE FROM dbo.Mobile output deleted.MobileId as Result WHERE MobileId = {Id};";
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
+            return TableConstants.Mobile.Delete((int)id);
         }
     }
 }

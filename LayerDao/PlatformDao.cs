@@ -12,36 +12,23 @@ namespace LayerDao
     {
         public static List<Platform> GetAll()
         {
-            string sql = $"SELECT * FROM dbo.Platform;";
-            return QueryExecutor.List<Platform>(sql);
+            return TableConstants.Platform.SelectAll<Platform>();
         }
-        public static Platform GetById(long Id)
+        public static Platform GetById(long id)
         {
-            string sql = $"SELECT * FROM dbo.Platform WHERE PlatformId = {Id};";
-            return QueryExecutor.FirstOrDefault<Platform>(sql);
+            return TableConstants.Platform.Select<Platform>((int)id);
         }
-        public static List<Platform> GetByProjectId(long id)
+        public static bool Insert(Platform platform)
         {
-            var where = $"ProjectId = {id}";
-            return TableConstants.Platform.SelectList<Platform>(where);
+            return platform.Insert(TableConstants.Platform) > 0;
         }
-        public static bool Insert(Platform p)
+        public static bool Update(Platform platform)
         {
-            string sql = $"Insert Into dbo.Platform (PlatformName,IconUrl,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
-                $" output INSERTED.PlatformId as Result VALUES " +
-                $"('{p.PlatformName}','{p.IconUrl}','{p.IsActive}','{p.CreatedBy}','{p.ModifiedBy}','{p.OnCreated}','{p.OnModified}');";
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
+            return platform.Update(TableConstants.Platform, (int)platform.Id) > 0;
         }
-        public static bool Update(Platform p)
+        public static bool Delete(long id)
         {
-            string sql = $"UPDATE dbo.Platform Set PlatformName='{p.PlatformName}',IconUrl='{p.IconUrl}',IsActive='{p.IsActive}',ModifiedBy='{p.ModifiedBy}',OnModified='{p.OnModified}' output INSERTED.PlatformId as Result where (PlatformId={p.PlatformId})";
-
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true; ;
-        }
-        public static bool Delete(long Id)
-        {
-            string sql = $"DELETE FROM dbo.Platform output deleted.PlatformId as Result WHERE PlatformId = {Id};";
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true; ;
+            return TableConstants.Platform.Delete((int)id);
         }
     }
 }

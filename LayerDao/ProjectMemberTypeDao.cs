@@ -4,6 +4,7 @@ using System.Text;
 using Generics.DataModels;
 using Generics.DataModels.AdminModels;
 using Generics.Services.DatabaseService.AdoNet;
+using LayerDao.DatabaseInfo;
 
 namespace LayerDao
 {
@@ -11,31 +12,23 @@ namespace LayerDao
     {
         public static List<ProjectMemberTypes> GetAll()
         {
-            string sql = $"SELECT * FROM dbo.ProjectMemberTypes;";
-            return QueryExecutor.List<ProjectMemberTypes>(sql);
+            return TableConstants.ProjectMemberTypes.SelectAll<ProjectMemberTypes>();
         }
-        public static ProjectMemberTypes GetById(long Id)
+        public static ProjectMemberTypes GetById(long id)
         {
-            string sql = $"SELECT * FROM dbo.ProjectMemberTypes WHERE ProjectMemberTypesId = {Id};";
-            return QueryExecutor.FirstOrDefault<ProjectMemberTypes>(sql);
+            return TableConstants.ProjectMemberTypes.Select<ProjectMemberTypes>((int)id);
         }
-        public static bool Insert(ProjectMemberTypes p)
+        public static bool Insert(ProjectMemberTypes projectmembertype)
         {
-            string sql = $"Insert Into dbo.ProjectMemberTypes (ProjectMemberTypeName,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
-                $" output INSERTED.ProjectMemberTypesId as Result VALUES " +
-                $"('{p.ProjectMemberTypeName}','{p.IsActive}','{p.CreatedBy}','{p.ModifiedBy}','{p.OnCreated}','{p.OnModified}');";
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
+            return projectmembertype.Insert(TableConstants.ProjectMemberTypes) > 0;
         }
-        public static bool Update(ProjectMemberTypes p)
+        public static bool Update(ProjectMemberTypes projectmembertype)
         {
-            string sql = $"UPDATE dbo.ProjectMemberTypes Set ProjectMemberTypeName='{p.ProjectMemberTypeName}',IsActive='{p.IsActive}',ModifiedBy='{p.ModifiedBy}',OnModified='{p.OnModified}' output INSERTED.ProjectMemberTypesId as Result where (ProjectMemberTypesId={p.ProjectMemberTypesId})";
-
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true; ;
+            return projectmembertype.Update(TableConstants.ProjectMemberTypes, (int)projectmembertype.Id) > 0;
         }
-        public static bool Delete(long Id)
+        public static bool Delete(long id)
         {
-            string sql = $"DELETE FROM dbo.ProjectMemberTypes output deleted.ProjectMemberTypesId as Result WHERE ProjectMemberTypesId = {Id};";
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true; ;
+            return TableConstants.ProjectMemberTypes.Delete((int)id);
         }
     }
 }

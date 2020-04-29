@@ -4,6 +4,7 @@ using System.Text;
 using Generics.DataModels;
 using Generics.DataModels.AdminModels;
 using Generics.Services.DatabaseService.AdoNet;
+using LayerDao.DatabaseInfo;
 
 namespace LayerDao
 {
@@ -11,39 +12,23 @@ namespace LayerDao
     {
         public static List<Project> GetAll()
         {
-            string sql = $"SELECT * FROM dbo.Project JOIN dbo.Customer ON Project.CustomerId = Customer.CustomerId;";
-            return QueryExecutor.List<Project>(sql);
+            return TableConstants.Project.SelectAll<Project>();
         }
-        public static Project GetById(long Id)
+        public static Project GetById(long id)
         {
-            string sql = $"SELECT * FROM dbo.Project JOIN dbo.Customer ON Project.CustomerId = Customer.CustomerId WHERE ProjectId = {Id};";
-            return QueryExecutor.FirstOrDefault<Project>(sql);
+            return TableConstants.Project.Select<Project>((int)id);
         }
-        public static List<Project> GetByCustomerId(long Id)
+        public static bool Insert(Project project)
         {
-            string sql = $"SELECT * FROM dbo.Project JOIN dbo.Customer ON Project.CustomerId = {Id};";
-            return QueryExecutor.List<Project>(sql);
+            return project.Insert(TableConstants.Project) > 0;
         }
-        public static bool Insert(Project c)
+        public static bool Update(Project project)
         {
-            string sql = $"Insert Into dbo.Project (ProjectName,Guid,CustomerId,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
-                $" output INSERTED.ProjectId as Result VALUES " +
-                $"('{c.ProjectName}','{c.Guid}',{c.CustomerId},'{c.IsActive}','{c.CreatedBy}','{c.ModifiedBy}','{c.OnCreated}','{c.OnModified}');";
-
-            long data = QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result;
-            return data == 0 ? true : false;
+            return project.Update(TableConstants.Project, (int)project.Id) > 0;
         }
-        public static bool Update(Project c)
+        public static bool Delete(long id)
         {
-            string sql = $"UPDATE dbo.Project Set ProjectName='{c.ProjectName}',CustomerId={c.CustomerId}" +
-                $",IsActive='{c.IsActive}',ModifiedBy='{c.ModifiedBy}',OnModified='{c.OnModified}' output inserted.ProjectId as Result where (ProjectId={c.ProjectId})";
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
-        }
-        public static bool Delete(long Id)
-        {
-            string sql = $"DELETE FROM dbo.Project output deleted.ProjectId as Result WHERE ProjectId = {Id};";
-            var data = QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
-            return data;
+            return TableConstants.Project.Delete((int)id);
         }
     }
 }

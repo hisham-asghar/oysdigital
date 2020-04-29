@@ -25,15 +25,15 @@ namespace Admin.Controllers
             if (Id != 0)
             {
                 var data = ProjectMembersBao.GetById(Id);
-                 if (data != null)
-                {
-                    ViewData["ProjectMemberTypesId"] = new SelectList(GetMembersSortedList(data.ProjectMemberTypesId), "ProjectMemberTypesId", "ProjectMemberTypeName", data.ProjectMemberTypesId);
-                    return View(data);
-                }
-                ProjectMembers m = new ProjectMembers();
-                m.ProjectMembersId = 0; m.ProjectMemberTypesId = 0; m.ProjectId = Id; m.IsActive = false;
-                ViewData["ProjectMemberTypesId"] = new SelectList(GetMembersSortedList(Id), "ProjectMemberTypesId", "ProjectMemberTypeName");
-                return View(m);
+                // if (data != null)
+                //{
+                //    ViewData["ProjectMemberTypesId"] = new SelectList(GetMembersSortedList(data.ProjectMemberTypesId), "ProjectMemberTypesId", "ProjectMemberTypeName", data.ProjectMemberTypesId);
+                //    return View(data);
+                //}
+                //ProjectMembers m = new ProjectMembers();
+                //m.Id = 0; m.ProjectMemberTypesId = 0; m.ProjectId = Id; m.IsActive = false;
+                //ViewData["ProjectMemberTypesId"] = new SelectList(GetMembersSortedList(Id), "ProjectMemberTypesId", "ProjectMemberTypeName");
+                return View();
             }
             else
             {
@@ -47,10 +47,10 @@ namespace Admin.Controllers
             var projectMembers = ProjectMembersBao.GetAll();
             foreach (var item in projectMembers)
             {
-                if (id != item.ProjectMemberTypesId)
-                {
-                    pal.Add(item);
-                }
+                //if (id != item.ProjectMemberTypesId)
+                //{
+                //    pal.Add(item);
+                //}
             }
             return pal;
         }
@@ -61,7 +61,7 @@ namespace Admin.Controllers
             try
             {
 
-                if (projectmembers.ProjectMembersId == 0)
+                if (projectmembers.Id == 0)
                 {
                     projectmembers.OnCreated = DateTime.Now;
                     projectmembers.CreatedBy = userId;

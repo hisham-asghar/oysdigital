@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Mobiles";
     Layout = "_TableLayout";
+    ViewBag.AddNewLink = "/Mobile/Create";
 }
 
 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
@@ -11,12 +12,13 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.MobileName</td>
+                <td>@item.Name</td>
                 <td>@item.OnCreated.ToString("MMM dd, yyyy")</td>
                 <td>@item.IsActive.CheckTag()</td>
                 <td>
-                    @ButtonHelper.EditSmall("/Mobile/Create/"+item.MobileId)
-                    @ButtonHelper.DeleteSmall("/Mobile/Create/" +item.MobileId)
+                    @ButtonHelper.EditSmall("/Mobile/Create/" + item.Id)
+                    @ButtonHelper.DeleteSmall("/Mobile/Delate/" + item.Id)
+                    @ButtonHelper.DetailSmall("/Mobile/Detail/" + item.Id)
                 </td>
             </tr>
         }
