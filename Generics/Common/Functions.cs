@@ -9,6 +9,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -17,7 +19,48 @@ namespace Generics.Common
     public static class Functions
     {
 #pragma warning disable 0168
+        public static To ToMapViaJson<From,To>(this From obj)
+        {
+            try
+            {
+                return obj.ToJson().FromJson<To>();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+                return default;
+            }
+        }
 
+        public static bool CheckBoxStatus(this IFormCollection form, string key)
+        {
+            return form[key].Count() > 0;
+        }
+
+
+        public static Dictionary<string, StringValues> CreateDictionaryFromKeyValuePairs(
+            List<KeyValuePair<string, string>> form)
+        {
+            if (form == null) return null;
+            var keyValuePairs = new Dictionary<string, StringValues>();
+            foreach (var keyvalues in form)
+            {
+                if (!keyValuePairs.ContainsKey(keyvalues.Key))
+                {
+                    keyValuePairs.Add(keyvalues.Key, keyvalues.Value);
+                }
+            }
+            return keyValuePairs;
+        }
+
+        public static string GetPhoneNumber(this string phoneNumberRaw)
+        {
+            phoneNumberRaw = new string(phoneNumberRaw.Where(char.IsDigit).ToArray());
+            if (phoneNumberRaw.Length > 10)
+                phoneNumberRaw = new string(phoneNumberRaw.Skip(phoneNumberRaw.Length - 10).ToArray());
+            else if (phoneNumberRaw.Length < 10) return null;
+            return "+92" + phoneNumberRaw;
+        }
         public static bool CompareDate(this DateTime d1 , DateTime d2)
         {
             return d1.Day == d2.Day && d1.Month == d2.Month && d1.Year == d2.Year;
@@ -31,11 +74,34 @@ namespace Generics.Common
                 data = data.Replace(replaceStr+replaceStr,replaceStr);
             return data;
         }
-        public static int ToInt(int? number)
+        public static int ToInt(this int? number)
         {
             try
             {
                 return number ?? 0;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
+        public static int ToInt(this bool? bit)
+        {
+            try
+            {
+                if (!bit.HasValue) return 0;
+                return bit.Value ? 1 : 0;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
+        public static int ToInt(this bool bit)
+        {
+            try
+            {
+                return bit ? 1 : 0;
             }
             catch (Exception e)
             {
@@ -53,6 +119,7 @@ namespace Generics.Common
             var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
+        
 
         public static Dictionary<T1, T2> ToCustomDictionary<T1, T2>(this List<KeyValuePair<T1,T2>> list) 
         {
@@ -64,6 +131,19 @@ namespace Generics.Common
             return dictionary;
         }
 
+        //public static Dictionary<string, StringValues> CreateDictionaryFromKeyValuePairs(List<KeyValuePair<string, string>> form)
+        //{
+        //    if (form == null) return null;
+        //    Dictionary<string, StringValues> keyValuePairs = new Dictionary<string, StringValues>();
+        //    foreach (var keyvalues in form)
+        //    {
+        //        if (!keyValuePairs.ContainsKey(keyvalues.Key))
+        //        {
+        //            keyValuePairs.Add(keyvalues.Key, keyvalues.Value);
+        //        }
+        //    }
+        //    return keyValuePairs;
+        //}
         public static int ToInt(this string number)
         {
             try
@@ -75,6 +155,20 @@ namespace Generics.Common
                 return 0;
             }
         }
+        public static bool ToBool(this string str)
+        {
+            try
+            {
+                return bool.Parse(str);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        public static int ToBoolInt(this string str) => str.ToBool().ToInt();
+        public static bool IsSimple(this Type type) => type.IsPrimitive || type.Equals(typeof(string));
+
         public static long ToLong(this string number)
         {
             try

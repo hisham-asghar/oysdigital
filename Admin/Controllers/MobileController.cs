@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.Data;
 using Generics.DataModels.AdminModels;
+using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,53 +18,54 @@ namespace Admin.Controllers
         {
             return View(MobileBao.GetAll());
         }
-        [HttpGet]
-        public IActionResult Create(long Id)
-        {
-            if (Id != 0)
-            {
-                var data = MobileBao.GetById(Id);
-                if (data != null)
-                {
-                    return View(data);
-                }
 
+        [Route("/Mobile/Create")]
+        [Route("/Mobile/Edit/{id}")]
+        [HttpGet]
+        public IActionResult Create(long id = 0)
+        {
+            Mobile mobile = id <= 0 ? new Mobile() : MobileBao.GetById(id);
+            if (id > 0 && mobile == null)
+            {
+                // Dont Exist
+            }
+            ViewBag.IsEdit = id > 0;
+            return View(mobile);
+        }
+        [Route("/Mobile/Create")]
+        [Route("/Mobile/Edit/{id}")]
+        [HttpPost]
+        public IActionResult Create(Mobile mobile, int id = 0)
+        {
+            Mobile mobileDb = MobileBao.GetById(id);
+            if(id > 0 && mobileDb == null)
+            {
+                // Not Exists
+            }
+
+            var userId = User.GetUserId();
+
+            if(mobile == null)
+            {
+                mobileDb = mobileDb ?? new Mobile(); 
+                ViewBag.IsEdit = id > 0;
+                return View(mobileDb);
+            }
+
+
+            if (id == 0)
+            {
+                mobile.SetOnCreate(userId);
+                MobileBao.Insert(mobile);
             }
             else
             {
-                Mobile m = new Mobile();
-                m.MobileName = "";m.MobileId = 0;m.IsActive=false;
-                return View(m);
+                mobile.SetOnUpdate(userId);
+                MobileBao.Update(mobile);
             }
-            return View();
-        }
-        [HttpPost]
-        public IActionResult Create(Mobile mobile)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            try
-            {
 
-                if (mobile.MobileId == 0)
-                {
-                    mobile.OnCreated = DateTime.Now;
-                    mobile.CreatedBy = userId;
-                    MobileBao.Insert(mobile);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    mobile.OnModified = DateTime.Now;
-                    mobile.ModifiedBy = userId;
-                    MobileBao.Update(mobile);
-                    return RedirectToAction("Index");
-                }
-            }
-            catch (Exception)
-            {
+            return RedirectToAction("Index");
 
-            }
-            return View(mobile);
         }
 
         public IActionResult Delete(long id)

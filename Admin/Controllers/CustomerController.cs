@@ -17,8 +17,9 @@ namespace Admin.Controllers
     {
         // GET: /<controller>/
         public IActionResult Index()
-        {           
-            return View(CustomerBao.GetAll());
+        {
+            var customers = CustomerBao.GetAll();
+            return View(customers);
         }
         [HttpGet]
         public IActionResult Create(long Id)

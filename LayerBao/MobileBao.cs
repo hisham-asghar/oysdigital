@@ -6,7 +6,7 @@ using System.Text;
 
 namespace LayerBao
 {
-    public class MobileBao
+    public static class MobileBao
     {
         public static List<Mobile> GetAll()
         {
@@ -20,9 +20,9 @@ namespace LayerBao
         {
             return MobileDao.Insert(c);
         }
-        public static bool Update(Mobile c)
+        public static bool Update(Mobile mobile)
         {
-            return MobileDao.Update(c);
+            return MobileDao.Update(mobile);
         }
         public static bool Delete(long id)
         {

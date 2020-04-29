@@ -1,6 +1,7 @@
 ﻿using Generics.DataModels;
 using Generics.DataModels.AdminModels;
 using Generics.Services.DatabaseService.AdoNet;
+using LayerDao.DatabaseInfo;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,13 +12,11 @@ namespace LayerDao
     {
         public static List<Mobile> GetAll()
         {
-            string sql = $"SELECT * FROM dbo.Mobile;";
-            return QueryExecutor.List<Mobile>(sql);
+            return TableConstants.Mobile.SelectAll<Mobile>();
         }
-        public static Mobile GetById(long Id)
+        public static Mobile GetById(long id)
         {
-            string sql = $"SELECT * FROM dbo.Mobile WHERE MobileId = {Id};";
-            return QueryExecutor.FirstOrDefault<Mobile>(sql);
+            return TableConstants.Mobile.Select<Mobile>((int)id);
         }
         public static bool Insert(Mobile c)
         {

@@ -1,9 +1,7 @@
-﻿using Generics.DataModels;
-using Generics.DataModels.AdminModels;
+﻿using Generics.DataModels.AdminModels;
 using Generics.Services.DatabaseService.AdoNet;
-using System;
+using LayerDao.DatabaseInfo;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LayerDao
 {
@@ -11,34 +9,23 @@ namespace LayerDao
     {
         public static List<Customer> GetAll()
         {
-            string sql = $"SELECT * FROM dbo.Customer;";
-            return QueryExecutor.List<Customer>(sql);
+            return TableConstants.Customer.SelectAll<Customer>();
         }
-        public static Customer GetById(long Id)
+        public static Customer GetById(long id)
         {
-            string sql = $"SELECT * FROM dbo.Customer WHERE CustomerId = {Id};";
-            return QueryExecutor.FirstOrDefault<Customer>(sql);
+            return TableConstants.Customer.Select<Customer>((int)id);
         }
-        public static bool Insert(Customer c)
+        public static bool Insert(Customer customer)
         {
-            string sql = $"Insert Into dbo.Customer (CustomerName,Guid,Email,PhoneNumber,Address,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +
-                $" output INSERTED.CustomerId as Result VALUES " +
-                $"('{c.CustomerName}','{c.Guid}','{c.Email}','{c.PhoneNumber}','{c.Address}','{c.IsActive}','{c.CreatedBy}','{c.ModifiedBy}','{c.OnCreated}','{c.OnModified}');";
-
-            long data = QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result;
-            return data == 0 ? true : false;
+            return customer.Insert(TableConstants.Customer) > 0;
         }
-        public static bool Update(Customer c)
+        public static bool Update(Customer customer)
         {
-            string sql = $"UPDATE dbo.Customer Set CustomerName='{c.CustomerName}',Email='{c.Email}',PhoneNumber='{c.PhoneNumber}'" +
-                $",Address='{c.Address}',IsActive='{c.IsActive}',ModifiedBy='{c.ModifiedBy}',OnModified='{c.OnModified}' output inserted.CustomerId as Result where (CustomerId={c.CustomerId})";
-            return QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
+            return customer.Update(TableConstants.Customer, (int)customer.CustomerId) > 0;
         }
-        public static bool Delete(long Id)
+        public static bool Delete(long id)
         {
-            string sql = $"DELETE FROM dbo.Customer output deleted.CustomerId as Result WHERE CustomerId = {Id};";
-            var data = QueryExecutor.FirstOrDefault<TemplateClass<long>>(sql).Result == 0 ? false : true;
-            return data;
+            return TableConstants.Customer.Delete((int)id);
         }
     }
 }

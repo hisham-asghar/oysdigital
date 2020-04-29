@@ -8,23 +8,23 @@ namespace LayerBao
 {
     public class PlatformBao
     {
-        public static List<Platforms> GetAll()
+        public static List<Platform> GetAll()
         {
             return PlatformDao.GetAll();
         }
-        public static Platforms GetById(long id)
+        public static Platform GetById(long id)
         {
             return PlatformDao.GetById(id);
         }
-        public static List<Platforms> GetByProjectId(long id)
+        public static List<Platform> GetByProjectId(long id)
         {
             return PlatformDao.GetByProjectId(id);
         }
-        public static bool Insert(Platforms c)
+        public static bool Insert(Platform c)
         {
             return PlatformDao.Insert(c);
         }
-        public static bool Update(Platforms c)
+        public static bool Update(Platform c)
         {
             return PlatformDao.Update(c);
         }

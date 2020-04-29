@@ -38,14 +38,14 @@ namespace Admin.Controllers
             }
             else
             {
-                Platforms p = new Platforms();
+                Platform p = new Platform();
                 p.PlatformName = ""; p.PlatformId = 0; p.IconUrl = ""; p.IsActive=false;
                 return View(p);
             }
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Platforms platform ,IFormFile file)
+        public IActionResult Create(Platform platform ,IFormFile file)
         {
             
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

@@ -11,12 +11,12 @@ namespace LayerDao
     {
         public static List<ProjectPlatforms> GetAll()
         {
-            string sql = $"SELECT * FROM dbo.ProjectPlatforms JOIN dbo.Project ON ProjectPlatforms.ProjectId = Project.ProjectId Join dbo.Platforms ON Platforms.PlatformId=ProjectPlatforms.PlatformId Join dbo.MobileSpaces ON MobileSpaces.MobileSpacesId=ProjectPlatforms.MobileSpacesId;";
+            string sql = $"SELECT * FROM dbo.ProjectPlatforms JOIN dbo.Project ON ProjectPlatforms.ProjectId = Project.ProjectId Join dbo.Platform ON Platform.PlatformId=ProjectPlatforms.PlatformId Join dbo.MobileSpaces ON MobileSpaces.MobileSpacesId=ProjectPlatforms.MobileSpacesId;";
             return QueryExecutor.List<ProjectPlatforms>(sql);
         }
         public static ProjectPlatforms GetById(long Id)
         {
-            string sql = $"SELECT * FROM dbo.ProjectPlatforms JOIN dbo.Project ON ProjectPlatforms.ProjectId = Project.ProjectId Join dbo.Platforms ON Platforms.PlatformId=ProjectPlatforms.PlatformId Join dbo.MobileSpaces ON MobileSpaces.MobileSpacesId=ProjectPlatforms.MobileSpacesId WHERE ProjectPlatformsId = {Id};";
+            string sql = $"SELECT * FROM dbo.ProjectPlatforms JOIN dbo.Project ON ProjectPlatforms.ProjectId = Project.ProjectId Join dbo.Platform ON Platform.PlatformId=ProjectPlatforms.PlatformId Join dbo.MobileSpaces ON MobileSpaces.MobileSpacesId=ProjectPlatforms.MobileSpacesId WHERE ProjectPlatformsId = {Id};";
             return QueryExecutor.FirstOrDefault<ProjectPlatforms>(sql);
         }
         public static List<ProjectPlatforms> GetByProjectId(long Id)
