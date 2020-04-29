@@ -98,11 +98,13 @@ namespace Admin.Controllers
                 if (data != null)
                 { 
                     var pro = ProjectBao.GetByCustomerId(data.CustomerId);
-                    foreach(var item in pro)
+                    if (pro != null)
                     {
-                        item.ProjectPlatforms = ProjectPlatformsBao.GetByProjectId(item.ProjectId);
-                        item.ProjectMembers = ProjectMembersBao.GetByProjectId(item.ProjectId);
-                        item.MobileSpaces = null;
+                        foreach (var item in pro)
+                        {
+                            item.ProjectPlatforms = ProjectPlatformsBao.GetByProjectId(item.ProjectId);
+                            item.ProjectMembers = ProjectMembersBao.GetByProjectId(item.ProjectId);
+                        }
                     }
                     detail.Projects = pro;
                 }

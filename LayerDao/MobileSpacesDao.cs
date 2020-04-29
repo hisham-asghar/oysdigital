@@ -20,6 +20,7 @@ namespace LayerDao
             string sql = $"SELECT * FROM dbo.MobileSpaces JOIN dbo.Mobile ON MobileSpaces.MobileId = Mobile.MobileId WHERE MobileSpacesId = {Id};";
             return QueryExecutor.FirstOrDefault<MobileSpaces>(sql);
         }
+        
         public static bool Insert(MobileSpaces p)
         {
             string sql = $"Insert Into dbo.MobileSpaces (SpaceName,MobileId,IsActive,CreatedBy,ModifiedBy,OnCreated,OnModified)" +

@@ -12,6 +12,7 @@ namespace Generics.DataModels.AdminModels
         public string PlatformLink { get; set; }
         public long ProjectId { get; set; }
         public string ProjectName { get; set; }
+        public string IconUrl { get; set; }
         public long PlatformId { get; set; }
         public string PlatformName { get; set; }
         public int PostPerDay { get; set; }
@@ -31,5 +32,6 @@ namespace Generics.DataModels.AdminModels
         public DateTime OnModified { get; set; }
         public int PostsQuantity { get; set; }
         public int StoriesQuantity { get; set; }
+        
     }
 }

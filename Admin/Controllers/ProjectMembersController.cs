@@ -27,12 +27,12 @@ namespace Admin.Controllers
                 var data = ProjectMembersBao.GetById(Id);
                  if (data != null)
                 {
-                    ViewData["ProjectMemberTypesId"] = new SelectList(ProjectMemberTypeBao.GetAll(), "ProjectMemberTypesId", "ProjectMemberTypeName", data.ProjectMemberTypesId);
+                    ViewData["ProjectMemberTypesId"] = new SelectList(GetMembersSortedList(data.ProjectMemberTypesId), "ProjectMemberTypesId", "ProjectMemberTypeName", data.ProjectMemberTypesId);
                     return View(data);
                 }
                 ProjectMembers m = new ProjectMembers();
                 m.ProjectMembersId = 0; m.ProjectMemberTypesId = 0; m.ProjectId = Id; m.IsActive = false;
-                ViewData["ProjectMemberTypesId"] = new SelectList(ProjectMemberTypeBao.GetAll(), "ProjectMemberTypesId", "ProjectMemberTypeName");
+                ViewData["ProjectMemberTypesId"] = new SelectList(GetMembersSortedList(Id), "ProjectMemberTypesId", "ProjectMemberTypeName");
                 return View(m);
             }
             else
@@ -40,6 +40,19 @@ namespace Admin.Controllers
                 return RedirectToAction("Index");
             }
             //return View();
+        }
+        public List<ProjectMembers> GetMembersSortedList(long id)
+        {
+            List<ProjectMembers> pal = new List<ProjectMembers>();
+            var projectMembers = ProjectMembersBao.GetAll();
+            foreach (var item in projectMembers)
+            {
+                if (id != item.ProjectMemberTypesId)
+                {
+                    pal.Add(item);
+                }
+            }
+            return pal;
         }
         [HttpPost]
         public IActionResult Create(ProjectMembers projectmembers)

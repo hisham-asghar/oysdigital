@@ -64,31 +64,60 @@
             </div>
             <div class="col-xl-8 col-lg-12 col-md-12">
                 <div class="row clearfix">
-                    <div class="col-md-6 col-sm-12">
+                    <div class="col-md-12 col-sm-12">
                         <h1>Projects</h1>
                         @foreach (var item in Model.Projects)
                         {
                             <div class="card">
                                 <div class="body">
-                                    <h5 class="mt-3">@item.ProjectName</h5>
-                                    <h6 class="mt-3">@item.CreatedBy Created this on @item.OnCreated</h6>
+                                    <h2 class="mt-3">@item.ProjectName</h2>
+                                    <p>Created : @item.OnCreated</p>
+                                    <h4 class="mt-3">Project Platforms</h4>
                                     @foreach (var i in item.ProjectPlatforms)
                                     {
-                                        <img class="img-fluid img-thumbnail" src="~/uploads/" alt="">
-
-                                        <h5 class="mt-3">@i.PlatformName</h5>
-                                        <h5 class="mt-3">@i.CreatedBy Created this on @i.OnCreated</h5>
-                                        <p>@i.PlatformLink</p>
-                                        @foreach(var m in item.ProjectMembers)
+                                        <img class="img-fluid img-thumbnail" width="50" height="60" src="~/uploads/@i.IconUrl" alt="">
+                                        <h5 class="mt-3">Platform Name : @i.PlatformName</h5>
+                                        <p>Created : @i.OnCreated</p>
+                                        <p>Platform Link : @i.PlatformLink</p>
+                                        <p>Mobile Space : @i.SpaceName</p>
+                                        @if (i.PostPerDay != 0)
                                         {
-                                            <p>@m.ProjectMemberTypeName</p>
-                                <h5 class="mt-3">@i.CreatedBy Created this on @i.OnCreated</h5>
+                                            <p>Post Plan : PostPerDay @i.PostPerDay</p>
+                                        }@if (i.PostPerWeek != 0)
+                                        {
+                                            <p>Post Plan : PostPerWeek @i.PostPerWeek</p>
+                                        }
+                                        @if (i.PostPerMonth != 0)
+                                        {
+                                            <p>Post Plan : PostPerMonth @i.PostPerMonth</p>
+                                        }
+                                        @if (i.StoriesPerDay != 0)
+                                        {
+                                            <p>Stories/Status Plan : StoriesPerDay @i.StoriesPerDay</p>
+                                        }@if (i.StoriesPerWeek != 0)
+                                        {
+                                           <p>Stories/Status Plan : StoriesPerWeek @i.StoriesPerWeek</p>
+                                        }
+                                        @if (i.StoriesPerMonth != 0)
+                                        {
+                                            <p>Stories/Status Plan : StoriesPerMonth @i.StoriesPerMonth</p>
                                         }
                                         <div class="d-flex justify-content-between">
-                                            <a href="/ProjectPlatform/Create/@item.ProjectId" class="btn btn-raised btn-success btn-round waves-effect">Add Platforms</a>
-                                            <a href="/ProjectMembers/Create/@item.ProjectId" class="btn btn-raised btn-primary btn-round waves-effect">Add Members</a>
+
                                         </div>
                                     }
+                                    <h4 class="mt-3">Project Members</h4>
+                                    
+                                        <ul>
+                                        @foreach (var m in item.ProjectMembers)
+                                        {
+                                            <li><p>@m.ProjectMemberTypeName</p></li>
+                                        }
+                                        </ul>
+                                        
+                                    
+                                    <a href="/ProjectPlatform/Create/@item.ProjectId" class="btn btn-raised btn-success btn-round waves-effect">Add Platforms</a>
+                                    <a href="/ProjectMembers/Create/@item.ProjectId" class="btn btn-raised btn-primary btn-round waves-effect">Add Members</a>
                                     <hr />
 
                                 </div>
