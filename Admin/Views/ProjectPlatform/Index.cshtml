@@ -1,30 +1,23 @@
-﻿
-@model IEnumerable<Generics.DataModels.AdminModels.ProjectPlatforms>
+﻿@model IEnumerable<Generics.DataModels.AdminModels.ProjectPlatforms>
 @{
     ViewData["Title"] = "Project Platforms";
     Layout = "_TableLayout";
-    ViewBag.AddNewLink = "null";
+    ViewBag.AddNewLink = "/ProjectPlatform/Create";
 }
 
-<table class="table table-bordered table-striped table-hover dataTable js-exportable">
-    @CHtmlHelper.TableHead("th", "Name", "Created", "Status", "Actions")
-    @CHtmlHelper.TableFoot("tf", "Name", "Created", "Status", "Actions")
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.PostPerDay</td>
-                <td>@item.OnCreated.ToString("MMM dd, yyyy")</td>
-                <td>@item.IsActive.CheckTag()</td>
-                <td>
-                    @ButtonHelper.EditSmall("/ProjectPlatform/Create/" + item.Id)
-                    @ButtonHelper.DeleteSmall("/ProjectPlatform/Delate/" + item.Id)
-                    @ButtonHelper.DetailSmall("/ProjectPlatform/Detail/" + item.Id)
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+        @CHtmlHelper.TableHead("th", "Post Quantity", "Post Time", "Stories Quantity", "Stories Time", "Created", "Status", "Actions")
+        @CHtmlHelper.TableFoot("th", "Post Quantity", "Post Time", "Stories Quantity", "Stories Time", "Created", "Status", "Actions")
+        <tbody>
+            @foreach (var item in Model)
+            {
+                @CHtmlHelper.Tr("td", ProjectPlatformHelper.GetPostCount(item.PostPerDay, item.PostPerMonth, item.PostPerWeek).ToString(), item.PostSchedulingTime.ToString(HH_mm), ProjectPlatformHelper.GetPostCount(item.StoriesPerDay, item.StoriesPerWeek, item.StoriesPerMonth).ToString(), item.StoriesSchedulingTime.ToString(HH_mm), item.OnCreated.ToString(dddd_dd_MMMM_yyyy), item.IsActive.CheckTag().ToString(),
+                 @ButtonHelper.EditSmall("/ProjectPlatform/Edit/" + item.Id) + "" +
+                 @ButtonHelper.DeleteSmall("/ProjectPlatform/Delete/" + item.Id) + "" +
+                 @ButtonHelper.DetailSmall("/ProjectPlatform/Detail/" + item.Id).ToString());
+            }
+        </tbody>
+    </table>
 
 
 

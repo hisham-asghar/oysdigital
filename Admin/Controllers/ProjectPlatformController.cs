@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Generics.Common;
 using Generics.DataModels.AdminModels;
+using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,128 +20,97 @@ namespace Admin.Controllers
 
             return View(data);
         }
-        public IActionResult Create()
-        {
-            return View();
-        }
+        [Route("/ProjectPlatform/Create")]
+        [Route("/ProjectPlatform/Edit/{id}")]
         [HttpGet]
-        public IActionResult Create(long Id)
+        public IActionResult Create(long id = 0)
         {
-            if (Id != 0)
+            ProjectPlatforms projectplatform = id <= 0 ? new ProjectPlatforms() : ProjectPlatformsBao.GetById(id);
+            if (id > 0 && projectplatform == null)
             {
-                var data = ProjectPlatformsBao.GetById(Id);
-                if (data != null)
-                {
-                    ViewData["Id"] = new SelectList(GetMobileSpacesSortedList(data.Id), "Id", "Name",data.Id);
-                    ViewData["Id"] = new SelectList(GetPlatformSortedList(data.Id), "Id", "Name",data.Id);
-                    
-                    return View(data);
-                }
-
-                ViewData["Id"] = new SelectList(MobileSpacesBao.GetAll(), "Id", "Name");
-                ViewData["Id"] = new SelectList(PlatformBao.GetAll(), "Id", "Name");
-
-                ProjectPlatforms m = new ProjectPlatforms();
-                m.Id = 0; m.ProjectId = Id; m.IsActive = false;
-                return View(m);
+                // Dont Exist
             }
             else
             {
-                return RedirectToAction("Index");
-            }
-           // return View();
-        }
-        public List<Platform> GetPlatformSortedList(long id)
-        {
-            List<Platform> pal = new List<Platform>();
-            var platform = PlatformBao.GetAll();
-            foreach (var item in platform)
-            {
-                if (id != item.Id)
+                Dictionary<int, string> dictionary = new Dictionary<int, string>();
+                foreach (var info in ProjectBao.GetAll())
                 {
-                    pal.Add(item);
+                    dictionary.Add((int)info.Id, info.Name);
                 }
-            }
-            return pal;
-        }
-        public List<MobileSpaces> GetMobileSpacesSortedList(long id)
-        {
-            List<MobileSpaces> mob = new List<MobileSpaces>();
-            var mobile = MobileSpacesBao.GetAll();
-            foreach (var item in mobile)
-            {
-                if (id != item.Id)
+                ViewBag.ProjectDictionary = dictionary;
+                Dictionary<int, string> dictionary1 = new Dictionary<int, string>();
+                foreach (var info in PlatformBao.GetAll())
                 {
-                    mob.Add(item);
+                    dictionary1.Add((int)info.Id, info.Name);
                 }
+                ViewBag.PlatformDictionary = dictionary1;
+                Dictionary<int, string> dictionary2 = new Dictionary<int, string>();
+                foreach (var info in MobileSpacesBao.GetAll())
+                {
+                    dictionary2.Add((int)info.Id, info.Name);
+                }
+                ViewBag.MobileSpacesDictionary = dictionary2;
+               
             }
-            return mob;
+            ProjectPlaformCreateView p = new ProjectPlaformCreateView();
+            ViewBag.IsEdit = id > 0;
+            if (projectplatform != null)
+            {
+                p=ProjectPlatformHelper.ProjectPlatformCreateViewParser(projectplatform);
+                return View(p);
+            }
+            else
+            {
+                return View(p);
+            }
         }
+        [Route("/ProjectPlatform/Create")]
+        [Route("/ProjectPlatform/Edit/{id}")]
         [HttpPost]
-        public IActionResult Save(ProjectPlatforms projectplatform)
+        public IActionResult Create(ProjectPlaformCreateView projectplatform, int id = 0)
         {
-            try
+            ProjectPlatforms projectplatformDb = ProjectPlatformsBao.GetById(id);
+            if (id > 0 && projectplatformDb == null)
             {
-                //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                //if (projectplatform.PostPerDay == 0)
-                //{
-                //    projectplatform.PostPerDay = projectplatform.PostsQuantity;
-                //    projectplatform.PostPerWeek = 0; projectplatform.PostPerMonth = 0;
-                //}
-                //if (projectplatform.PostPerDay == 1)
-                //{
-                //    projectplatform.PostPerWeek = projectplatform.PostsQuantity;
-                //    projectplatform.PostPerDay = 0; projectplatform.PostPerMonth = 0;
-                //}
-                //if (projectplatform.PostPerDay == 2)
-                //{
-                //    projectplatform.PostPerMonth = projectplatform.PostsQuantity;
-                //    projectplatform.PostPerWeek = 0; projectplatform.PostPerDay = 0;
-                //}
-                //if (projectplatform.StoriesPerDay == 0)
-                //{
-                //    projectplatform.StoriesPerDay = projectplatform.StoriesQuantity;
-                //    projectplatform.StoriesPerWeek = 0; projectplatform.StoriesPerMonth = 0;
-                //}
-                //if (projectplatform.StoriesPerDay == 1)
-                //{
-                //    projectplatform.StoriesPerWeek = projectplatform.StoriesQuantity;
-                //    projectplatform.StoriesPerDay = 0; projectplatform.StoriesPerMonth = 0;
-                //}
-                //if (projectplatform.StoriesPerDay == 2)
-                //{
-                //    projectplatform.StoriesPerMonth = projectplatform.StoriesQuantity;
-                //    projectplatform.StoriesPerWeek = 0; projectplatform.StoriesPerDay = 0;
-                //}
-                //if (projectplatform.ProjectPlatformsId == 0)
-                //{
-                //    projectplatform.OnCreated = DateTime.Now;
-                //    projectplatform.CreatedBy = userId;
-                //    ProjectPlatformsBao.Insert(projectplatform);
-                //    return RedirectToAction("Index");
-                //}
-                //else
-                //{
-                //    projectplatform.OnModified = DateTime.Now;
-                //    projectplatform.ModifiedBy = userId;
-                //    ProjectPlatformsBao.Update(projectplatform);
-                //    return RedirectToAction("Index");
-                //}
+                // Not Exists
             }
-            catch (Exception)
-            {
 
+            var userId = User.GetUserId();
+
+            if (projectplatform == null)
+            {
+                projectplatformDb = projectplatformDb ?? new ProjectPlatforms();
+                ViewBag.IsEdit = id > 0;
+                return View(projectplatformDb);
             }
-            return View(projectplatform);
+            if (id == 0)
+            {
+                ProjectPlatforms project=ProjectPlatformHelper.ProjectPlatformParser(projectplatform);
+                project.SetOnCreate(userId);
+                ProjectPlatformsBao.Insert(project);
+            }
+            else
+            {
+                ProjectPlatforms project = ProjectPlatformHelper.ProjectPlatformParser(projectplatform);
+                project.SetOnUpdate(userId);
+                ProjectPlatformsBao.Update(project);
+            }
+
+            return RedirectToAction("Index");
+
         }
-
         public IActionResult Delete(long id)
         {
-            if (id != 0)
+            ProjectPlatforms projectplatform = ProjectPlatformsBao.GetById(id);
+            if (id > 0 && projectplatform == null)
             {
-                return View(ProjectPlatformsBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.ProjectDictionary = Functions.CreateDictionaryFromModel(projectplatform);
+            }
+            return View(projectplatform);
         }
 
         public IActionResult ConfirmDelete(long id)
@@ -152,11 +123,16 @@ namespace Admin.Controllers
         }
         public IActionResult Detail(long id)
         {
-            if (id != 0)
+            ProjectPlatforms projectplatform = ProjectPlatformsBao.GetById(id);
+            if (id > 0 && projectplatform == null)
             {
-                return View(ProjectPlatformsBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.ProjectDictionary = Functions.CreateDictionaryFromModel(projectplatform);
+            }
+            return View(projectplatform);
         }
     }
 }

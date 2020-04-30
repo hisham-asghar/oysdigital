@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Generics.Common;
 using Generics.DataModels.AdminModels;
 using Generics.WebHelper.Extensions;
 using LayerBao;
@@ -72,11 +73,16 @@ namespace Admin.Controllers
         }
         public IActionResult Delete(long id)
         {
-            if (id != 0)
+            ProjectNotes projectnotes = ProjectNotesBao.GetById(id);
+            if (id > 0 && projectnotes == null)
             {
-                return View(ProjectNotesBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.ProjectNotesDictionary = Functions.CreateDictionaryFromModel(projectnotes);
+            }
+            return View(projectnotes);
         }
 
         public IActionResult ConfirmDelete(long id)
@@ -89,11 +95,16 @@ namespace Admin.Controllers
         }
         public IActionResult Detail(long id)
         {
-            if (id != 0)
+            ProjectNotes projectnotes = ProjectNotesBao.GetById(id);
+            if (id > 0 && projectnotes == null)
             {
-                return View(ProjectNotesBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.ProjectNotesDictionary = Functions.CreateDictionaryFromModel(projectnotes);
+            }
+            return View(projectnotes);
         }
     }
 }

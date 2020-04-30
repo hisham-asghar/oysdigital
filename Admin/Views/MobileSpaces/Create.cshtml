@@ -1,5 +1,4 @@
-﻿
-@model Generics.DataModels.AdminModels.MobileSpaces
+﻿@model Generics.DataModels.AdminModels.MobileSpaces
 @{
     var isEdit = (bool)ViewBag.IsEdit;
     var title = (isEdit ? "Edit " : "Create ") + " MobileSpaces";
@@ -9,16 +8,20 @@
 
 @CHtmlHelper.GenerateHeader(title, "/MobileSpaces", "Back to Mobiles List")
 @CHtmlHelper.GetCardHeader(12, title)
-<form method="post" name="mobilespaces">
-    @if (isEdit)
-    {
-        @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
-    }
-    @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
-    @*@HtmlInputType.DropdownList.GenerateInputField("Name", Model.MobileId, "MobileId")*@
-    @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
-    @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
-</form>
+    <form method="post" name="mobilespaces">
+        @if (isEdit)
+        {
+            @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
+            @CHtmlHelper.GenerateSingleSelectField("Mobile", "MobileId", ViewBag.MobileDictionary, (int)Model.MobileId)
+        }
+        else
+        {
+            @CHtmlHelper.GenerateSingleSelectField("Mobile", "MobileId", ViewBag.MobileDictionary)
+        }
+        @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
+        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
+        @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
+    </form>
 @CHtmlHelper.GetCardFooter()
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Generics.Common;
 using Generics.DataModels.AdminModels;
 using Generics.WebHelper.Extensions;
 using LayerBao;
@@ -29,8 +30,22 @@ namespace Admin.Controllers
             {
                 // Dont Exist
             }
+            else
+            {
+                Dictionary<int, string> dictionary = new Dictionary<int, string>();
+                foreach (var info in ProjectMemberTypeBao.GetAll())
+                {
+                    dictionary.Add((int)info.Id, info.Name);
+                }
+                ViewBag.ProjectMemberTypeDictionary = dictionary;
+                Dictionary<int, string> dictionary2 = new Dictionary<int, string>();
+                foreach (var info in ProjectBao.GetAll())
+                {
+                    dictionary2.Add((int)info.Id, info.Name);
+                }
+                ViewBag.ProjectDictionary = dictionary2;
+            }
             ViewBag.IsEdit = id > 0;
-            ViewBag.PMT = new SelectList(ProjectMemberTypeBao.GetAll(),"Name", "Id");
             return View(projectmembers);
         }
         [Route("/ProjectMembers/Create")]
@@ -75,11 +90,16 @@ namespace Admin.Controllers
         }
         public IActionResult Delete(long id)
         {
-            if (id != 0)
+            ProjectMembers projectmembers = ProjectMembersBao.GetById(id);
+            if (id > 0 && projectmembers == null)
             {
-                return View(ProjectMembersBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.ProjectMembersDictionary = Functions.CreateDictionaryFromModel(projectmembers);
+            }
+            return View(projectmembers);
         }
 
         public IActionResult ConfirmDelete(long id)
@@ -92,11 +112,16 @@ namespace Admin.Controllers
         }
         public IActionResult Detail(long id)
         {
-            if (id != 0)
+            ProjectMembers projectmembers = ProjectMembersBao.GetById(id);
+            if (id > 0 && projectmembers == null)
             {
-                return View(ProjectMembersBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.ProjectMembersDictionary = Functions.CreateDictionaryFromModel(projectmembers);
+            }
+            return View(projectmembers);
         }
     }
 }

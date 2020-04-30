@@ -9,7 +9,6 @@ namespace Generics.DataModels.AdminModels
     {
         public string PlatformLink { get; set; }
         public long ProjectId { get; set; }
-        public string IconUrl { get; set; }
         public long PlatformId { get; set; }
         public int PostPerDay { get; set; }
         public int PostPerWeek { get; set; }
@@ -23,4 +22,12 @@ namespace Generics.DataModels.AdminModels
         public bool IsActive { get; set; }
         
     }
+    public class ProjectPlaformCreateView:ProjectPlatforms
+    {
+        public int PostCount { get; set; }
+        public int StoriesCount { get; set; }
+        public int PostType { get; set; }
+        public int StoriesType { get; set; }
+    }
+    
 }

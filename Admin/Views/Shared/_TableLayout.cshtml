@@ -18,11 +18,9 @@
         </div>
         @if (ViewBag.AddNewLink != null)
         {
-            <div class="col-lg-5 col-md-6 col-sm-12">
-                <a href="@ViewBag.AddNewLink" class="btn btn-info float-right" type="button">
-                    <i class="fa fa-plus-square"></i> Add New
-                </a>
-            </div>
+    <div class="col-lg-5 col-md-6 col-sm-12">
+        @ButtonHelper.Create(@ViewBag.AddNewLink)
+    </div>
         }
     </div>
 </div>

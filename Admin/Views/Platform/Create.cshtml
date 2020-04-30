@@ -1,24 +1,21 @@
-﻿
-@model Generics.DataModels.AdminModels.Platform
+﻿@model Generics.DataModels.AdminModels.Platform
 @{
     var isEdit = (bool)ViewBag.IsEdit;
     var title = (isEdit ? "Edit " : "Create ") + " Platforms";
     ViewData["Title"] = title;
 }
-
-
 @CHtmlHelper.GenerateHeader(title, "/MobileSpaces", "Back to Mobiles List")
 @CHtmlHelper.GetCardHeader(12, title)
-    <form method="post" name="platform">
+    <form method="post" name="platform" enctype="multipart/form-data">
         @if (isEdit)
         {
             @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
         }
         @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
-        @HtmlInputType.file.GenerateInputField("file", Model.IconUrl, "file")
+        @HtmlInputType.File.GenerateInputField("Icon", Model.IconUrl, "file")
         @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
-        @ButtonHelper.CreateSmall("/Platform/Index", "Back to List")
+        @ButtonHelper.BackToListSmall("/Platform/Index")
     </form>
 @CHtmlHelper.GetCardFooter()
 @section Scripts {

@@ -4,27 +4,23 @@
     var title = (isEdit ? "Edit " : "Create ") + " Project Alert Message";
     ViewData["Title"] = title;
 }
-
-
 @CHtmlHelper.GenerateHeader(title, "/ProjectAlertMessage", "Back to Mobiles List")
 @CHtmlHelper.GetCardHeader(12, title)
-<form method="post" name="projectalertmessage">
-    @if (isEdit)
-    {
-        @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
-    }
-    <div class="form-group">
-        <select class="form-control show-tick" name="ProjectMessageTypeId">
-            <option value="">-- Please select --</option>
-            <option value="0">General</option>
-            <option value="1">Task</option>
-            <option value="2">CustomerInstruction</option>
-        </select>
-    </div>
-    @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
-    @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
-    @ButtonHelper.CreateSmall("/Platform/Index", "Back to List")
-</form>
+    <form method="post" name="projectalertmessage">
+        @if (isEdit)
+        {
+            @CHtmlHelper.GenerateInputField("", Model.ProjectMessageTypeId.ToString(), HtmlInputType.Hidden, "Id")
+            @CHtmlHelper.GenerateSingleSelectField("Project Message Type", "ProjectMessageTypeId", ProjectMessageType.CreateProjectMessageTypeDictionary(), (int)Model.ProjectMessageTypeId)
+        }
+        else
+        {
+            @CHtmlHelper.GenerateSingleSelectField("Project Message Type", "ProjectMessageTypeId", ProjectMessageType.CreateProjectMessageTypeDictionary())
+        }
+        @HtmlInputType.TextArea.GenerateInputField("Message", Model.Message, "Message")
+        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
+        @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
+        @ButtonHelper.CreateSmall("/Platform/Index", "Back to List")
+    </form>
 @CHtmlHelper.GetCardFooter()
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

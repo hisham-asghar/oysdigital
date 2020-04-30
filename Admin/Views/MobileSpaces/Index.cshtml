@@ -6,21 +6,15 @@
 }
 
 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-    @CHtmlHelper.TableHead("th", "Name", "Created", "Status", "Actions")
-    @CHtmlHelper.TableFoot("tf", "Name", "Created", "Status", "Actions")
+    @CHtmlHelper.TableHead("th", "Space", "Mobile", "Created", "Status", "Actions")
+    @CHtmlHelper.TableFoot("th", "Space", "Mobile", "Created", "Status", "Actions")
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.OnCreated.ToString("MMM dd, yyyy")</td>
-                <td>@item.IsActive.CheckTag()</td>
-                <td>
-                    @ButtonHelper.EditSmall("/MobileSpaces/Create/" + item.Id)
-                    @ButtonHelper.DeleteSmall("/MobileSpaces/Delate/" + item.Id)
-                    @ButtonHelper.DetailSmall("/MobileSpaces/Detail/" + item.Id)
-                </td>
-            </tr>
+            @CHtmlHelper.Tr("td", item.Name, item.MobileId.ToString(), item.OnCreated.ToString(dddd_dd_MMMM_yyyy), item.IsActive.CheckTag().ToString(),
+             @ButtonHelper.EditSmall("/MobileSpaces/Edit/" + item.Id) + "" +
+             @ButtonHelper.DeleteSmall("/MobileSpaces/Delete/" + item.Id) + "" +
+             @ButtonHelper.DetailSmall("/MobileSpaces/Detail/" + item.Id).ToString());
         }
     </tbody>
 </table>

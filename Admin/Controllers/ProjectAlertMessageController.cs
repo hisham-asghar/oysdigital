@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Generics.Common;
 using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +28,10 @@ namespace Admin.Controllers
             if (id > 0 && projectalertmessage == null)
             {
                 // Dont Exist
+            }
+            else
+            {
+                ViewBag.SelectedValue = projectalertmessage.ProjectMessageTypeId;
             }
             ViewBag.IsEdit = id > 0;
             return View(projectalertmessage);
@@ -52,14 +58,7 @@ namespace Admin.Controllers
             if (id == 0)
             {
                 projectalertmessage.SetOnCreate(userId);
-                if (ProjectAlertMessageBao.Insert(projectalertmessage))
-                {
-                    //return RedirectToAction("Index");
-                }
-                else
-                {
-                    return View(projectalertmessage);
-                }
+                ProjectAlertMessageBao.Insert(projectalertmessage);
             }
             else
             {
@@ -72,11 +71,16 @@ namespace Admin.Controllers
         }
         public IActionResult Delete(long id)
         {
-            if (id != 0)
+            ProjectAlertMessage projectalertmessage = ProjectAlertMessageBao.GetById(id);
+            if (id > 0 && projectalertmessage == null)
             {
-                return View(ProjectAlertMessageBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.ProjectAlertMessageDictionary = Functions.CreateDictionaryFromModel(projectalertmessage);
+            }
+            return View(projectalertmessage);
         }
 
         public IActionResult ConfirmDelete(long id)
@@ -89,11 +93,16 @@ namespace Admin.Controllers
         }
         public IActionResult Detail(long id)
         {
-            if (id != 0)
+            ProjectAlertMessage projectalertmessage = ProjectAlertMessageBao.GetById(id);
+            if (id > 0 && projectalertmessage == null)
             {
-                return View(ProjectAlertMessageBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.ProjectAlertMessageDictionary = Functions.CreateDictionaryFromModel(projectalertmessage);
+            }
+            return View(projectalertmessage);
         }
     }
 }

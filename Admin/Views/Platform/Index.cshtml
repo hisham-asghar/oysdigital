@@ -11,17 +11,10 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>@item.IconUrl</td>
-            <td>@item.Name</td>
-            <td>@item.OnCreated.ToString("MMM dd, yyyy")</td>
-            <td>@item.IsActive.CheckTag()</td>
-            <td>
-                @ButtonHelper.EditSmall("/Platform/Edit/" + item.Id)
-                @ButtonHelper.DeleteSmall("/Platform/Delete/" + item.Id)
-                @ButtonHelper.DetailSmall("/Platform/Detail/" + item.Id)
-            </td>
-        </tr>
+            @CHtmlHelper.Tr("td", item.IconUrl, item.Name, item.OnCreated.ToString(dddd_dd_MMMM_yyyy), item.IsActive.CheckTag().ToString(),
+             @ButtonHelper.EditSmall("/Platform/Edit/" + item.Id)+""+
+             @ButtonHelper.DeleteSmall("/Platform/Delete/" + item.Id)+""+
+             @ButtonHelper.DetailSmall("/Platform/Detail/" + item.Id).ToString());
         }
     </tbody>
 </table>

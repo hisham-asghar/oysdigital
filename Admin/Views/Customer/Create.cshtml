@@ -11,18 +11,20 @@
 }*@
 @CHtmlHelper.GenerateHeader(title, "/Customer", "Back to Customers List")
 @CHtmlHelper.GetCardHeader(12, title)
-<form method="post" name="customer">
-    @if (isEdit)
-    {
-        @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
-    }
-    @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
-    @HtmlInputType.Text.GenerateInputField("Email", Model.Email, "Email")
-    @HtmlInputType.Text.GenerateInputField("Address", Model.Address, "Address")
-    @HtmlInputType.Text.GenerateInputField("PhoneNumber", Model.PhoneNumber, "PhoneNumber")
-    @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
-    @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
-</form>
+    <form method="post" name="customer">
+        @if (isEdit)
+        {
+            @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
+        }
+        @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
+        @HtmlInputType.Text.GenerateInputField("Email", Model.Email, "Email")
+        @HtmlInputType.Text.GenerateInputField("Address", Model.Address, "Address")
+        @HtmlInputType.Text.GenerateInputField("PhoneNumber", Model.PhoneNumber, "PhoneNumber")
+        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
+        @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
+
+        </form>
+    
 @CHtmlHelper.GetCardFooter()
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

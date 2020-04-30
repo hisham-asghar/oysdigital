@@ -1,8 +1,13 @@
-﻿
+﻿@model Generics.DataModels.AdminModels.Project
 @{
-    ViewData["Title"] = "Detail";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Delete";
+    Layout = "_DetailLayout";
 }
-
-<h1>Detail</h1>
-
+<h1>Details</h1>
+<div>
+    <h4>Project</h4>
+    <hr />
+    @CHtmlHelper.Dl(ViewBag.ProjectDictionary)
+    @ButtonHelper.EditSmall("/Project/Edit/" + Model.Id)
+    @ButtonHelper.BackToListSmall("/Project/Index")
+</div>

@@ -4,14 +4,12 @@
     var title = (isEdit ? "Edit " : "Create " ) + " Mobile";
     ViewData["Title"] = title;
 }
-
-
 @CHtmlHelper.GenerateHeader(title , "/Mobile", "Back to Mobiles List")
 @CHtmlHelper.GetCardHeader(12, title)
 <form method="post" name="mobile">
     @if (isEdit)
     {
-        @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
+        @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
     }
     @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
     @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")

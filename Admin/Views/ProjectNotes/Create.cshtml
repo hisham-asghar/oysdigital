@@ -7,23 +7,20 @@
 
 @CHtmlHelper.GenerateHeader(title, "/ProjectNotes", "Back to Mobiles List")
 @CHtmlHelper.GetCardHeader(12, title)
-<form method="post" name="mobile">
-    @if (isEdit)
-    {
-        @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
-    }
-    @HtmlInputType.Text.GenerateInputField("Message", Model.Message, "Message")
-    <div class="form-group">
-        <select class="form-control show-tick" name="NoteTypeId">
-            <option value="">-- Please select --</option>
-            <option value="0">Admin</option>
-            <option value="1">Manager</option>
-            <option value="2">Member</option>
-        </select>
-    </div>
-    @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
-    @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
-</form>
+    <form method="post" name="mobile">
+        @if (isEdit)
+        {
+            @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
+            @CHtmlHelper.GenerateSingleSelectField("Note Type", "NoteTypeId", NoteType.CreateProjectNoteDictionary(), (int)Model.NoteTypeId)
+        }
+        else
+        {
+            @CHtmlHelper.GenerateSingleSelectField("Note Type", "NoteTypeId", NoteType.CreateProjectNoteDictionary())
+        }
+        @HtmlInputType.Text.GenerateInputField("Message", Model.Message, "Message")
+        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
+        @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
+    </form>
 @CHtmlHelper.GetCardFooter()
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

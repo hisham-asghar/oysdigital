@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Generics.Common;
 using Generics.DataModels.AdminModels;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Org.BouncyCastle.Math.EC.Rfc7748;
 
 namespace Admin.Controllers
 {
@@ -29,6 +31,15 @@ namespace Admin.Controllers
             if (id > 0 && mobilespaces == null)
             {
                 // Dont Exist
+            }
+            else
+            {
+                Dictionary<int, string> dictionary = new Dictionary<int, string>();
+                foreach (var info in MobileBao.GetAll())
+                {
+                    dictionary.Add((int)info.Id, info.Name);
+                }
+                ViewBag.MobileDictionary = dictionary;
             }
             ViewBag.IsEdit = id > 0;
             return View(mobilespaces);
@@ -55,14 +66,8 @@ namespace Admin.Controllers
             if (id == 0)
             {
                 mobilespaces.SetOnCreate(userId);
-                if (MobileSpacesBao.Insert(mobilespaces))
-                {
-                    //return RedirectToAction("Index");
-                }
-                else
-                {
-                    return View(mobilespaces);
-                }
+                MobileSpacesBao.Insert(mobilespaces);
+               
             }
             else
             {
@@ -76,11 +81,16 @@ namespace Admin.Controllers
 
         public IActionResult Delete(long id)
         {
-            if (id != 0)
+            MobileSpaces mobilespaces = MobileSpacesBao.GetById(id);
+            if (id > 0 && mobilespaces == null)
             {
-                return View(MobileSpacesBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.MobileSpacesDictionary = Functions.CreateDictionaryFromModel(mobilespaces);
+            }
+            return View(mobilespaces);
         }
 
         public IActionResult ConfirmDelete(long id)
@@ -93,11 +103,16 @@ namespace Admin.Controllers
         }
         public IActionResult Detail(long id)
         {
-            if (id != 0)
+            MobileSpaces mobilespaces = MobileSpacesBao.GetById(id);
+            if (id > 0 && mobilespaces == null)
             {
-                return View(MobileSpacesBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.MobileSpacesDictionary = Functions.CreateDictionaryFromModel(mobilespaces);
+            }
+            return View(mobilespaces);
         }
     }
 }

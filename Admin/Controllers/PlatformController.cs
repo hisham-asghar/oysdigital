@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Generics.Common;
 using Generics.DataModels.AdminModels;
 using Generics.WebHelper.Extensions;
 using LayerBao;
@@ -15,7 +16,6 @@ namespace Admin.Controllers
 {
     public class PlatformController : Controller
     {
-        public ImageUploader i;
         [Obsolete]
         private readonly IHostingEnvironment _environment;
 
@@ -28,8 +28,21 @@ namespace Admin.Controllers
         {
             return View(PlatformBao.GetAll());
         }
+        [Route("/Platform/Create")]
+        [Route("/Platform/Edit/{id}")]
         [HttpGet]
-         [Route("/Platform/Create")]
+        public IActionResult Create(long id = 0)
+        {
+            Platform platform = id <= 0 ? new Platform() : PlatformBao.GetById(id);
+            if (id > 0 && platform == null)
+            {
+                // Dont Exist
+            }
+            ViewBag.IsEdit = id > 0;
+            return View(platform);
+        }
+
+        [Route("/Platform/Create")]
         [Route("/Platform/Edit/{id}")]
         [HttpPost]
         [Obsolete]
@@ -55,7 +68,7 @@ namespace Admin.Controllers
                 platform.IconUrl = SaveImage(file);
                 if (PlatformBao.Insert(platform))
                 {
-                    //return RedirectToAction("Index");
+                    return RedirectToAction("Index");
                 }
                 else
                 {
@@ -120,11 +133,16 @@ namespace Admin.Controllers
 
         public IActionResult Delete(long id)
         {
-            if (id != 0)
+            Platform platform = PlatformBao.GetById(id);
+            if (id > 0 && platform == null)
             {
-                return View(PlatformBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.PlatformDictionary = Functions.CreateDictionaryFromModel(platform);
+            }
+            return View(platform);
         }
 
         public IActionResult ConfirmDelete(long id)
@@ -137,11 +155,16 @@ namespace Admin.Controllers
         }
         public IActionResult Detail(long id)
         {
-            if (id != 0)
+            Platform platform = PlatformBao.GetById(id);
+            if (id > 0 && platform == null)
             {
-                return View(PlatformBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.PlatformDictionary = Functions.CreateDictionaryFromModel(platform);
+            }
+            return View(platform);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Generics.Common;
 using Generics.Data;
 using Generics.DataModels.AdminModels;
 using Generics.WebHelper.Extensions;
@@ -70,11 +71,16 @@ namespace Admin.Controllers
 
         public IActionResult Delete(long id)
         {
-            if (id != 0)
+            Mobile mobile = MobileBao.GetById(id);
+            if (id > 0 && mobile == null)
             {
-                return View(MobileBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.MobileDictionary = Functions.CreateDictionaryFromModel(mobile);
+            }
+            return View(mobile);
         }
 
         public IActionResult ConfirmDelete(long id)
@@ -87,11 +93,16 @@ namespace Admin.Controllers
         }
         public IActionResult Detail(long id)
         {
-            if (id != 0)
+            Mobile mobile = MobileBao.GetById(id);
+            if (id > 0 && mobile == null)
             {
-                return View(MobileBao.GetById(id));
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.MobileDictionary = Functions.CreateDictionaryFromModel(mobile);
+            }
+            return View(mobile);
         }
     }
 }

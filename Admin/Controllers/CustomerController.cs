@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using Amazon.S3.Encryption.Internal;
+using Generics.Common;
 using Generics.Data;
 using Generics.DataModels.AdminModels;
 using Generics.WebHelper.Extensions;
@@ -85,9 +87,14 @@ namespace Admin.Controllers
             {
                 // Dont Exist
             }
+            else
+            {
+                ViewBag.CustomerDictionary = Functions.CreateDictionaryFromModel(customer);
+            }
             return View(customer);
         }
-      
+        
+
         public IActionResult ConfirmDelete(long id)
         {
             if (id != 0)
@@ -98,27 +105,16 @@ namespace Admin.Controllers
         }
         public IActionResult Detail(long id)
         {
-            if (id != 0)
+            Customer customer = CustomerBao.GetById(id);
+            if (id > 0 && customer == null)
             {
-                CustomerDetailView detail = new CustomerDetailView();
-                var data= CustomerBao.GetById(id);
-                detail.customer = data; 
-                if (data != null)
-                { 
-                    //var pro = ProjectBao.GetByCustomerId(data.Id);
-                    //if (pro != null)
-                    //{
-                    //    foreach (var item in pro)
-                    //    {
-                    //        item.ProjectPlatforms = ProjectPlatformsBao.GetByProjectId(item.ProjectId);
-                    //        item.ProjectMembers = ProjectMembersBao.GetByProjectId(item.ProjectId);
-                    //    }
-                    //}
-                    //detail.Projects = pro;
-                }
-                return View(detail);
+                // Dont Exist
             }
-            return View();
+            else
+            {
+                ViewBag.CustomerDictionary = Functions.CreateDictionaryFromModel(customer);
+            }
+            return View(customer);
         }
     }
 }

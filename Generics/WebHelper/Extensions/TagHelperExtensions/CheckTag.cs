@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.OpenApi.Extensions;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,9 @@ namespace Generics.WebHelper.Extensions
         Checbox = 4,
         TextArea = 5,
         DropdownList = 6,
-        file = 7,
+        File = 7,
+        Select=8,
+
     };
     public enum HtmlButtonType
     {
@@ -38,7 +41,8 @@ namespace Generics.WebHelper.Extensions
                 HtmlInputType.Number => "number",
                 HtmlInputType.Hidden => "hidden",
                 HtmlInputType.Checbox => "checkbox",
-                HtmlInputType.file => "file",
+                HtmlInputType.File => "file",
+                HtmlInputType.Select => "select",
                 _ => "",
             };
         }
@@ -76,6 +80,11 @@ namespace Generics.WebHelper.Extensions
             var str = $"<button class='btn btn-raised btn-primary waves-effect' type='{ParseButtonTypes(htmlButtonType)}'>{name}</button>";
             return new HtmlString(str);
         }
+        public static IHtmlContent GenerateDataTime(string name,string value)
+        {
+            var str = $"<div class='form-group form-float'><div class='input-group'><div class='input-group-prepend'><span class='input-group-text'><i class='zmdi zmdi-time'></i></span></div><input type='text' class='form-control timepicker' name='{name}' value='{value}' placeholder='Please choose a time...'></div></div>";
+            return new HtmlString(str);
+        }
         public static IHtmlContent GenerateHeader(string heading,string link,string linkText)
         {
             var str = $"<div class='block-header'> " +
@@ -102,6 +111,7 @@ namespace Generics.WebHelper.Extensions
                 $"<thead class='thead-light'> {tr} </thead>";
             return new HtmlString(str);
         }
+
         public static IHtmlContent GenerateTableFooter()
         {
             return new HtmlString("</table>");
@@ -122,40 +132,26 @@ namespace Generics.WebHelper.Extensions
             var tr = $"<tr>{tds}</tr>";
             return new HtmlString(tr);
         }
-       
+        
         public static IHtmlContent TableHead(params string[] items)
         {
             var start = ("<thead>");
             var end = ("</thead>");
             return new HtmlString(start + Tr(items) + end);
         }
-        public static IHtmlContent Dl(params string[] items)
+        public static IHtmlContent Dl(Dictionary<string,object> dic)
         {
             var dls = "";
-            if (items != null && items.Length > 0)
+            if (dic != null && dic.Count > 0)
             {
-                var type = "";
-                var type2 = "";
-                for (var i = 0; i < items.Length; i++)
+                foreach(var item in dic)
                 {
-                    if (i == 0) type = items[i];
-                    if (i == 1) type2 = items[i];
-                    if(i > 1)
-                    {
-                        dls += $"<{type}>{items[i]}</{type}>"+ $"<{type2}>{items[i]}</{type2}>";
-                    }
+                  dls += $"<dt>{item.Key}</dt>"+ $"<dd>{item.Value}</dd>";
                 }
             }
             var dl = $"<dl>{dls}</dl>";
             return new HtmlString(dl);
         }
-        public static IHtmlContent DataList(params string[] items)
-        {
-            var start = ("<dl>");
-            var end = ("</dt>");
-            return new HtmlString(start + Dl(items) + end);
-        }
-
         public static IHtmlContent TableFoot(params string[] items)
         {
             var start = ("<tfoot>");
@@ -209,12 +205,7 @@ namespace Generics.WebHelper.Extensions
             {
                 str = $"<div class='form-group'> <div class='checkbox'> <input id='{id}' {(value == "True" ? "checked=''" : "")} type='{htmlInputTypeValue}' name='{mappingName}' {value}> " +
                     $"<label for='{id}' name='{mappingName}'>{displayName}</label></div></div>";
-            }else if (htmlInputType == HtmlInputType.file)
-            {
-                str = $"<div class='form-group'> <div class='file'> <input id='{id}' type='{htmlInputTypeValue}' name='{mappingName}' {value}> " +
-                    $"<label for='{id}' name='{mappingName}'>{displayName}</label></div></div>";
-            }
-            else
+            }else
             {
                 str = $"<div class='form-group form-float'><label>{displayName}</label><input type='{htmlInputTypeValue}' class='form-control' " +
                               $"value='{value}' placeholder='{displayName}' name='{mappingName}' {required}>" +
@@ -262,7 +253,7 @@ namespace Generics.WebHelper.Extensions
 
 
         public static IHtmlContent Create(string link)
-        => new HtmlString(string.Format(buttonTemplate, "Create", link, "btn-primary", "zmdi-plus"));
+        => new HtmlString(string.Format(buttonTemplate, "Create", link, "btn btn-success float-right", "zmdi-plus"));
 
         public static IHtmlContent EditSmall(string link)
             => new HtmlString(string.Format(buttonTemplate, "Edit", link, "btn-sm btn-default", "zmdi-edit"));
@@ -272,6 +263,8 @@ namespace Generics.WebHelper.Extensions
             => new HtmlString(string.Format(buttonTemplate, "Detail", link, "btn-sm btn-info", "zmdi-info-outline"));
         public static IHtmlContent CreateSmall(string link,string text)
                    => new HtmlString(string.Format(buttonTemplate, text, link, "btn-sm btn-primary", "zmdi-plus"));
+        public static IHtmlContent BackToListSmall(string link)
+                   => new HtmlString(string.Format(buttonTemplate,"Back to list", link, "btn-sm btn-info", ""));
 
     }
 }

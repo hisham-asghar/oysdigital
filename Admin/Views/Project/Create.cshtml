@@ -8,16 +8,22 @@
 
 @CHtmlHelper.GenerateHeader(title, "/Project", "Back to Mobiles List")
 @CHtmlHelper.GetCardHeader(12, title)
-<form method="post" name="project">
-    @if (isEdit)
-    {
-        @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
-    }
-    @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
-    @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
-    @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
-    @ButtonHelper.CreateSmall("/Project/Index", "Back to List")
-</form>
+    <form method="post" name="project">
+        @if (isEdit)
+        {
+            @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
+            @CHtmlHelper.GenerateInputField("", Model.Guid, HtmlInputType.Hidden, "Guid")
+            @CHtmlHelper.GenerateSingleSelectField("Customer Name", "CustomerId", ViewBag.CustomerDictionary, (int)Model.CustomerId)
+
+        }
+        else
+        {
+            @CHtmlHelper.GenerateSingleSelectField("Customer Name", "CustomerId", ViewBag.CustomerDictionary)
+        }
+        @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
+        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
+        @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
+    </form>
 @CHtmlHelper.GetCardFooter()
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

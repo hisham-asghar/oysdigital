@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
@@ -51,6 +52,20 @@ namespace Generics.Common
                 }
             }
             return keyValuePairs;
+        }
+        public static Dictionary<string, object> CreateDictionaryFromModel<T>(T form)
+        {
+           return form.GetType()
+            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .ToDictionary(prop => prop.Name.ToUpper().ToString(), prop => prop.GetValue(form, null));
+
+        }
+        public static Dictionary<string, object> CreateDictionaryFromModelList<T>(List<T> form)
+        {
+            return form.GetType()
+             .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+             .ToDictionary(prop => prop.Name.ToUpper().ToString(), prop => prop.GetValue(form, null));
+
         }
 
         public static string GetPhoneNumber(this string phoneNumberRaw)
@@ -167,7 +182,7 @@ namespace Generics.Common
             }
         }
         public static int ToBoolInt(this string str) => str.ToBool().ToInt();
-        public static bool IsSimple(this Type type) => type.IsPrimitive || type.Equals(typeof(string));
+        public static bool IsSimple(this Type type) => type.IsPrimitive || type.Equals(typeof(string)) || type.Equals(typeof(DateTime));
 
         public static long ToLong(this string number)
         {
