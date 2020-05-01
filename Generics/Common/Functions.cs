@@ -58,7 +58,6 @@ namespace Generics.Common
            return form.GetType()
             .GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .ToDictionary(prop => prop.Name.ToUpper().ToString(), prop => prop.GetValue(form, null));
-
         }
         public static Dictionary<int, string> CreateDictionaryFromModelList<T>(List<T> item)
         {

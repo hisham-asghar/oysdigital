@@ -62,14 +62,7 @@ namespace Admin.Controllers
             {
                 customer.SetOnCreate(userId);
                 customer.Guid = Guid.NewGuid().ToString();
-                if (CustomerBao.Insert(customer))
-                {
-                    //return RedirectToAction("Index");
-                }
-                else
-                {
-                    return View(customer);
-                }
+                CustomerBao.Insert(customer);
             }
             else
             {
