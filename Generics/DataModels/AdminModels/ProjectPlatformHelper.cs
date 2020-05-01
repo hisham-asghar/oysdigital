@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Amazon.S3.Model.Internal.MarshallTransformations;
+using Generics.Common;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace Generics.DataModels.AdminModels
@@ -27,7 +30,9 @@ namespace Generics.DataModels.AdminModels
             }
             return postconnt;
         }
-        public static ProjectPlatforms ProjectPlatformParser(ProjectPlaformCreateView proj)
+        
+
+    public static ProjectPlatforms ProjectPlatformParser(ProjectPlaformCreateView proj)
         {
             ProjectPlatforms p=new ProjectPlatforms();
             if (proj.PostType == 0)

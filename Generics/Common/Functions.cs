@@ -60,12 +60,40 @@ namespace Generics.Common
             .ToDictionary(prop => prop.Name.ToUpper().ToString(), prop => prop.GetValue(form, null));
 
         }
-        public static Dictionary<string, object> CreateDictionaryFromModelList<T>(List<T> form)
+        public static Dictionary<int, string> CreateDictionaryFromModelList<T>(List<T> item)
         {
-            return form.GetType()
-             .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-             .ToDictionary(prop => prop.Name.ToUpper().ToString(), prop => prop.GetValue(form, null));
+            Dictionary<int, string> dictionary = new Dictionary<int, string>();
+            if (item != null)
+            {
+                var list = typeof(T)
+                    .GetProperties()
+                    .ToDictionary(c => c.Name, c => item.Select(x => c.GetValue(x)).ToList());
+                var Name = list.Keys.Contains("Name") ? GetDictionaryByKey(list, "Name") : null;
+                var Id = list.Keys.Contains("Id") ? GetDictionaryByKey(list, "Id") : null;
+                for (int i = 0; i < Name.Count; i++)
+                {
+                    dictionary.Add(Id[i].ToInt(), Name[i].ToString());
+                }
+            }
+            return dictionary;
+        }
 
+        private static Dictionary<int, string> GetDictionaryByKey(Dictionary<string, List<object>> ret, string Key)
+        {
+            Dictionary<int, string> dictionary = new Dictionary<int, string>();
+            int x = 0;
+            foreach (var data in ret)
+            {
+                if (data.Key == Key)
+                {
+                    foreach (var i in data.Value)
+                    {
+                        dictionary.Add(x, i.ToString());
+                        x++;
+                    }
+                }
+            }
+            return dictionary;
         }
 
         public static string GetPhoneNumber(this string phoneNumberRaw)

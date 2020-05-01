@@ -32,25 +32,9 @@ namespace Admin.Controllers
             }
             else
             {
-                Dictionary<int, string> dictionary = new Dictionary<int, string>();
-                foreach (var info in ProjectBao.GetAll())
-                {
-                    dictionary.Add((int)info.Id, info.Name);
-                }
-                ViewBag.ProjectDictionary = dictionary;
-                Dictionary<int, string> dictionary1 = new Dictionary<int, string>();
-                foreach (var info in PlatformBao.GetAll())
-                {
-                    dictionary1.Add((int)info.Id, info.Name);
-                }
-                ViewBag.PlatformDictionary = dictionary1;
-                Dictionary<int, string> dictionary2 = new Dictionary<int, string>();
-                foreach (var info in MobileSpacesBao.GetAll())
-                {
-                    dictionary2.Add((int)info.Id, info.Name);
-                }
-                ViewBag.MobileSpacesDictionary = dictionary2;
-               
+                ViewBag.ProjectDictionary = Functions.CreateDictionaryFromModelList(ProjectBao.GetAll());
+                ViewBag.PlatformDictionary = Functions.CreateDictionaryFromModelList(PlatformBao.GetAll());
+                ViewBag.MobileSpacesDictionary = Functions.CreateDictionaryFromModelList(MobileSpacesBao.GetAll());
             }
             ProjectPlaformCreateView p = new ProjectPlaformCreateView();
             ViewBag.IsEdit = id > 0;
