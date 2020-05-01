@@ -1,13 +1,13 @@
 ﻿@model Generics.DataModels.AdminModels.ProjectPlatforms
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Detail";
     Layout = "_DetailLayout";
 }
 <h1>Details</h1>
 <div>
     <h4>Project Platforms</h4>
     <hr />
-    @CHtmlHelper.Dl(ViewBag.ProjectPlatformsDictionary)
-    @ButtonHelper.EditSmall("/ProjectPlatforms/Edit/" + Model.Id)
-    @ButtonHelper.BackToListSmall("/ProjectPlatforms/Index")
+    @CHtmlHelper.Dl(ViewBag.ProjectPlatformDictionary)
+    @ButtonHelper.EditSmall("/ProjectPlatform/Edit/" + Model.Id)
+    @ButtonHelper.BackToListSmall("/ProjectPlatform/Index")
 </div>

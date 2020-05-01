@@ -56,7 +56,7 @@ namespace Admin.Controllers
             ViewBag.IsEdit = id > 0;
             if (projectplatform != null)
             {
-                p=ProjectPlatformHelper.ProjectPlatformCreateViewParser(projectplatform);
+                p = ProjectPlatformHelper.ProjectPlatformCreateViewParser(projectplatform);
                 return View(p);
             }
             else
@@ -108,7 +108,7 @@ namespace Admin.Controllers
             }
             else
             {
-                ViewBag.ProjectDictionary = Functions.CreateDictionaryFromModel(projectplatform);
+                ViewBag.projectplatformDictionary = Functions.CreateDictionaryFromModel(projectplatform);
             }
             return View(projectplatform);
         }
@@ -130,7 +130,7 @@ namespace Admin.Controllers
             }
             else
             {
-                ViewBag.ProjectDictionary = Functions.CreateDictionaryFromModel(projectplatform);
+                ViewBag.projectplatformDictionary = Functions.CreateDictionaryFromModel(projectplatform);
             }
             return View(projectplatform);
         }

@@ -12,15 +12,9 @@
         @if (isEdit)
         {
             @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
-            @CHtmlHelper.GenerateSingleSelectField("Member Type Name", "ProjectMemberTypeId", ViewBag.ProjectMemberTypeDictionary, (int)Model.ProjectMemberTypeId)
-            @CHtmlHelper.GenerateSingleSelectField("Project Name", "ProjectId", ViewBag.ProjectDictionary, (int)Model.ProjectId)
         }
-        else
-        {
-            @CHtmlHelper.GenerateSingleSelectField("Member Type Name", "ProjectMemberTypeId", ViewBag.ProjectMemberTypeDictionary)
-            @CHtmlHelper.GenerateSingleSelectField("Project Name", "ProjectId", ViewBag.ProjectDictionary)
-        }
-
+        @CHtmlHelper.GenerateSingleSelectField("Member Type Name", "ProjectMemberTypeId", ViewBag.ProjectMemberTypeDictionary, (isEdit) ? (int)Model.ProjectMemberTypeId : 0)
+        @CHtmlHelper.GenerateSingleSelectField("Project Name", "ProjectId", ViewBag.ProjectDictionary, (isEdit) ? (int)Model.ProjectId : 0)
         @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
         @ButtonHelper.CreateSmall("/ProjectMembers/Index", "Back to List")

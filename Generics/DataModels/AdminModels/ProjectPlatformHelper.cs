@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -16,22 +17,6 @@ namespace Generics.DataModels.AdminModels
             if (items != null && items.Length > 0)
             {
                 
-                for (var i = 0; i < items.Length; i++)
-                {
-                    if (items[i] != 0)
-                    {
-                        return items[i];
-                    }
-                }
-            }
-            return postconnt;
-        }
-        public static int GetPostId(params int[] items)
-        {
-            int postconnt = 0;
-            if (items != null && items.Length > 0)
-            {
-
                 for (var i = 0; i < items.Length; i++)
                 {
                     if (items[i] != 0)
@@ -64,6 +49,11 @@ namespace Generics.DataModels.AdminModels
             p.PlatformLink = proj.PlatformLink;
             p.MobileSpaceId = proj.MobileSpaceId;
             p.IsActive = proj.IsActive;
+            p.Id = proj.Id;
+            p.CreatedBy = proj.CreatedBy;
+            p.ModifiedBy = proj.ModifiedBy;
+            p.OnCreated = proj.OnCreated;
+            p.OnModified = proj.OnModified;
             return p;
         }
         public static ProjectPlaformCreateView ProjectPlatformCreateViewParser(ProjectPlatforms proj)
@@ -107,6 +97,10 @@ namespace Generics.DataModels.AdminModels
             p.MobileSpaceId = proj.MobileSpaceId;
             p.IsActive = proj.IsActive;
             p.Id = proj.Id;
+            p.CreatedBy = proj.CreatedBy;
+            p.ModifiedBy = proj.ModifiedBy;
+            p.OnCreated= proj.OnCreated;
+            p.OnModified = proj.OnModified;
             return p;
         }
         public static Dictionary<int, string> CreatePostScheduling()

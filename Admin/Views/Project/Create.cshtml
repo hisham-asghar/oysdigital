@@ -13,13 +13,8 @@
         {
             @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
             @CHtmlHelper.GenerateInputField("", Model.Guid, HtmlInputType.Hidden, "Guid")
-            @CHtmlHelper.GenerateSingleSelectField("Customer Name", "CustomerId", ViewBag.CustomerDictionary, (int)Model.CustomerId)
-
         }
-        else
-        {
-            @CHtmlHelper.GenerateSingleSelectField("Customer Name", "CustomerId", ViewBag.CustomerDictionary)
-        }
+        @CHtmlHelper.GenerateSingleSelectField("Customer Name", "CustomerId", ViewBag.CustomerDictionary, (isEdit) ? (int)Model.CustomerId : 0)
         @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
         @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)

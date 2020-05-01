@@ -80,9 +80,9 @@ namespace Generics.WebHelper.Extensions
             var str = $"<button class='btn btn-raised btn-primary waves-effect' type='{ParseButtonTypes(htmlButtonType)}'>{name}</button>";
             return new HtmlString(str);
         }
-        public static IHtmlContent GenerateDataTime(string name,string value)
+        public static IHtmlContent GenerateDataTime(string name,string value,string mappingName)
         {
-            var str = $"<div class='form-group form-float'><div class='input-group'><div class='input-group-prepend'><span class='input-group-text'><i class='zmdi zmdi-time'></i></span></div><input type='text' class='form-control timepicker' name='{name}' value='{value}' placeholder='Please choose a time...'></div></div>";
+            var str = $"<div class='form-group form-float'><label>{name}</label><div class='input-group'><div class='input-group-prepend'><span class='input-group-text'><i class='zmdi zmdi-time'></i></span></div><input type='text' class='form-control timepicker' name='{mappingName}' value='{value}' placeholder='Please choose a time...'></div></div>";
             return new HtmlString(str);
         }
         public static IHtmlContent GenerateHeader(string heading,string link,string linkText)
@@ -146,7 +146,9 @@ namespace Generics.WebHelper.Extensions
             {
                 foreach(var item in dic)
                 {
-                  dls += $"<dt>{item.Key}</dt>"+ $"<dd>{item.Value}</dd>";
+                    if (item.Value.ToString()!="" && item.Value.ToString() != "0")
+                    dls += $"<dt>{item.Key}</dt>" + $"<dd>{item.Value}</dd>";
+                   
                 }
             }
             var dl = $"<dl>{dls}</dl>";

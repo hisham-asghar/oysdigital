@@ -14,7 +14,7 @@
     <form method="post" name="customer">
         @if (isEdit)
         {
-            @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
+            @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
         }
         @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
         @HtmlInputType.Text.GenerateInputField("Email", Model.Email, "Email")

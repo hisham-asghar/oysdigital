@@ -11,12 +11,8 @@
         @if (isEdit)
         {
             @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
-            @CHtmlHelper.GenerateSingleSelectField("Note Type", "NoteTypeId", NoteType.CreateProjectNoteDictionary(), (int)Model.NoteTypeId)
         }
-        else
-        {
-            @CHtmlHelper.GenerateSingleSelectField("Note Type", "NoteTypeId", NoteType.CreateProjectNoteDictionary())
-        }
+        @CHtmlHelper.GenerateSingleSelectField("Note Type", "NoteTypeId", NoteType.CreateProjectNoteDictionary(), (isEdit) ? (int)Model.NoteTypeId : 0)
         @HtmlInputType.Text.GenerateInputField("Message", Model.Message, "Message")
         @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
