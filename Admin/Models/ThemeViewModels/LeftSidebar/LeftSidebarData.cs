@@ -11,18 +11,11 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
         {
             var data = new List<LeftSidebarDto>
             {
-                new LeftSidebarDto("Dashboard", "#", "home"),
-                new LeftSidebarDto("Our Profile", "#", "account"),
-                new LeftSidebarDto("App", "#", "apps")
-                {
-                    SubItems = new List<LeftSidebarDto>
-                    {
-                        new LeftSidebarDto("Email", "#"),
-                        new LeftSidebarDto("Chat Apps", "#"),
-                        new LeftSidebarDto("Calendar", "#"),
-                        new LeftSidebarDto("Contact", "#"),
-                    }
-                }
+                new LeftSidebarDto("Dashboard", "/", "home"),
+                new LeftSidebarDto("Customers", "/Customer", "accounts"),
+                new LeftSidebarDto("Projects", "/Project", "assignment"),
+                new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"),
+                new LeftSidebarDto("Platforms", "/Platform", "delicious")
             };
             return data;
         }

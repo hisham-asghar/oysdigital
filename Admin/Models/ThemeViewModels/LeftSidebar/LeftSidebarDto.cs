@@ -17,8 +17,8 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
             if (SubItems == null) SubItems = new List<LeftSidebarDto>();
             if (Title == null) Title = title;
             if (ClassName == null) ClassName = className;
-            if (referenceLink == null) ReferenceLink = referenceLink;
-            if (isNewTabLink == false) IsNewTabLink = isNewTabLink;
+            if (ReferenceLink == null) ReferenceLink = referenceLink;
+            if (IsNewTabLink == false) IsNewTabLink = isNewTabLink;
 
         }
     }
