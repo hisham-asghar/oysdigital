@@ -12,9 +12,6 @@ namespace Generics.DataModels.AdminModels
         public string Name { get; set; }
         public long CustomerId { get; set; }
         public bool IsActive { get; set; }
-    }
-    public class projectview
-    {
         public List<ProjectPlatforms> ProjectPlatforms { get; set; }
         public List<ProjectMembers> ProjectMembers { get; set; }
         public List<MobileSpaces> MobileSpaces { get; set; }

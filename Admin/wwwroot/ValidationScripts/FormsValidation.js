@@ -96,7 +96,7 @@
         $("form[name='projectmessages']").validate({
             rules: {
                 Message: { required: true, minlength: 10, maxlength: 150 },
-                ProjectMessageTypeId: "required"
+                LabelTypeId: "required"
             },
             messages: {
                 Message: {
@@ -104,7 +104,7 @@
                     minlength: "Message must be at least 10 characters long",
                     maxlength: "Message must be at least 150 characters long"
                 },
-                ProjectMessageTypeId: "Please select message type"
+                LabelTypeId: "Please select message type"
             },
             submitHandler: function (form) {
                 form.submit();
@@ -173,21 +173,25 @@
         $("form[name='projectplatform']").validate({
             rules: {
                 Id: "required",
+                ProjectId: "required",
+                PlatformId: "required",
                 PlatformLink: "required",
-                Id: "required",
-                PostPerDay: "required",
-                PostsQuantity: { required: true, minlength: 1, maxlength: 150, regex: "^[0-9]{1,150}$" },
+                MobileSpaceId: "required",
+                PostType: "required",
+                PostCount: { required: true, minlength: 1, maxlength: 150, regex: "^[0-9]{1,150}$" },
                 PostSchedulingTime: "required",
-                StoriesPerDay: "required",
-                StoriesQuantity: { required: true, minlength: 1, maxlength: 150, regex: "^[0-9]{1,150}$" },
+                StoriesType: "required",
+                StoriesCount: { required: true, minlength: 1, maxlength: 150, regex: "^[0-9]{1,150}$" },
                 StoriesSchedulingTime: "required",
             },
             // Specify validation error messages
             messages: {
                 Id: "Please select platform name",
+                ProjectId: "Please select your Project",
+                PlatformId: "Please select your Platform",
                 PlatformLink: "Please enter your PlatformLink",
-                Id: "Please select mobile space name",
-                PostPerDay: "Please select posts plan",
+                MobileSpaceId: "Please select mobile space name",
+                PostType: "Please select posts plan",
                 PostsQuantity: {
                     required: "Please enter your post quantity",
                     minlength: "Post quantity must be at least 1 numeric long",
@@ -195,7 +199,7 @@
                     regex: "Only numerical values are allowed"
                 },
                 PostSchedulingTime: "Please select post scheduling time",
-                StoriesPerDay: "Please select stories/status plan",
+                StoriesType: "Please select stories/status plan",
                 StoriesQuantity: {
                     required: "Please enter your stories/status quantity",
                     minlength: "Stories quantity must be at least 1 numeric long",

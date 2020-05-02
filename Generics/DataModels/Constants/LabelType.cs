@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Generics.DataModels.Constants
 {
-    public static class ProjectMessageType
+    public static class LabelType
     {
         public const string General = "0";
         public const string Task = "1";

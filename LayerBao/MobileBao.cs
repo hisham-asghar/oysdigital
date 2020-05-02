@@ -14,7 +14,9 @@ namespace LayerBao
         }
         public static Mobile GetById(long id)
         {
-            return MobileDao.GetById(id);
+            var mobile = MobileDao.GetById(id);
+            if (mobile != null) mobile.Spaces = MobileSpacesDao.GetByMobileId(id);
+            return mobile;
         }
         public static bool Insert(Mobile mobile)
         {

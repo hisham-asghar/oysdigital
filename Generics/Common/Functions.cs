@@ -59,16 +59,16 @@ namespace Generics.Common
             .GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .ToDictionary(prop => prop.Name.ToUpper().ToString(), prop => prop.GetValue(form, null));
         }
-        public static Dictionary<int, string> CreateDictionaryFromModelList<T>(List<T> item)
+        public static Dictionary<int, string> CreateDictionaryFromModelList<T>(this List<T> items, string key = "Id", string value = "Name")
         {
             Dictionary<int, string> dictionary = new Dictionary<int, string>();
-            if (item != null)
+            if (items != null && items.Count > 0)
             {
                 var list = typeof(T)
                     .GetProperties()
-                    .ToDictionary(c => c.Name, c => item.Select(x => c.GetValue(x)).ToList());
-                var Name = list.Keys.Contains("Name") ? GetDictionaryByKey(list, "Name") : null;
-                var Id = list.Keys.Contains("Id") ? GetDictionaryByKey(list, "Id") : null;
+                    .ToDictionary(c => c.Name, c => items.Select(x => c.GetValue(x)).ToList());
+                var Name = list.Keys.Contains(value) ? GetDictionaryByKey(list, value) : null;
+                var Id = list.Keys.Contains(key) ? GetDictionaryByKey(list, key) : null;
                 for (int i = 0; i < Name.Count; i++)
                 {
                     dictionary.Add(Id[i].ToInt(), Name[i].ToString());

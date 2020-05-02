@@ -222,10 +222,10 @@ namespace Generics.WebHelper.Extensions
             return htmlInputType.GenerateInputField(displayName, value, mappingName, id, isRequired);
         }
         
-        public static IHtmlContent GenerateSingleSelectField(string displayName,string mappingName,Dictionary<int,string>options,int selectedValId = 0)
+        public static IHtmlContent GenerateSingleSelectField(string displayName,string mappingName,Dictionary<int,string>options,int selectedValId = 0, bool includeEmpty = true)
         {
             var str = $"<div class='form-group form-float'> <label>{displayName}</label> <select class='form-control show-tick' name='{mappingName}'>" +
-            $" <option value ='0' selected>None</option>";
+            (includeEmpty ? $" <option value ='0' selected>None</option>" : "");
             if (options != null)
             {
                 foreach(var keyvalues in options)

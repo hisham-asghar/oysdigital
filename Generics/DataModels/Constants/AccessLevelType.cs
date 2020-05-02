@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Generics.DataModels.Constants
 {
-    public static class NoteType
+    public static class AccessLevelType
     {
         public const string Admin = "0";
         public const string Manager = "1";

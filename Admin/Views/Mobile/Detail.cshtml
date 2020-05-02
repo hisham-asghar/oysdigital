@@ -1,13 +1,57 @@
 ﻿@model Generics.DataModels.AdminModels.Mobile
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Mobile Detail";
     Layout = "_DetailLayout";
 }
-<h1>Details</h1>
-<div>
-    <h4>Mobile</h4>
-    <hr />
-    @CHtmlHelper.Dl(ViewBag.MobileDictionary)
-    @ButtonHelper.EditSmall("/Mobile/Edit/" + Model.Id)
-    @ButtonHelper.BackToListSmall("/Mobile/Index")
-</div>
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-7 col-md-6 col-sm-12">
+                <h2>Mobile Detail</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-4 col-md-12">
+                <div class="card mcard_3 p10">
+                    <div class="body">
+                        <a href="#"><img src="/images/profile_av.jpg" class="rounded-circle shadow " alt="profile-image"></a>
+                        <h4 class="m-t-10">@Model.Name</h4>
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge badge-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger">Not Active</span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="card p10">
+                    <div class="header">
+                        <h2>Mobile <strong>Spaces</strong></h2>
+                        <div class="pull-right">
+
+                            @ButtonHelper.Create($"/MobileSpaces/Create?mobileId={Model.Id}&returnUrl=/Mobile/Detail/{Model.Id}")
+                        </div>
+                    </div>
+                    <div class="body">
+                        <table class="table table-hover theme-color c_table">
+                            <tbody>
+                                @foreach (var space in Model.Spaces)
+                                {
+                                    <tr>
+                                        <td class="w70">@space.Name</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

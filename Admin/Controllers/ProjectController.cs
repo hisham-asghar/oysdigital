@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Generics.Common;
 using Generics.DataModels.AdminModels;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Admin.Controllers
 {
@@ -22,7 +18,7 @@ namespace Admin.Controllers
         [Route("/Project/Create")]
         [Route("/Project/Edit/{id}")]
         [HttpGet]
-        public IActionResult Create(long id = 0)
+        public IActionResult Create(long id = 0, long customerId = 0, string returnUrl = null)
         {
             Project project = id <= 0 ? new Project() : ProjectBao.GetById(id);
             if (id > 0 && project == null)
@@ -31,12 +27,15 @@ namespace Admin.Controllers
             }
             else
             {
-                Dictionary<int, string> dictionary = new Dictionary<int, string>();
-                foreach (var info in CustomerBao.GetAll())
+                var customer = CustomerBao.GetById(customerId);
+                if (customer == null)
+                    ViewBag.CustomerDictionary = CustomerBao.GetAll().CreateDictionaryFromModelList();
+                else
                 {
-                    dictionary.Add((int)info.Id, info.Name);
+                    var dictionary = new Dictionary<int, string>();
+                    dictionary.Add((int)customer.Id, customer.Name);
+                    ViewBag.CustomerDictionary = dictionary;
                 }
-                ViewBag.CustomerDictionary = dictionary;
             }
             ViewBag.IsEdit = id > 0;
             return View(project);
@@ -44,7 +43,7 @@ namespace Admin.Controllers
         [Route("/Project/Create")]
         [Route("/Project/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(Project project, int id = 0)
+        public IActionResult Create(Project project, int id = 0, long customerId = 0, string returnUrl = null)
         {
             Project projectDb = ProjectBao.GetById(id);
             if (id > 0 && projectDb == null)
@@ -71,8 +70,10 @@ namespace Admin.Controllers
                 project.SetOnUpdate(userId);
                 ProjectBao.Update(project);
             }
-
-            return RedirectToAction("Index");
+            if (string.IsNullOrWhiteSpace(returnUrl))
+                return RedirectToAction("Index");
+            else
+                return RedirectPermanent(returnUrl);
 
         }
         public IActionResult Delete(long id)

@@ -8,7 +8,9 @@ namespace Generics.DataModels.AdminModels
     public class ProjectNotes:BaseEntity
     {
         public string Message { get; set; }
-        public int NoteTypeId { get; set; }
+        public int AccessLevelTypeId { get; set; }
+        public int LabelTypeId { get; set; }
+        public long ProjectId { get; set; }
         public bool IsActive { get; set; }
     }
 }

@@ -7,6 +7,8 @@ namespace Generics.Common
     public static class DateTimeHelper
     {
         public const string MM_dd_yyyy = "MM/dd/yyyy";
+        public const string dd_MMMM_yyyy = "dd MMMM yyyy";
+        public const string MMMM_dd_yyyy = "MMMM dd yyyy";
         public const string dddd_dd_MMMM_yyyy = "dddd, dd MMMM yyyy";
         public const string dddd_dd_MMMM_yyyy_HH_mm_ss = "dddd, dd MMMM yyyy HH:mm:ss";
         public const string MM_dd_yyyy_HH_mm = "MM/dd/yyyy HH:mm";

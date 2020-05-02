@@ -14,7 +14,9 @@ namespace LayerBao
         }
         public static Customer GetById(long id)
         {
-            return CustomerDao.GetById(id);
+            var customer = CustomerDao.GetById(id);
+            if (customer != null) customer.Projects = ProjectDao.GetByCustomerId(id);
+            return customer;
         }
         public static bool Insert(Customer customer)
         {

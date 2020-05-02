@@ -9,5 +9,6 @@ namespace Generics.DataModels.AdminModels
     {       
         public string Name { get; set; }
         public bool IsActive { get; set; }
+        public List<MobileSpaces> Spaces { get; set; }
     }
 }

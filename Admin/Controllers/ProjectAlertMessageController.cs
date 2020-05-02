@@ -31,7 +31,7 @@ namespace Admin.Controllers
             }
             else
             {
-                ViewBag.SelectedValue = projectalertmessage.ProjectMessageTypeId;
+                ViewBag.SelectedValue = projectalertmessage.LabelTypeId;
             }
             ViewBag.IsEdit = id > 0;
             return View(projectalertmessage);

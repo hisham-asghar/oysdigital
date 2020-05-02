@@ -23,14 +23,6 @@ namespace Generics.WebHelper.Extensions
             var id = principal.FindFirst(u => u.Type == "CustomerId")?.Value;
             return id.ToInt();
         }
-        public static int GetCustomerName(this ClaimsPrincipal principal)
-        {
-            if (principal == null)
-                throw new ArgumentNullException(nameof(principal));
-
-            var id = principal.FindFirst(u => u.Type == "Name")?.Value;
-            return id.ToInt();
-        }
         public static string GetName(this ClaimsPrincipal principal)
         {
             if (principal == null)

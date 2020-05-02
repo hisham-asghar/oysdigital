@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Generics.Common;
 using Generics.DataModels.AdminModels;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Org.BouncyCastle.Math.EC.Rfc7748;
 
 namespace Admin.Controllers
 {
@@ -25,8 +18,9 @@ namespace Admin.Controllers
         [Route("/MobileSpaces/Create")]
         [Route("/MobileSpaces/Edit/{id}")]
         [HttpGet]
-        public IActionResult Create(long id = 0)
+        public IActionResult Create(long id = 0, long mobileId = 0,string returnUrl = null)
         {
+            
             MobileSpaces mobilespaces = id <= 0 ? new MobileSpaces() : MobileSpacesBao.GetById(id);
             if (id > 0 && mobilespaces == null)
             {
@@ -34,20 +28,24 @@ namespace Admin.Controllers
             }
             else
             {
-                Dictionary<int, string> dictionary = new Dictionary<int, string>();
-                foreach (var info in MobileBao.GetAll())
+                var mobile = MobileBao.GetById(mobileId);
+                if (mobile == null)
+                    ViewBag.MobileDictionary = MobileBao.GetAll().CreateDictionaryFromModelList();
+                else
                 {
-                    dictionary.Add((int)info.Id, info.Name);
+                    var dictionary = new Dictionary<int, string>();
+                    dictionary.Add((int)mobile.Id, mobile.Name);
+                    ViewBag.MobileDictionary = dictionary;
                 }
-                ViewBag.MobileDictionary = dictionary;
             }
             ViewBag.IsEdit = id > 0;
             return View(mobilespaces);
         }
+
         [Route("/MobileSpaces/Create")]
         [Route("/MobileSpaces/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(MobileSpaces mobilespaces, int id = 0)
+        public IActionResult Create(MobileSpaces mobilespaces, int id = 0, long mobileId = 0, string returnUrl = null)
         {
             MobileSpaces mobilespacesDb = MobileSpacesBao.GetById(id);
             if (id > 0 && mobilespacesDb == null)
@@ -66,16 +64,17 @@ namespace Admin.Controllers
             if (id == 0)
             {
                 mobilespaces.SetOnCreate(userId);
-                MobileSpacesBao.Insert(mobilespaces);
-               
+                MobileSpacesBao.Insert(mobilespaces);               
             }
             else
             {
                 mobilespaces.SetOnUpdate(userId);
                 MobileSpacesBao.Update(mobilespaces);
             }
-
-            return RedirectToAction("Index");
+            if(string.IsNullOrWhiteSpace(returnUrl))
+                return RedirectToAction("Index");
+            else
+                return RedirectPermanent(returnUrl);
 
         }
 
