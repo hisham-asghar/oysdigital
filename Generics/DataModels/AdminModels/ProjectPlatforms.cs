@@ -10,6 +10,7 @@ namespace Generics.DataModels.AdminModels
         public string PlatformLink { get; set; }
         public long ProjectId { get; set; }
         public long PlatformId { get; set; }
+        public Platform Platform { get; set; }
         public int PostPerDay { get; set; }
         public int PostPerWeek { get; set; }
         public int PostPerMonth { get; set; }
@@ -19,7 +20,9 @@ namespace Generics.DataModels.AdminModels
         public int StoriesPerMonth { get; set; }
         public DateTime StoriesSchedulingTime { get; set; }
         public long MobileSpaceId { get; set; }
+        public MobileSpaces MobileSpaces { get; set; }
         public bool IsActive { get; set; }
+
         
     }
     public class ProjectPlaformCreateView:ProjectPlatforms

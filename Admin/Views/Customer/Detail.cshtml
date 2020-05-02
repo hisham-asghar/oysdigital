@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Customer Detail";
     Layout = "_DetailLayout";
+    int count = 1;
 }
 <div class="block-header">
     <div class="row">
@@ -13,7 +14,7 @@
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-4 col-md-12">
-            <div class="card mcard_3 p10">
+            <div class="card mcard_3 p10 shadow p-3 mb-5 bg-white rounded">
                 <div class="body">
                     <a href="#"><img src="/images/profile_av.jpg" class="rounded-circle shadow " alt="profile-image"></a>
                     <h4 class="m-t-10">@Model.Name</h4>
@@ -31,35 +32,47 @@
             </div>
         </div>
         <div class="col-lg-8 col-md-12">
-            <div class="card">
+            <div class="card shadow p-3 mb-5 bg-white rounded">
                 <div class="header">
                     <h2>Customer <strong>Projects</strong></h2>
                     <div class="pull-right">
                         @ButtonHelper.Create($"/Project/Create?customerId={Model.Id}&returnUrl=/Customer/Detail/{Model.Id}")
                     </div>
+                    <br />
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0 c_table">
+                        <table class="table m-b-0">
+                            <thead class="thead-light">
+                                <tr class="text-center" style="background-color:grey">
+                                    <td>#</td>
+                                    <td>Name</td>
+                                    <td>Creation Date</td>
+                                    <td>Status</td>
+                                    <td>Action</td>
+                                </tr>
+                            </thead>
                             <tbody>
                                 @foreach (var project in Model.Projects)
                                 {
-                                <tr>
-                                    <td class="w250 text-left"><strong>@project.Name</strong></td>
+                                <tr class="text-center">
+                                    <td>@(count++)</td>
+                                    <td><strong>@project.Name  </strong></td>
+                                    <td>@project.OnCreated.ToString(MMMM_dd_yyyy)</td>
                                     @if (project.IsActive)
                                     {
-                                        <td class="w250 text-center"><span class="badge badge-success">Active</span></td>
+                                        <td><span class="badge badge-success">Active</span></td>
                                     }
                                     else
                                     {
-                                        <td class="w250"><span class="badge badge-danger">Not Active</span></td>
+                                        <td><span class="badge badge-danger">Not Active</span></td>
                                     }
-                                    <td class="w250 text-right">@ButtonHelper.Edit($"/Project/Edit/{project.Id}&returnUrl=/Customer/Detail/{Model.Id}")</td>
+                                    <td>@ButtonHelper.Edit($"/Project/Edit/{project.Id}&returnUrl=/Customer/Detail/{Model.Id}")</td>
                                 </tr>
                                 }
-                             </tbody>
-                         </table>
-                     </div>
+                            </tbody>
+                        </table>
+                    </div>
                     </div>
                 </div>
         </div>
