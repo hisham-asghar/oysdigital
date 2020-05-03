@@ -21,12 +21,24 @@ namespace Admin.Controllers
         [Route("/ProjectNotes/Create")]
         [Route("/ProjectNotes/Edit/{id}")]
         [HttpGet]
-        public IActionResult Create(long id = 0)
+        public IActionResult Create(long id = 0, long projectId = 0, string returnUrl = null)
         {
             ProjectNotes projectnotes = id <= 0 ? new ProjectNotes() : ProjectNotesBao.GetById(id);
             if (id > 0 && projectnotes == null)
             {
                 // Dont Exist
+            }
+            else
+            {
+                var project = ProjectBao.GetById(projectId);
+                if (project == null)
+                    ViewBag.ProjectDictionary = ProjectBao.GetAll().CreateDictionaryFromModelList();
+                else
+                {
+                    var dictionary = new Dictionary<int, string>();
+                    dictionary.Add((int)project.Id, project.Name);
+                    ViewBag.ProjectDictionary = dictionary;
+                }
             }
             ViewBag.IsEdit = id > 0;
             return View(projectnotes);
@@ -34,7 +46,7 @@ namespace Admin.Controllers
         [Route("/ProjectNotes/Create")]
         [Route("/ProjectNotes/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(ProjectNotes projectnotes, int id = 0)
+        public IActionResult Create(ProjectNotes projectnotes, int id = 0, long projectId = 0, string returnUrl = null)
         {
             ProjectNotes projectnotesDb = ProjectNotesBao.GetById(id);
             if (id > 0 && projectnotesDb == null)
@@ -53,22 +65,17 @@ namespace Admin.Controllers
             if (id == 0)
             {
                 projectnotes.SetOnCreate(userId);
-                if (ProjectNotesBao.Insert(projectnotes))
-                {
-                    //return RedirectToAction("Index");
-                }
-                else
-                {
-                    return View(projectnotes);
-                }
+                ProjectNotesBao.Insert(projectnotes);
             }
             else
             {
                 projectnotes.SetOnUpdate(userId);
                 ProjectNotesBao.Update(projectnotes);
             }
-
-            return RedirectToAction("Index");
+            if (string.IsNullOrWhiteSpace(returnUrl))
+                return RedirectToAction("Index");
+            else
+                return RedirectPermanent(returnUrl);
 
         }
         public IActionResult Delete(long id)

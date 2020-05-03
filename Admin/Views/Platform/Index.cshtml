@@ -11,7 +11,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            @CHtmlHelper.Tr("td", item.IconUrl, item.Name, item.OnCreated.ToString(dddd_dd_MMMM_yyyy), item.IsActive.CheckTag().ToString(),
+            @CHtmlHelper.Tr("td", item.IconClass, item.Name, item.OnCreated.ToString(dddd_dd_MMMM_yyyy), item.IsActive.CheckTag().ToString(),
              @ButtonHelper.EditSmall("/Platform/Edit/" + item.Id)+""+
              @ButtonHelper.DeleteSmall("/Platform/Delete/" + item.Id)+""+
              @ButtonHelper.DetailSmall("/Platform/Detail/" + item.Id).ToString());

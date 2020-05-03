@@ -1,6 +1,6 @@
 ﻿@model Generics.DataModels.AdminModels.Project
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Detail";
     Layout = "_DetailLayout";
 }
     <div class="block-header">
@@ -17,7 +17,7 @@
                         <div class="body">
                             <a href="profile.html"><img src="/images/profile_av.jpg" class="rounded-circle" alt="profile-image"></a>
                             <h4 class="m-t-10">@Model.Name</h4>
-                            <h5 class="m-t-10">@Model.OnModified</h5>
+                            <h5 class="m-t-10">@Model.OnModified.ToString(MMMM_dd_yyyy)</h5>
                             <div class="row">
                                 <div class="col-12 mb-4">
                                     <ul class="social-links list-unstyled">
@@ -41,94 +41,184 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card shadow p-3 mb-5 bg-white rounded">
-                        <div class="body">
-                            <small class="text-muted">Reviews: </small>
-                            <p>
-                                <i class="text-warning zmdi zmdi-star"></i>
-                                <i class="text-warning zmdi zmdi-star"></i>
-                                <i class="text-warning zmdi zmdi-star"></i>
-                                <i class="text-warning zmdi zmdi-star"></i>
-                                <i class="text-warning zmdi zmdi-star-half"></i>
-                            </p>
-                            <hr>
-                            <small class="text-muted">Email address: </small>
-                            <p>wraptheme@gmail.com</p>
-                            <hr>
-                            <span>We offer development services in Angular, Laravel, WordPress, React and many other platforms.</span>
-                            <hr>
-                            <ul class="list-unstyled">
-                                <li>
-                                    <div>Angular</div>
-                                    <div class="progress m-b-20">
-                                        <div class="progress-bar l-blush" role="progressbar" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100" style="width: 89%"> <span class="sr-only">56% Complete</span> </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div>Laravel</div>
-                                    <div class="progress m-b-20">
-                                        <div class="progress-bar l-purple " role="progressbar" aria-valuenow="91" aria-valuemin="0" aria-valuemax="100" style="width: 91%"> <span class="sr-only">87% Complete</span> </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div>Photoshop</div>
-                                    <div class="progress m-b-20">
-                                        <div class="progress-bar l-blue " role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" style="width: 72%"> <span class="sr-only">62% Complete</span> </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div>Wordpress</div>
-                                    <div class="progress m-b-20">
-                                        <div class="progress-bar l-green " role="progressbar" aria-valuenow="63" aria-valuemin="0" aria-valuemax="100" style="width: 63%"> <span class="sr-only">87% Complete</span> </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div>FrontEnd</div>
-                                    <div class="progress m-b-20">
-                                        <div class="progress-bar l-amber" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100" style="width: 78%"> <span class="sr-only">32% Complete</span> </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+
                 </div>
                 <div class="col-xl-8 col-lg-12 col-md-12">
                     <div class="row clearfix">
                         <div class="col-md-12 col-sm-12">
-                                <div class="card shadow p-3 mb-5 bg-white rounded">
-                                    <div class="header">
-                                        <h2><strong>Platforms</strong></h2>
-                                        <div class="pull-right">
-                                            @ButtonHelper.Create($"/ProjectPlatforms/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
-                                        </div>
-                                        <br />
-                                    </div>
-                                    <div class="body taskboard progress_task">
-                                        <div class="dd" data-plugin="nestable">
-                                            <ol class="dd-list">
-                                                <li class="dd-item shadow p-3 mb-5 bg-white rounded" data-id="2">
-                                                    <div class="dd-handle d-flex justify-content-between align-items-center">
-                                                        <div class="h6 mb-0">Platform Name</div>
-                                                        <div class="action">
-                                                            <a href="javascript:void(0);"><i class="zmdi zmdi-edit"></i></a>
-                                                            <a href="javascript:void(0);"><i class="zmdi zmdi-delete"></i></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="dd-content p-15">
-                                                        <p class="text-black">Contrary to popular belief, Lorem Ipsum is not simply.</p>
-                                                        <ul class="list-unstyled d-flex bd-highlight align-items-center">
-                                                            <li class="mr-2 flex-grow-1 bd-highlight"><span class="badge badge-default"><i class="zmdi zmdi-time"></i>@Model.OnCreated.ToString(MMMM_dd_yyyy)</span></li>
-                                                            @*<li class="ml-3 bd-highlight"><a href="javascript:void(0);" class="text-muted"><i class="zmdi zmdi-comments"></i> 2</a></li>
-                                                            <li class="ml-3 bd-highlight"><a href="javascript:void(0);" class="text-muted"><i class="zmdi zmdi-check-square"></i> 8</a></li>*@
-                                                        </ul>
-                                                    </div>
-                                                </li>
-                                            </ol>
-                                        </div>
+                            <div class="card shadow p-3 mb-5 bg-white rounded">
+                                <div class="header">
+                                    <h2><strong>Platforms</strong></h2>
+                                    <div class="pull-right">
+                                        @ButtonHelper.Create($"/ProjectPlatform/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
                                     </div>
                                 </div>
+                                <div class="responsive">
+                                    <table class="table table-hover c_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Media</th>
+                                                <th>Posts</th>
+                                                <th>Stories</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.ProjectPlatforms)
+                                            {
+                                            <tr>
+                                                <td>
+                                                    <div class="hover-zoom-effect social-widget @item.PlatformName-widget">
+                                                        <div class="icon"><i class="@item.PlatformIcon"></i></div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <ul class="social-links list-unstyled">
+                                                        <li><span class="list-name">@ProjectPlatformHelper.GetPostName(item.PostPerDay, item.PostPerWeek, item.PostPerMonth)</span></li>
+                                                        <li><span class="text-muted">@ProjectPlatformHelper.GetPostCount(item.PostPerDay, item.PostPerMonth, item.PostPerWeek)</span></li>
+                                                        <li><span class="text-muted">@item.PostSchedulingTime.ToString(hh_mm_tt)</span></li>
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    <ul class="social-links list-unstyled">
+                                                        <li><span class="list-name">@ProjectPlatformHelper.GetStoriesName(item.StoriesPerDay, item.StoriesPerWeek, item.StoriesPerMonth)</span></li>
+                                                        <li><span class="text-muted">@ProjectPlatformHelper.GetPostCount(item.StoriesPerDay, item.StoriesPerWeek, item.StoriesPerMonth)</span></li>
+                                                        <li><span class="text-muted">@item.StoriesSchedulingTime.ToString(hh_mm_tt)</span></li>
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    @if (item.IsActive)
+                                                    {
+                                                        <span class="badge badge-success">Active</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-danger">In Active</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <a role="button" class="boxs-close"><i class="zmdi zmdi-edit"></i></a>
+                                                    <a role="button" class="boxs-close"><i class="zmdi zmdi-delete"></i></a>
+                                                </td>
+                                            </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card shadow p-3 mb-5 bg-white rounded">
+                                <div class="header">
+                                    <h2><strong>Members</strong></h2>
+                                    <div class="pull-right">
+                                        @ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                    </div>
+                                </div>
+                                <div class="responsive">
+                                    <table class="table table-hover c_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Image</th>
+                                                <th>Name</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.ProjectMembers)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div style="width:50px;height:auto" class="img img-rounded">
+                                                            <img src="/images/profile_av.jpg" class="img-fluid" alt="">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <ul class="social-links list-unstyled">
+                                                            <li><span>@item.MemberName</span></li>
+                                                            <li><span class="text-muted">@item.MemberType</span></li>
+                                                        </ul>
+                                                    </td>
+                                                    <td>
+                                                        @if (item.IsActive)
+                                                        {
+                                                            <span class="badge badge-success">Active</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge badge-danger">In Active</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <a role="button" class="boxs-close"><i class="zmdi zmdi-edit"></i></a>
+                                                        <a role="button" class="boxs-close"><i class="zmdi zmdi-delete"></i></a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-xl-12 col-lg-12 col-md-12">
+                    <div class="row clearfix">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="card shadow p-3 mb-5 bg-white rounded">
+                                <div class="header">
+                                    <h2><strong>Alert Messages</strong></h2>
+                                    <div class="pull-right">
+                                        @ButtonHelper.Create($"/ProjectAlertMessage/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                    </div>
+                                </div>
+                                <div class="responsive">
+                                    <table class="table c_table inbox_table">
+                                        @foreach (var item in Model.ProjectAlertMessages)
+                                        {
+                                        <tr>
+                                            <td class="max_ellipsis">
+                                                <div class="responsive">
+                                                    <span class="badge badge-primary mr-2">@LabelType.CheckProjectMessageType(item.LabelTypeId)</span>
+                                                    @item.Message
+                                                </div>
+                                            </td>
+                                            <td class="time">@item.OnCreated.ToString(MMMM_dd)</td>
+                                        </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            
+                            <div class="card shadow p-3 mb-5 bg-white rounded">
+                                <div class="header">
+                                    <h2><strong>Notes</strong></h2>
+                                    <div class="pull-right">
+                                        @ButtonHelper.Create($"/ProjectNotes/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                    </div>
+                                </div>
+                                <div class="responsive">
+                                    <table class="table c_table inbox_table">
+                                        @foreach (var item in Model.ProjectNotes)
+                                        {
+                                            <tr>
+                                                <td class="max_ellipsis">
+                                                    <div class="responsive">
+                                                        <span class="badge badge-primary mr-2">@LabelType.CheckProjectMessageType(item.LabelTypeId)</span>
+                                                        @item.Message
+                                                    </div>
+                                                </td>
+                                                <td class="time">@item.OnCreated.ToString(MMMM_dd)</td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
+                    </div>
+                </div>
             </div>
-        </div>

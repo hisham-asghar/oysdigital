@@ -18,6 +18,11 @@ namespace LayerDao
         {
             return TableConstants.ProjectAlertMessage.Select<ProjectAlertMessage>((int)id);
         }
+        public static List<ProjectAlertMessage> GetByProjectId(long id)
+        {
+            var where = $"ProjectId={id}";
+            return TableConstants.ProjectAlertMessage.SelectList<ProjectAlertMessage>(where);
+        }
         public static bool Insert(ProjectAlertMessage projectalertmessage)
         {
             return projectalertmessage.Insert(TableConstants.ProjectAlertMessage) > 0;

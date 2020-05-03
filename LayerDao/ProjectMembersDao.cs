@@ -12,11 +12,18 @@ namespace LayerDao
     {
         public static List<ProjectMembers> GetAll()
         {
-            return TableConstants.ProjectMembers.SelectAll<ProjectMembers>();
+            var query = $"SELECT  ProjectMembers.*,ProjectMemberTypes.Name as MemberType,AspNetUsers.Name as MemberName  FROM [dbo].[ProjectMembers] Join dbo.ProjectMemberTypes on ProjectMemberTypes.Id=ProjectMembers.ProjectMemberTypeId Join dbo.AspNetUsers on AspNetUsers.Id=ProjectMembers.AspNetUserId;";
+            return QueryExecutor.List<ProjectMembers>(query);
         }
         public static ProjectMembers GetById(long id)
         {
-            return TableConstants.ProjectMembers.Select<ProjectMembers>((int)id);
+            var query = $"SELECT  ProjectMembers.*,ProjectMemberTypes.Name as MemberType,AspNetUsers.Name as MemberName  FROM [dbo].[ProjectMembers] Join dbo.ProjectMemberTypes on ProjectMemberTypes.Id=ProjectMembers.ProjectMemberTypeId Join dbo.AspNetUsers on AspNetUsers.Id=ProjectMembers.AspNetUserId where ProjectMembers.Id={id};";
+            return QueryExecutor.FirstOrDefault<ProjectMembers>(query);
+        }
+        public static List<ProjectMembers> GetByProjectId(long id)
+        {
+            var query = $"SELECT  ProjectMembers.*,ProjectMemberTypes.Name as MemberType,AspNetUsers.Name as MemberName  FROM [dbo].[ProjectMembers] Join dbo.ProjectMemberTypes on ProjectMemberTypes.Id=ProjectMembers.ProjectMemberTypeId Join dbo.AspNetUsers on AspNetUsers.Id=ProjectMembers.AspNetUserId where ProjectId={id};";
+            return QueryExecutor.List<ProjectMembers>(query);
         }
         public static bool Insert(ProjectMembers projectmembers)
         {

@@ -46,7 +46,7 @@ namespace Admin.Controllers
         [Route("/Platform/Edit/{id}")]
         [HttpPost]
         [Obsolete]
-        public IActionResult Create(Platform platform,IFormFile file,int id = 0)
+        public IActionResult Create(Platform platform,int id = 0)
         {
             Platform platformDb = PlatformBao.GetById(id);
             if (id > 0 && platformDb == null)
@@ -65,72 +65,19 @@ namespace Admin.Controllers
             if (id == 0)
             {
                 platform.SetOnCreate(userId);
-                platform.IconUrl = SaveImage(file);
-                if (PlatformBao.Insert(platform))
-                {
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    return View(platform);
-                }
+                PlatformBao.Insert(platform);
+                
             }
             else
             {
                 platform.SetOnUpdate(userId);
-                DeleteImage(platform.IconUrl);
-                platform.IconUrl = SaveImage(file);
                 PlatformBao.Update(platform);
             }
 
             return RedirectToAction("Index");
 
         }
-
-        [Obsolete]
-        public string SaveImage(IFormFile file)
-        {
-            // do other validations on your model as needed
-            var uploads = Path.Combine(_environment.WebRootPath, "uploads");
-            var uniquefileName = GetUniqueFileName(file.FileName);
-            if (file.Length > 0)
-            {
-                using (var fileStream = new FileStream(Path.Combine(uploads, uniquefileName), FileMode.Create))
-                {
-                    file.CopyToAsync(fileStream);
-                }
-                return uniquefileName;
-            }
-            return null;
-            // to do  : Return something
-        }
-        private string GetUniqueFileName(string fileName)
-        {
-            fileName = Path.GetFileName(fileName);
-            return Path.GetFileNameWithoutExtension(fileName)
-                      + "_"
-                      + Guid.NewGuid().ToString().Substring(0, 4)
-                      + Path.GetExtension(fileName);
-        }
-
-        [Obsolete]
-        public bool DeleteImage(string file)
-        {
-            var uploads = Path.Combine(_environment.WebRootPath, "uploads");
-            string fileName = Path.Combine(uploads, file);
-
-            if (fileName != null || fileName != string.Empty)
-            {
-                if ((System.IO.File.Exists(fileName)))
-                {
-                    System.IO.File.Delete(fileName);
-                    return true;
-                }
-
-            }
-            return false;
-        }
-
+                
         public IActionResult Delete(long id)
         {
             Platform platform = PlatformBao.GetById(id);

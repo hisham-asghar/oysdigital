@@ -15,7 +15,13 @@ namespace LayerBao
         public static Project GetById(long id)
         {
             var project = ProjectDao.GetById(id);
-            if (project != null) project.ProjectPlatforms = ProjectPlatformsDao.GetByProjectId(id);
+            if (project != null)
+            {
+                project.ProjectPlatforms = ProjectPlatformsDao.GetByProjectId(id);
+                project.ProjectMembers = ProjectMembersDao.GetByProjectId(id);
+                project.ProjectAlertMessages = ProjectAlertMessageDao.GetByProjectId(id);
+                project.ProjectNotes = ProjectNotesDao.GetByProjectId(id);
+            }
             return project;
         }
         public static List<Project> GetByCustomerId(long id)

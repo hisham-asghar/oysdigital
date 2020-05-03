@@ -18,6 +18,11 @@ namespace LayerDao
         {
             return TableConstants.ProjectMemberTypes.Select<ProjectMemberTypes>((int)id);
         }
+        public static List<ProjectMemberTypes> GetByProjectId(long id)
+        {
+            var where = $"ProjectId={id}";
+            return TableConstants.ProjectMemberTypes.SelectList<ProjectMemberTypes>(where);
+        }
         public static bool Insert(ProjectMemberTypes projectmembertype)
         {
             return projectmembertype.Insert(TableConstants.ProjectMemberTypes) > 0;

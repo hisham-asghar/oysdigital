@@ -22,7 +22,7 @@ namespace Admin.Controllers
         [Route("/ProjectAlertMessage/Create")]
         [Route("/ProjectAlertMessage/Edit/{id}")]
         [HttpGet]
-        public IActionResult Create(long id = 0)
+        public IActionResult Create(long id = 0,long projectId=0,string returnUrl=null)
         {
             ProjectAlertMessage projectalertmessage = id <= 0 ? new ProjectAlertMessage() : ProjectAlertMessageBao.GetById(id);
             if (id > 0 && projectalertmessage == null)
@@ -31,7 +31,15 @@ namespace Admin.Controllers
             }
             else
             {
-                ViewBag.SelectedValue = projectalertmessage.LabelTypeId;
+                var project = ProjectBao.GetById(projectId);
+                if (project == null)
+                    ViewBag.ProjectDictionary = ProjectBao.GetAll().CreateDictionaryFromModelList();
+                else
+                {
+                    var dictionary = new Dictionary<int, string>();
+                    dictionary.Add((int)project.Id, project.Name);
+                    ViewBag.ProjectDictionary = dictionary;
+                }
             }
             ViewBag.IsEdit = id > 0;
             return View(projectalertmessage);
@@ -39,7 +47,7 @@ namespace Admin.Controllers
         [Route("/ProjectAlertMessage/Create")]
         [Route("/ProjectAlertMessage/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(ProjectAlertMessage projectalertmessage, int id = 0)
+        public IActionResult Create(ProjectAlertMessage projectalertmessage, int id = 0, long projectId = 0, string returnUrl = null)
         {
             ProjectAlertMessage projectalertmessageDb = ProjectAlertMessageBao.GetById(id);
             if (id > 0 && projectalertmessageDb == null)
@@ -65,8 +73,10 @@ namespace Admin.Controllers
                 projectalertmessage.SetOnUpdate(userId);
                 ProjectAlertMessageBao.Update(projectalertmessage);
             }
-
-            return RedirectToAction("Index");
+            if (string.IsNullOrWhiteSpace(returnUrl))
+                return RedirectToAction("Index");
+            else
+                return RedirectPermanent(returnUrl);
 
         }
         public IActionResult Delete(long id)

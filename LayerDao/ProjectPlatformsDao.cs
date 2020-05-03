@@ -12,16 +12,18 @@ namespace LayerDao
     {
         public static List<ProjectPlatforms> GetAll()
         {
-            return TableConstants.ProjectPlatforms.SelectAll<ProjectPlatforms>();
+            var query = $"SELECT  ProjectPlatforms.*, Platform.Name as PlatformName,Project.Name as ProjectName ,MobileSpaces.Name as MobileSpaceName  FROM [dbo].[ProjectPlatforms] Join dbo.Platform on ProjectPlatforms.PlatformId=Platform.Id Join dbo.Project on ProjectPlatforms.ProjectId=Project.Id Join dbo.MobileSpaces on ProjectPlatforms.MobileSpaceId=MobileSpaces.Id;";
+            return QueryExecutor.List<ProjectPlatforms>(query);
         }
         public static ProjectPlatforms GetById(long id)
         {
-            return TableConstants.ProjectPlatforms.Select<ProjectPlatforms>((int)id);
+            var query = $"SELECT  ProjectPlatforms.*, Platform.Name as PlatformName,Platform.IconClass as PlatformIcon,Project.Name as ProjectName ,MobileSpaces.Name as MobileSpaceName  FROM [dbo].[ProjectPlatforms] Join dbo.Platform on ProjectPlatforms.PlatformId=Platform.Id Join dbo.Project on ProjectPlatforms.ProjectId=Project.Id Join dbo.MobileSpaces on ProjectPlatforms.MobileSpaceId=MobileSpaces.Id where ProjectPlatforms.Id={id};";
+            return QueryExecutor.FirstOrDefault<ProjectPlatforms>(query);
         }
         public static List<ProjectPlatforms> GetByProjectId(long id)
         {
-            var where = $"ProjectId = {id}";
-            return TableConstants.ProjectPlatforms.SelectList<ProjectPlatforms>(where);
+            var query = $"SELECT  ProjectPlatforms.*, Platform.Name as PlatformName,Platform.IconClass as PlatformIcon,Project.Name as ProjectName ,MobileSpaces.Name as MobileSpaceName  FROM [dbo].[ProjectPlatforms] Join dbo.Platform on ProjectPlatforms.PlatformId=Platform.Id Join dbo.Project on ProjectPlatforms.ProjectId=Project.Id Join dbo.MobileSpaces on ProjectPlatforms.MobileSpaceId=MobileSpaces.Id where ProjectId={id};";
+              return QueryExecutor.List<ProjectPlatforms>(query);
         }
         public static bool Insert(ProjectPlatforms projectplatforms)
         {

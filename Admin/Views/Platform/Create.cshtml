@@ -4,15 +4,26 @@
     var title = (isEdit ? "Edit " : "Create ") + " Platforms";
     ViewData["Title"] = title;
 }
-@CHtmlHelper.GenerateHeader(title, "/MobileSpaces", "Back to Mobiles List")
+@CHtmlHelper.GenerateHeader(title, "/Platform", "Back to Mobiles List")
 @CHtmlHelper.GetCardHeader(12, title)
     <form method="post" name="platform" enctype="multipart/form-data">
         @if (isEdit)
         {
             @CHtmlHelper.GenerateInputField("Id", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
         }
-        @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
-        @HtmlInputType.File.GenerateInputField("Icon", Model.IconUrl, "file")
+        @*@CHtmlHelper.GenerateSingleEventSelectField("Platform", "Name", PlatformHelper.GetPlatformDictionar())*@
+        <div class='form-group form-float'>
+            <label>Platform</label>
+            <select class="form-control" name="IconClass" onchange="myNewFunction(this)">
+                @foreach (var item in PlatformHelper.GetPlatformDictionar())
+                {
+                    <option value="@item.Key">
+                        @item.Value
+                    </option>
+                }
+            </select>
+        </div>
+       <input type="hidden" name="Name" id="Name" value="@Model.Name" />
         @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
         @ButtonHelper.BackToListSmall("/Platform/Index")
@@ -20,4 +31,12 @@
 @CHtmlHelper.GetCardFooter()
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    
 }
+<script type="text/javascript">
+    function myNewFunction(sel) {
+        //alert(sel.options[sel.selectedIndex].text);
+        document.getElementById("Name").value = sel.options[sel.selectedIndex].text;
+    }
+   
+</script>

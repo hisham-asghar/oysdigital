@@ -30,9 +30,65 @@ namespace Generics.DataModels.AdminModels
             }
             return postconnt;
         }
-        
+        public static string GetPostName(params int[] items)
+        {
+            if (items != null && items.Length > 0)
+            {
 
-    public static ProjectPlatforms ProjectPlatformParser(ProjectPlaformCreateView proj)
+                for (var i = 0; i < items.Length; i++)
+                {
+                    if (items[i]!=0)
+                    {
+                        var data = items[i];
+                        if (i == 0)
+                        {
+                            return "Post Per Day";
+                        }
+                        if (i == 1)
+                        {
+                            return "Post Per Week";
+                        }
+                        if (i == 2)
+                        {
+                            return "Post Per Month";
+                        }
+
+                    }
+                }
+            }
+            return "Posts";
+        }
+        public static string GetStoriesName(params int[] items)
+        {
+            if (items != null && items.Length > 0)
+            {
+
+                for (var i = 0; i < items.Length; i++)
+                {
+                    if (items[i] != 0)
+                    {
+                        var data = items[i];
+                        if (i == 0)
+                        {
+                            return "Stories Per Day";
+                        }
+                        if (i == 1)
+                        {
+                            return "Stories Per Week";
+                        }
+                        if (i == 2)
+                        {
+                            return "Stories Per Month";
+                        }
+
+                    }
+                }
+            }
+            return "Posts";
+        }
+
+
+        public static ProjectPlatforms ProjectPlatformParser(ProjectPlaformCreateView proj)
         {
             ProjectPlatforms p=new ProjectPlatforms();
             if (proj.PostType == 0)

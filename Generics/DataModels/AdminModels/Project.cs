@@ -14,6 +14,7 @@ namespace Generics.DataModels.AdminModels
         public bool IsActive { get; set; }
         public List<ProjectPlatforms> ProjectPlatforms { get; set; }
         public List<ProjectMembers> ProjectMembers { get; set; }
-        public List<MobileSpaces> MobileSpaces { get; set; }
+        public List<ProjectAlertMessage> ProjectAlertMessages { get; set; }
+        public List<ProjectNotes> ProjectNotes { get; set; }
     }
 }

@@ -222,13 +222,30 @@ namespace Generics.WebHelper.Extensions
             return htmlInputType.GenerateInputField(displayName, value, mappingName, id, isRequired);
         }
         
-        public static IHtmlContent GenerateSingleSelectField(string displayName,string mappingName,Dictionary<int,string>options,int selectedValId = 0, bool includeEmpty = true)
+        public static IHtmlContent GenerateSingleSelectField(string displayName,string mappingName,Dictionary<int,string>options,int selectedValId = 0, bool includeEmpty = false)
         {
             var str = $"<div class='form-group form-float'> <label>{displayName}</label> <select class='form-control show-tick' name='{mappingName}'>" +
             (includeEmpty ? $" <option value ='0' selected>None</option>" : "");
             if (options != null)
             {
                 foreach(var keyvalues in options)
+                {
+                    var selectedStr = keyvalues.Key == selectedValId ? "selected" : "";
+                    str += $"<option value='{keyvalues.Key}' {selectedStr} > {keyvalues.Value}  </option>";
+                }
+
+            }
+            str += "</select> </div>";
+
+            return new HtmlString(str);
+        }
+        public static IHtmlContent GenerateSingleSelectFieldString(string displayName, string mappingName, Dictionary<string, string> options, string selectedValId = null, bool includeEmpty = false)
+        {
+            var str = $"<div class='form-group form-float'> <label>{displayName}</label> <select class='form-control  show-tick' name='{mappingName}'>" +
+            (includeEmpty ? $" <option value ='0' selected>None</option>" : "");
+            if (options != null)
+            {
+                foreach (var keyvalues in options)
                 {
                     var selectedStr = keyvalues.Key == selectedValId ? "selected" : "";
                     str += $"<option value='{keyvalues.Key}' {selectedStr} > {keyvalues.Value}  </option>";

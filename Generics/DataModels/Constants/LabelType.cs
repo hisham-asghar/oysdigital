@@ -18,7 +18,7 @@ namespace Generics.DataModels.Constants
             else
                 return "CustomerInstruction";
         }
-        public static Dictionary<int,string> CreateProjectMessageTypeDictionary()
+        public static Dictionary<int,string> CreateLabelTypeDictionary()
         {
             Dictionary<int, string> dictionary = new Dictionary<int, string>();
             dictionary.Add(0, "General"); dictionary.Add(1,"Task"); dictionary.Add(2, "CustomerInstruction");

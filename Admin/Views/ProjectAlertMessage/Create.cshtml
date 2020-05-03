@@ -9,9 +9,10 @@
     <form method="post" name="projectalertmessage">
         @if (isEdit)
         {
-            @CHtmlHelper.GenerateInputField("", Model.LabelTypeId.ToString(), HtmlInputType.Hidden, "Id")
+            @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
         }
-        @CHtmlHelper.GenerateSingleSelectField("Project Message Type", "LabelTypeId", LabelType.CreateProjectMessageTypeDictionary(), (isEdit) ? (int)Model.LabelTypeId : 0)
+        @CHtmlHelper.GenerateSingleSelectField("Project Message Type", "LabelTypeId", LabelType.CreateLabelTypeDictionary(), (isEdit) ? (int)Model.LabelTypeId : 0)
+        @CHtmlHelper.GenerateSingleSelectField("Project", "ProjectId", ViewBag.ProjectDictionary, (isEdit) ? (int)Model.ProjectId : 0)
         @HtmlInputType.TextArea.GenerateInputField("Message", Model.Message, "Message")
         @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)

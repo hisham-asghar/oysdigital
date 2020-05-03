@@ -4,9 +4,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.Common;
+using Generics.Data;
 using Generics.DataModels.AdminModels;
 using Generics.WebHelper.Extensions;
 using LayerBao;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -14,6 +16,11 @@ namespace Admin.Controllers
 {
     public class ProjectMembersController : Controller
     {
+        private UserManager<ApplicationUser> _userManager;
+        public ProjectMembersController(UserManager<ApplicationUser> userManager)
+        {
+            _userManager = userManager;
+        }
         public IActionResult Index()
         {
             var data = ProjectMembersBao.GetAll();
@@ -23,7 +30,7 @@ namespace Admin.Controllers
         [Route("/ProjectMembers/Create")]
         [Route("/ProjectMembers/Edit/{id}")]
         [HttpGet]
-        public IActionResult Create(long id = 0)
+        public IActionResult Create(long id = 0,long projectId=0,string returnUrl=null)
         {
             ProjectMembers projectmembers = id <= 0 ? new ProjectMembers() : ProjectMembersBao.GetById(id);
             if (id > 0 && projectmembers == null)
@@ -32,26 +39,36 @@ namespace Admin.Controllers
             }
             else
             {
-                Dictionary<int, string> dictionary = new Dictionary<int, string>();
-                foreach (var info in ProjectMemberTypeBao.GetAll())
+                var project = ProjectBao.GetById(projectId);
+                if (project == null)
                 {
-                    dictionary.Add((int)info.Id, info.Name);
+                   
+                    ViewBag.ProjectDictionary = ProjectBao.GetAll().CreateDictionaryFromModelList();
+                    
                 }
-                ViewBag.ProjectMemberTypeDictionary = dictionary;
-                Dictionary<int, string> dictionary2 = new Dictionary<int, string>();
-                foreach (var info in ProjectBao.GetAll())
+                 else
                 {
-                    dictionary2.Add((int)info.Id, info.Name);
+                    var prodictionary = new Dictionary<int, string>();
+                    prodictionary.Add((int)project.Id, project.Name);
+                    ViewBag.ProjectDictionary = prodictionary;
                 }
-                ViewBag.ProjectDictionary = dictionary2;
+                                
             }
+            ViewBag.ProjectMemberTypeDictionary = ProjectMemberTypeBao.GetAll().CreateDictionaryFromModelList();
+            var user = _userManager.Users.ToList();
+            var dictionary = new Dictionary<string, string>();
+            foreach (var item in user)
+            {
+                dictionary.Add(item.Id, item.Name);
+            }
+            ViewBag.AspNetUsersDictionary = dictionary;
             ViewBag.IsEdit = id > 0;
             return View(projectmembers);
         }
         [Route("/ProjectMembers/Create")]
         [Route("/ProjectMembers/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(ProjectMembers projectmembers, int id = 0)
+        public IActionResult Create(ProjectMembers projectmembers, int id = 0, long projectId = 0, string returnUrl = null)
         {
             ProjectMembers projectmembersDb = ProjectMembersBao.GetById(id);
             if (id > 0 && projectmembersDb == null)
@@ -70,22 +87,17 @@ namespace Admin.Controllers
             if (id == 0)
             {
                 projectmembers.SetOnCreate(userId);
-                if (ProjectMembersBao.Insert(projectmembers))
-                {
-                    //return RedirectToAction("Index");
-                }
-                else
-                {
-                    return View(projectmembers);
-                }
+                ProjectMembersBao.Insert(projectmembers);
             }
             else
             {
                 projectmembers.SetOnUpdate(userId);
                 ProjectMembersBao.Update(projectmembers);
             }
-
-            return RedirectToAction("Index");
+            if (string.IsNullOrWhiteSpace(returnUrl))
+                return RedirectToAction("Index");
+            else
+                return RedirectPermanent(returnUrl);
 
         }
         public IActionResult Delete(long id)

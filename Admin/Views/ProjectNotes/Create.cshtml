@@ -12,7 +12,9 @@
         {
             @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
         }
-        @CHtmlHelper.GenerateSingleSelectField("Note Type", "NoteTypeId", AccessLevelType.CreateProjectNoteDictionary(), (isEdit) ? (int)Model.AccessLevelTypeId : 0)
+        @CHtmlHelper.GenerateSingleSelectField("Project Message Type", "LabelTypeId", LabelType.CreateLabelTypeDictionary(), (isEdit) ? (int)Model.LabelTypeId : 0)
+        @CHtmlHelper.GenerateSingleSelectField("Project", "ProjectId", ViewBag.ProjectDictionary, (isEdit) ? (int)Model.ProjectId : 0)
+        @CHtmlHelper.GenerateSingleSelectField("Access Level", "AccessLevelTypeId", AccessLevelType.CreateAccessLevelTypeDictionary(), (isEdit) ? (int)Model.AccessLevelTypeId : 0)
         @HtmlInputType.Text.GenerateInputField("Message", Model.Message, "Message")
         @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)

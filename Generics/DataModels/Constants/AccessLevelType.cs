@@ -18,7 +18,7 @@ namespace Generics.DataModels.Constants
             else
                 return "Member";
         }
-        public static Dictionary<int, string> CreateProjectNoteDictionary()
+        public static Dictionary<int, string> CreateAccessLevelTypeDictionary()
         {
             Dictionary<int, string> dictionary = new Dictionary<int, string>();
             dictionary.Add(0, "Admin"); dictionary.Add(1, "Manager"); dictionary.Add(2, "Member");

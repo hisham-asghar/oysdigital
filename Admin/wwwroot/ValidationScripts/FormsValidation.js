@@ -77,17 +77,10 @@
         });
         $("form[name='platform']").validate({
             rules: {
-                Name: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.\\s]{3,25}$" },
-                file: "required"
+                Name: "required"
             },
             messages: {
-                Name: {
-                    required: "Please enter your platform name",
-                    minlength: "Platform Space name must be at least 3 characters long",
-                    maxlength: "Platform Space name must be at least 25 characters long",
-                    regex: "Only Character and numarical values are allowed"
-                },
-                file: "Please select a file"
+                Name: "Please select a Platform"
             },
             submitHandler: function (form) {
                 form.submit();

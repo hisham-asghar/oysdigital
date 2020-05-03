@@ -6,14 +6,14 @@
 }
 
 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-    @CHtmlHelper.TableHead("th", "ProjectMemberTypeId", "ProjectId", "Created", "Status", "Actions")
-    @CHtmlHelper.TableFoot("th", "ProjectMemberTypeId", "ProjectId", "Created", "Status", "Actions")
+    @CHtmlHelper.TableHead("th", "Member Type", "Member Name", "Created", "Status", "Actions")
+    @CHtmlHelper.TableFoot("th", "Member Type", "Member Name", "Created", "Status", "Actions")
     <tbody>
         @foreach (var item in Model)
         {
         <tr>
-            <td>@item.ProjectMemberTypeId</td>
-            <td>@item.ProjectId</td>
+            <td>@item.MemberType</td>
+            <td>@item.MemberName </td>
             <td>@item.OnCreated.ToString("MMM dd, yyyy")</td>
             <td>@item.IsActive.CheckTag()</td>
             <td>

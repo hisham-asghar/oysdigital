@@ -36,6 +36,7 @@ namespace Admin.Controllers
                     dictionary.Add((int)customer.Id, customer.Name);
                     ViewBag.CustomerDictionary = dictionary;
                 }
+               
             }
             ViewBag.IsEdit = id > 0;
             return View(project);

@@ -1,31 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Generics.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Generics.DataModels.AdminModels
 {
-    public class AspNetUserHelper
+    public static class AspNetUserHelper
     {
-        //public AccountController(AUserManager userManager,
-        //    ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
-        //{
-        //    UserManager = userManager;
-        //    AccessTokenFormat = accessTokenFormat;
-        //}
+        private static UserManager<ApplicationUser> _userManager;
 
-        //public ApplicationUserManager UserManager
-        //{
-        //    get
-        //    {
-        //        return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-        //    }
-        //    private set
-        //    {
-        //        _userManager = value;
-        //    }
-        //}
+        public static List<ApplicationUser> GetAll()
+        {
+            return _userManager.Users.ToList();
+        }
     }
 }
