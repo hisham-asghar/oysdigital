@@ -1,6 +1,6 @@
 ﻿@model Generics.DataModels.AdminModels.Project
 @{
-    ViewData["Title"] = "Detail";
+    ViewData["Title"] = "Project Detail";
     Layout = "_DetailLayout";
 }
     <div class="block-header">
@@ -17,28 +17,7 @@
                         <div class="body">
                             <a href="profile.html"><img src="/images/profile_av.jpg" class="rounded-circle" alt="profile-image"></a>
                             <h4 class="m-t-10">@Model.Name</h4>
-                            <h5 class="m-t-10">@Model.OnModified.ToString(MMMM_dd_yyyy)</h5>
-                            <div class="row">
-                                <div class="col-12 mb-4">
-                                    <ul class="social-links list-unstyled">
-                                        <li><a href="https://www.facebook.com/thememakkerteam" title="facebook"><i class="zmdi zmdi-facebook-box"></i></a></li>
-                                        <li><a href="https://twitter.com/thememakker" title="twitter"><i class="zmdi zmdi-twitter-box"></i></a></li>
-                                        <li><a href="https://www.instagram.com/thememakker/" title="instagram"><i class="zmdi zmdi-instagram"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-4">
-                                    <small>Experience</small>
-                                    <h5>6+ Year</h5>
-                                </div>
-                                <div class="col-4">
-                                    <small>Hourly Rate</small>
-                                    <h5>18$</h5>
-                                </div>
-                                <div class="col-4">
-                                    <small>Team</small>
-                                    <h5>25+</h5>
-                                </div>
-                            </div>
+                            <h5 class="m-t-10">Created: @Model.OnModified.ToString(MMMM_dd_yyyy)</h5>
                         </div>
                     </div>
 
@@ -55,37 +34,18 @@
                                 </div>
                                 <div class="responsive">
                                     <table class="table table-hover c_table">
-                                        <thead>
-                                            <tr>
-                                                <th>Media</th>
-                                                <th>Posts</th>
-                                                <th>Stories</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
                                         <tbody>
                                             @foreach (var item in Model.ProjectPlatforms)
                                             {
                                             <tr>
                                                 <td>
                                                     <div class="hover-zoom-effect social-widget @item.PlatformName-widget">
-                                                        <div class="icon"><i class="@item.PlatformIcon"></i></div>
+                                                        <span class="icon"><i class="@item.PlatformIcon"></i></span>
+
+                                                        <span class="text-muted">@ProjectPlatformHelper.GetPostCount(item.PostPerDay, item.PostPerMonth, item.PostPerWeek)</span>
+                                                        <span class="list-name">@ProjectPlatformHelper.GetPostName(item.PostPerDay, item.PostPerWeek, item.PostPerMonth)</span> @@
+                                                        <span class="text-muted">@item.PostSchedulingTime.ToString(hh_mm_tt)</span>
                                                     </div>
-                                                </td>
-                                                <td>
-                                                    <ul class="social-links list-unstyled">
-                                                        <li><span class="list-name">@ProjectPlatformHelper.GetPostName(item.PostPerDay, item.PostPerWeek, item.PostPerMonth)</span></li>
-                                                        <li><span class="text-muted">@ProjectPlatformHelper.GetPostCount(item.PostPerDay, item.PostPerMonth, item.PostPerWeek)</span></li>
-                                                        <li><span class="text-muted">@item.PostSchedulingTime.ToString(hh_mm_tt)</span></li>
-                                                    </ul>
-                                                </td>
-                                                <td>
-                                                    <ul class="social-links list-unstyled">
-                                                        <li><span class="list-name">@ProjectPlatformHelper.GetStoriesName(item.StoriesPerDay, item.StoriesPerWeek, item.StoriesPerMonth)</span></li>
-                                                        <li><span class="text-muted">@ProjectPlatformHelper.GetPostCount(item.StoriesPerDay, item.StoriesPerWeek, item.StoriesPerMonth)</span></li>
-                                                        <li><span class="text-muted">@item.StoriesSchedulingTime.ToString(hh_mm_tt)</span></li>
-                                                    </ul>
                                                 </td>
                                                 <td>
                                                     @if (item.IsActive)
@@ -96,10 +56,8 @@
                                                     {
                                                         <span class="badge badge-danger">In Active</span>
                                                     }
-                                                </td>
-                                                <td>
-                                                    <a role="button" class="boxs-close"><i class="zmdi zmdi-edit"></i></a>
-                                                    <a role="button" class="boxs-close"><i class="zmdi zmdi-delete"></i></a>
+                                                    <a role="button" class="btn btn-sm btn-default"><i class="zmdi zmdi-edit"></i></a>
+                                                    <a role="button" class="btn btn-sm btn-danger"><i class="zmdi zmdi-delete"></i></a>
                                                 </td>
                                             </tr>
                                             }
