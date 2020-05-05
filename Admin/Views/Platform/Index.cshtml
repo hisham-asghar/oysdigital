@@ -5,18 +5,15 @@
     ViewBag.AddNewLink = "/Platform/Create";
 }
 
-<table class="table table-bordered table-striped table-hover dataTable js-exportable">
-    @CHtmlHelper.TableHead("th","Icon", "Name", "Created", "Status", "Actions")
-    @CHtmlHelper.TableFoot("th", "Icon", "Name", "Created", "Status", "Actions")
-    <tbody>
-        @foreach (var item in Model)
-        {
-            @CHtmlHelper.Tr("td", item.IconClass, item.Name, item.OnCreated.ToString(dddd_dd_MMMM_yyyy), item.IsActive.CheckTag().ToString(),
-             @ButtonHelper.EditSmall("/Platform/Edit/" + item.Id)+""+
-             @ButtonHelper.DeleteSmall("/Platform/Delete/" + item.Id)+""+
-             @ButtonHelper.DetailSmall("/Platform/Detail/" + item.Id).ToString());
-        }
-    </tbody>
-</table>
+    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+        @CHtmlHelper.TableHead("th", "Name", "Icon")
+        @CHtmlHelper.TableFoot("th", "Name", "Icon")
+        <tbody>
+            @foreach (var item in Model)
+            {
+                @CHtmlHelper.Tr("td", item.Name, $"<i class='{item.IconClass}'></i>")
+            }
+        </tbody>
+    </table>
 
 
