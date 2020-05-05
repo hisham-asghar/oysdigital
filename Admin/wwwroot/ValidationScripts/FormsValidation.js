@@ -207,5 +207,21 @@
                 form.submit();
             }
         });
+        $("form[name='labeltype']").validate({
+            rules: {
+                Name: { required: true, minlength: 3, maxlength: 35, regex: "^[a-zA-Z'.\\s]{3,35}$" }
+            },
+            messages: {
+                Name: {
+                    required: "Please enter your LabelType",
+                    minlength: "LabelType must be at least 3 characters long",
+                    maxlength: "LabelType must be at least 35 characters long",
+                    regex:"LabelType shoulb be alphabets only"
+                }
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
     })    
 });

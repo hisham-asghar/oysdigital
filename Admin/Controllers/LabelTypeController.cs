@@ -1,30 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.Common;
 using Generics.DataModels.AdminModels;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Admin.Controllers
 {
-    public class ProjectNotesController : Controller
+    public class LabelTypeController : Controller
     {
         public IActionResult Index()
         {
-            return View(ProjectNotesBao.GetAll());
+            return View(LabelTypeBao.GetAll());
         }
-        [Route("/ProjectNotes/Create")]
-        [Route("/ProjectNotes/Edit/{id}")]
+        [Route("/LabelType/Create")]
+        [Route("/LabelType/Edit/{id}")]
         [HttpGet]
         public IActionResult Create(long id = 0, long projectId = 0, string returnUrl = null)
         {
-            ProjectNotes projectnotes = id <= 0 ? new ProjectNotes() : ProjectNotesBao.GetById(id);
-            if (id > 0 && projectnotes == null)
+            LabelType labeltype = id <= 0 ? new LabelType() : LabelTypeBao.GetById(id);
+            if (id > 0 && labeltype == null)
             {
                 // Dont Exist
             }
@@ -39,39 +37,38 @@ namespace Admin.Controllers
                     dictionary.Add((int)project.Id, project.Name);
                     ViewBag.ProjectDictionary = dictionary;
                 }
-                ViewBag.LabelTypeDictionary = LabelTypeBao.GetAll().CreateDictionaryFromModelList();
             }
             ViewBag.IsEdit = id > 0;
-            return View(projectnotes);
+            return View(labeltype);
         }
-        [Route("/ProjectNotes/Create")]
-        [Route("/ProjectNotes/Edit/{id}")]
+        [Route("/LabelType/Create")]
+        [Route("/LabelType/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(ProjectNotes projectnotes, int id = 0, long projectId = 0, string returnUrl = null)
+        public IActionResult Create(LabelType labeltype, int id = 0, long projectId = 0, string returnUrl = null)
         {
-            ProjectNotes projectnotesDb = ProjectNotesBao.GetById(id);
-            if (id > 0 && projectnotesDb == null)
+            LabelType labeltypeDb = LabelTypeBao.GetById(id);
+            if (id > 0 && labeltypeDb == null)
             {
                 // Not Exists
             }
 
             var userId = User.GetUserId();
 
-            if (projectnotes == null)
+            if (labeltype == null)
             {
-                projectnotesDb = projectnotesDb ?? new ProjectNotes();
+                labeltypeDb = labeltypeDb ?? new LabelType();
                 ViewBag.IsEdit = id > 0;
-                return View(projectnotesDb);
+                return View(labeltypeDb);
             }
             if (id == 0)
             {
-                projectnotes.SetOnCreate(userId);
-                ProjectNotesBao.Insert(projectnotes);
+                labeltype.SetOnCreate(userId);
+                LabelTypeBao.Insert(labeltype);
             }
             else
             {
-                projectnotes.SetOnUpdate(userId);
-                ProjectNotesBao.Update(projectnotes);
+                labeltype.SetOnUpdate(userId);
+                LabelTypeBao.Update(labeltype);
             }
             if (string.IsNullOrWhiteSpace(returnUrl))
                 return RedirectToAction("Index");
@@ -81,38 +78,38 @@ namespace Admin.Controllers
         }
         public IActionResult Delete(long id)
         {
-            ProjectNotes projectnotes = ProjectNotesBao.GetById(id);
-            if (id > 0 && projectnotes == null)
+            LabelType labeltype = LabelTypeBao.GetById(id);
+            if (id > 0 && labeltype == null)
             {
                 // Dont Exist
             }
             else
             {
-                ViewBag.ProjectNotesDictionary = Functions.CreateDictionaryFromModel(projectnotes);
+                ViewBag.LabelTypeDictionary = Functions.CreateDictionaryFromModel(labeltype);
             }
-            return View(projectnotes);
+            return View(labeltype);
         }
 
         public IActionResult ConfirmDelete(long id)
         {
             if (id != 0)
             {
-                ProjectNotesBao.Delete(id);
+                LabelTypeBao.Delete(id);
             }
             return RedirectToAction("Index");
         }
         public IActionResult Detail(long id)
         {
-            ProjectNotes projectnotes = ProjectNotesBao.GetById(id);
-            if (id > 0 && projectnotes == null)
+            LabelType labeltype = LabelTypeBao.GetById(id);
+            if (id > 0 && labeltype == null)
             {
                 // Dont Exist
             }
             else
             {
-                ViewBag.ProjectNotesDictionary = Functions.CreateDictionaryFromModel(projectnotes);
+                ViewBag.LabelTypeDictionary = Functions.CreateDictionaryFromModel(labeltype);
             }
-            return View(projectnotes);
+            return View(labeltype);
         }
     }
 }

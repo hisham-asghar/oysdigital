@@ -12,16 +12,18 @@ namespace LayerDao
     {
         public static List<ProjectNotes> GetAll()
         {
-            return TableConstants.ProjectNotes.SelectAll<ProjectNotes>();
+            var query = $"SELECT ProjectNotes.*, LabelType.Name as LabelName,LabelType.ColorCode as LabelColor FROM [dbo].ProjectNotes Join dbo.LabelType on ProjectNotes.LabelTypeId=LabelType.Id;";
+            return QueryExecutor.List<ProjectNotes>(query);
         }
         public static ProjectNotes GetById(long id)
         {
-            return TableConstants.ProjectNotes.Select<ProjectNotes>((int)id);
+            var query = $"SELECT ProjectNotes.*, LabelType.Name as LabelName,LabelType.ColorCode as LabelColor FROM [dbo].ProjectNotes Join dbo.LabelType on ProjectNotes.LabelTypeId=LabelType.Id where ProjectNotes.Id={id};";
+            return QueryExecutor.FirstOrDefault<ProjectNotes>(query);
         }
         public static List<ProjectNotes> GetByProjectId(long id)
         {
-            var where = $"ProjectId={id}";
-            return TableConstants.ProjectNotes.SelectList<ProjectNotes>(where);
+            var query = $"SELECT ProjectNotes.*, LabelType.Name as LabelName,LabelType.ColorCode as LabelColor FROM [dbo].ProjectNotes Join dbo.LabelType on ProjectNotes.LabelTypeId=LabelType.Id where ProjectId={id};";
+            return QueryExecutor.List<ProjectNotes>(query);
         }
         public static bool Insert(ProjectNotes projectnotes)
         {

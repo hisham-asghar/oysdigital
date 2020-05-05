@@ -1,0 +1,30 @@
+﻿@model Generics.DataModels.AdminModels.LabelType
+@{
+    var isEdit = (bool)ViewBag.IsEdit;
+    var title = (isEdit ? "Edit " : "Create ") + " LabelType";
+    ViewData["Title"] = title;
+}
+@CHtmlHelper.GenerateHeader(title, "/LabelType", "Back to Label List")
+@CHtmlHelper.GetCardHeader(12, title)
+    <form method="post" name="labeltype">
+        @if (isEdit)
+        {
+            @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
+        }
+        <div style="width:40px;height:40px;backgroundcolor:">color</div>
+        @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
+        <div class="mb-3">
+            <label>Color Code</label>
+            <div class="input-group colorpicker">
+                <input type="text" class="form-control" name="ColorCode" value="@((Model.ColorCode==null)?"#00AABB":Model.ColorCode)">
+                <div class="input-group-append">
+                    <span class="input-group-text"><span class="input-group-addon"> <i></i> </span></span>
+                </div>
+            </div>
+        </div>
+        @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
+    </form>
+@CHtmlHelper.GetCardFooter()
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

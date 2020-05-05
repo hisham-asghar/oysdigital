@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Generics.DataModels.AdminModels;
+using LayerDao;
 
 namespace LayerBao
 {
@@ -13,7 +14,7 @@ namespace LayerBao
         }
         public static LabelType GetById(long id)
         {
-            var labeltype = LabelTypeDao.GetById(id);
+            return LabelTypeDao.GetById(id);
         }
         public static bool Insert(LabelType labeltype)
         {

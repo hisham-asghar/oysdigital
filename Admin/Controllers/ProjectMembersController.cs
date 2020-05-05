@@ -114,13 +114,16 @@ namespace Admin.Controllers
             return View(projectmembers);
         }
 
-        public IActionResult ConfirmDelete(long id)
+        public IActionResult ConfirmDelete(long id, string returnUrl = null)
         {
             if (id != 0)
             {
                 ProjectMembersBao.Delete(id);
             }
-            return RedirectToAction("Index");
+            if (string.IsNullOrWhiteSpace(returnUrl))
+                return RedirectToAction("Index");
+            else
+                return RedirectPermanent(returnUrl);
         }
         public IActionResult Detail(long id)
         {

@@ -1,7 +1,7 @@
 ﻿@model Generics.DataModels.AdminModels.Project
 @{
     ViewData["Title"] = "Project Detail";
-    Layout = "_DetailLayout";
+    Layout = "_Layout";
 }
     <div class="block-header">
         <div class="row">
@@ -20,6 +20,45 @@
                             <h5 class="m-t-10">Created: @Model.OnModified.ToString(MMMM_dd_yyyy)</h5>
                         </div>
                     </div>
+                    <div class="card shadow p-3 mb-5 bg-white rounded">
+                        <div class="header">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h2><strong>Members</strong></h2>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="pull-right">
+                                        @ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="responsive">
+                            <table class="table table-hover c_table">
+                                <tbody>
+                                    @foreach (var item in Model.ProjectMembers)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div style="width:50px;height:auto" class="rounded-circle">
+                                                    <img src="/images/profile_av.jpg" class="img-fluid" alt="">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <ul class="social-links list-unstyled">
+                                                    <li><span>@item.MemberName</span></li>
+                                                    <li><span class="text-muted">@item.MemberType</span></li>
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                <a href="/ProjectMembers/ConfirmDelete/@item.Id&returnUrl=/Project/Detail/{@Model.Id}" role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
                 </div>
                 <div class="col-xl-8 col-lg-12 col-md-12">
@@ -27,9 +66,15 @@
                         <div class="col-md-12 col-sm-12">
                             <div class="card shadow p-3 mb-5 bg-white rounded">
                                 <div class="header">
-                                    <h2><strong>Platforms</strong></h2>
-                                    <div class="pull-right">
-                                        @ButtonHelper.Create($"/ProjectPlatform/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h2><strong>Platform</strong></h2>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="pull-right">
+                                                @ButtonHelper.Create($"/ProjectPlatform/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="responsive">
@@ -37,65 +82,15 @@
                                         <tbody>
                                             @foreach (var item in Model.ProjectPlatforms)
                                             {
-                                            <tr>
-                                                <td>
-                                                    <div class="hover-zoom-effect social-widget @item.PlatformName-widget">
-                                                        <span class="icon"><i class="@item.PlatformIcon"></i></span>
-
-                                                        <span class="text-muted">@ProjectPlatformHelper.GetPostCount(item.PostPerDay, item.PostPerMonth, item.PostPerWeek)</span>
-                                                        <span class="list-name">@ProjectPlatformHelper.GetPostName(item.PostPerDay, item.PostPerWeek, item.PostPerMonth)</span> @@
-                                                        <span class="text-muted">@item.PostSchedulingTime.ToString(hh_mm_tt)</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    @if (item.IsActive)
-                                                    {
-                                                        <span class="badge badge-success">Active</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="badge badge-danger">In Active</span>
-                                                    }
-                                                    <a role="button" class="btn btn-sm btn-default"><i class="zmdi zmdi-edit"></i></a>
-                                                    <a role="button" class="btn btn-sm btn-danger"><i class="zmdi zmdi-delete"></i></a>
-                                                </td>
-                                            </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="card shadow p-3 mb-5 bg-white rounded">
-                                <div class="header">
-                                    <h2><strong>Members</strong></h2>
-                                    <div class="pull-right">
-                                        @ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
-                                    </div>
-                                </div>
-                                <div class="responsive">
-                                    <table class="table table-hover c_table">
-                                        <thead>
-                                            <tr>
-                                                <th>Image</th>
-                                                <th>Name</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var item in Model.ProjectMembers)
-                                            {
                                                 <tr>
                                                     <td>
-                                                        <div style="width:50px;height:auto" class="img img-rounded">
-                                                            <img src="/images/profile_av.jpg" class="img-fluid" alt="">
+                                                        <div class="hover-zoom-effect social-widget @item.PlatformName-widget">
+                                                            <span class="icon"><i class="@item.PlatformIcon"></i></span>
+
+                                                            <span class="text-muted">@ProjectPlatformHelper.GetPostCount(item.PostPerDay, item.PostPerMonth, item.PostPerWeek)</span>
+                                                            <span class="list-name">@ProjectPlatformHelper.GetPostName(item.PostPerDay, item.PostPerWeek, item.PostPerMonth)</span> @@
+                                                            <span class="text-muted">@item.PostSchedulingTime.ToString(hh_mm_tt)</span>
                                                         </div>
-                                                    </td>
-                                                    <td>
-                                                        <ul class="social-links list-unstyled">
-                                                            <li><span>@item.MemberName</span></li>
-                                                            <li><span class="text-muted">@item.MemberType</span></li>
-                                                        </ul>
                                                     </td>
                                                     <td>
                                                         @if (item.IsActive)
@@ -106,10 +101,8 @@
                                                         {
                                                             <span class="badge badge-danger">In Active</span>
                                                         }
-                                                    </td>
-                                                    <td>
-                                                        <a role="button" class="boxs-close"><i class="zmdi zmdi-edit"></i></a>
-                                                        <a role="button" class="boxs-close"><i class="zmdi zmdi-delete"></i></a>
+                                                        <a role="button" class="btn btn-sm btn-primary btn-round text-white"><i class="zmdi zmdi-edit"></i></a>
+                                                        <a role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
                                                     </td>
                                                 </tr>
                                             }
@@ -117,44 +110,17 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-12 col-lg-12 col-md-12">
-                    <div class="row clearfix">
-                        <div class="col-md-6 col-sm-12">
                             <div class="card shadow p-3 mb-5 bg-white rounded">
                                 <div class="header">
-                                    <h2><strong>Alert Messages</strong></h2>
-                                    <div class="pull-right">
-                                        @ButtonHelper.Create($"/ProjectAlertMessage/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
-                                    </div>
-                                </div>
-                                <div class="responsive">
-                                    <table class="table c_table inbox_table">
-                                        @foreach (var item in Model.ProjectAlertMessages)
-                                        {
-                                        <tr>
-                                            <td class="max_ellipsis">
-                                                <div class="responsive">
-                                                    <span class="badge badge-primary mr-2">@LabelType.CheckProjectMessageType(item.LabelTypeId)</span>
-                                                    @item.Message
-                                                </div>
-                                            </td>
-                                            <td class="time">@item.OnCreated.ToString(MMMM_dd)</td>
-                                        </tr>
-                                        }
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            
-                            <div class="card shadow p-3 mb-5 bg-white rounded">
-                                <div class="header">
-                                    <h2><strong>Notes</strong></h2>
-                                    <div class="pull-right">
-                                        @ButtonHelper.Create($"/ProjectNotes/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h2><strong>Notes</strong></h2>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="pull-right">
+                                                @ButtonHelper.Create($"/ProjectNotes/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="responsive">
@@ -162,21 +128,57 @@
                                         @foreach (var item in Model.ProjectNotes)
                                         {
                                             <tr>
-                                                <td class="max_ellipsis">
-                                                    <div class="responsive">
-                                                        <span class="badge badge-primary mr-2">@LabelType.CheckProjectMessageType(item.LabelTypeId)</span>
-                                                        @item.Message
-                                                    </div>
+                                                <td style="vertical-align: top;text-align: left;">
+                                                    <p>@item.Message bilal saleem</p>
                                                 </td>
-                                                <td class="time">@item.OnCreated.ToString(MMMM_dd)</td>
+                                                <td class="time">
+                                                    <ul class="social-links list-unstyled">
+                                                        <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
+                                                        <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
+                                                        <li><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></li>
+                                                    </ul>
+                                                </td>
                                             </tr>
                                         }
                                     </table>
                                 </div>
                             </div>
-                        
+                            <div class="card shadow p-3 mb-5 bg-white rounded">
+                                <div class="header">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h2><strong>Alert Messages</strong></h2>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="pull-right">
+                                                @ButtonHelper.Create($"/ProjectAlertMessage/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="responsive">
+                                    <table class="table c_table inbox_table">
+                                        @foreach (var item in Model.ProjectAlertMessages)
+                                        {
+                                            <tr>
+                                                <td style="vertical-align: top;text-align: left;">
+                                                    <p>@item.Message</p>
+                                                </td>
+                                                <td class="time">
+                                                    <ul class="social-links list-unstyled">
+                                                        <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
+                                                        <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
+                                                        <li><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    </div>
+                </div>
+               
                 </div>
             </div>

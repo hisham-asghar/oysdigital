@@ -12,16 +12,18 @@ namespace LayerDao
     {
         public static List<ProjectAlertMessage> GetAll()
         {
-            return TableConstants.ProjectAlertMessage.SelectAll<ProjectAlertMessage>();
+            var query = $"SELECT ProjectAlertMessage.*, LabelType.Name as LabelName,LabelType.ColorCode as LabelColor FROM [dbo].[ProjectAlertMessage] Join dbo.LabelType on ProjectAlertMessage.LabelTypeId=LabelType.Id;";
+            return QueryExecutor.List<ProjectAlertMessage>(query);
         }
         public static ProjectAlertMessage GetById(long id)
         {
-            return TableConstants.ProjectAlertMessage.Select<ProjectAlertMessage>((int)id);
+            var query = $"SELECT ProjectAlertMessage.*, LabelType.Name as LabelName,LabelType.ColorCode as LabelColor FROM [dbo].[ProjectAlertMessage] Join dbo.LabelType on ProjectAlertMessage.LabelTypeId=LabelType.Id where ProjectAlertMessage.Id={id};";
+            return QueryExecutor.FirstOrDefault<ProjectAlertMessage>(query);
         }
         public static List<ProjectAlertMessage> GetByProjectId(long id)
         {
-            var where = $"ProjectId={id}";
-            return TableConstants.ProjectAlertMessage.SelectList<ProjectAlertMessage>(where);
+            var query = $"SELECT ProjectAlertMessage.*, LabelType.Name as LabelName,LabelType.ColorCode as LabelColor FROM [dbo].[ProjectAlertMessage] Join dbo.LabelType on ProjectAlertMessage.LabelTypeId=LabelType.Id where ProjectId={id};";
+            return QueryExecutor.List<ProjectAlertMessage>(query);
         }
         public static bool Insert(ProjectAlertMessage projectalertmessage)
         {

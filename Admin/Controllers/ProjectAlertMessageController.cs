@@ -40,6 +40,7 @@ namespace Admin.Controllers
                     dictionary.Add((int)project.Id, project.Name);
                     ViewBag.ProjectDictionary = dictionary;
                 }
+                ViewBag.LabelTypeDictionary = LabelTypeBao.GetAll().CreateDictionaryFromModelList();
             }
             ViewBag.IsEdit = id > 0;
             return View(projectalertmessage);

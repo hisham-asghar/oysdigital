@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="/plugins/jquery-datatable/dataTables.bootstrap4.min.css">
     <!-- SweetAlert Plugin Js -->
     <link rel="stylesheet" href="/plugins/sweetalert/sweetalert.css" />
+    <link rel="stylesheet" href="~/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.css" />
+
 
     <!-- Bootstrap Select Css -->
     <link href="/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
@@ -24,7 +26,7 @@
     <!-- Bootstrap Material Datetime Picker Css -->
     <link href="/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
 
-    
+
 </head>
 
 <body class="theme-blush @(ViewData["BodyClass"])">
@@ -33,7 +35,6 @@
     <!-- Jquery Core Js -->
     <script src="/bundles/libscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
     <script src="/bundles/vendorscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
-    <script src="/bundles/mainscripts.bundle.js"></script>
     <!-- Jquery DataTable Plugin Js -->
     <script src="/bundles/datatablescripts.bundle.js"></script>
     <script src="/plugins/jquery-datatable/buttons/dataTables.buttons.min.js"></script>
@@ -52,8 +53,16 @@
 
     <!-- Basi formElements Js -->
     <script src="/js/pages/forms/basic-form-elements.js"></script>
+    <!-- Colorpicker Css -->
 
-    <script src="~/plugins/jquery-validation/jquery.validate.js"    ></script>
+    <script src="~/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script> <!-- Bootstrap Colorpicker Js -->
+
+
+
+    <script src="/bundles/mainscripts.bundle.js"></script>
+    <script src="/js/pages/forms/advanced-form-elements.js"></script>
+
+    <script src="~/plugins/jquery-validation/jquery.validate.js"></script>
     <script src="~/ValidationScripts/FormsValidation.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)

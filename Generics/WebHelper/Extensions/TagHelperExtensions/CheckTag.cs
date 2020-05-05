@@ -132,7 +132,22 @@ namespace Generics.WebHelper.Extensions
             var tr = $"<tr>{tds}</tr>";
             return new HtmlString(tr);
         }
-        
+        public static IHtmlContent TrHtml(this IHtmlHelper html, params string[] items)
+        {
+            var tds = "";
+            if (items != null && items.Length > 0)
+            {
+                var type = "";
+                for (var i = 0; i < items.Length; i++)
+                {
+                    if (i == 0) type = items[i];
+                    else tds += $"<{type}>{html.Raw(items[i])}</{type}>";
+                }
+            }
+            var tr = $"<tr>{tds}</tr>";
+            return new HtmlString(tr);
+        }
+
         public static IHtmlContent TableHead(params string[] items)
         {
             var start = ("<thead>");

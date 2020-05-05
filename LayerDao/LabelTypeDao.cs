@@ -17,13 +17,13 @@ namespace LayerDao
         {
             return TableConstants.LabelType.Select<LabelType>((int)id);
         }
-        public static bool Insert(LabelType mobile)
+        public static bool Insert(LabelType labeltype)
         {
-            return mobile.Insert(TableConstants.LabelType) > 0;
+            return labeltype.Insert(TableConstants.LabelType) > 0;
         }
-        public static bool Update(LabelType mobile)
+        public static bool Update(LabelType labeltype)
         {
-            return mobile.Update(TableConstants.LabelType, (int)mobile.Id) > 0;
+            return labeltype.Update(TableConstants.LabelType, (int)labeltype.Id) > 0;
         }
         public static bool Delete(long id)
         {

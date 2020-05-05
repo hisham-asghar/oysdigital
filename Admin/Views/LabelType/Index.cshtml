@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Generics.DataModels.AdminModels.LabelType>
+@{
+    ViewData["Title"] = "LabelType";
+    Layout = "_TableLayout";
+    ViewBag.AddNewLink = "/LabelType/Create";
+}
+
+<table class="table table-bordered table-striped table-hover dataTable js-exportable">
+    @CHtmlHelper.TableHead("th", "Name","Color", "Created", "Actions")
+    @CHtmlHelper.TableFoot("th", "Name", "Color", "Created", "Actions")
+    <tbody>
+        @foreach (var item in Model)
+        {            
+            @Html.TrHtml("td", item.Name,$"<div style='width:40px;height:40px;background-color:{item.ColorCode};'></div>", item.OnCreated.ToString(dddd_dd_MMMM_yyyy),
+             @ButtonHelper.EditSmall("/LabelType/Edit/" + item.Id) + "" +
+             @ButtonHelper.DeleteSmall("/LabelType/Delete/" + item.Id) + "" +
+             @ButtonHelper.DetailSmall("/LabelType/Detail/" + item.Id).ToString());
+        }
+    </tbody>
+</table>

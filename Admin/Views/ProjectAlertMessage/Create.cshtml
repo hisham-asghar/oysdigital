@@ -11,7 +11,7 @@
         {
             @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
         }
-        @CHtmlHelper.GenerateSingleSelectField("Project Message Type", "LabelTypeId", LabelType.CreateLabelTypeDictionary(), (isEdit) ? (int)Model.LabelTypeId : 0)
+        @CHtmlHelper.GenerateSingleSelectField("Project Message Type", "LabelTypeId", ViewBag.LabelTypeDictionary, (isEdit) ? (int)Model.LabelTypeId : 0)
         @CHtmlHelper.GenerateSingleSelectField("Project", "ProjectId", ViewBag.ProjectDictionary, (isEdit) ? (int)Model.ProjectId : 0)
         @HtmlInputType.TextArea.GenerateInputField("Message", Model.Message, "Message")
         @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
