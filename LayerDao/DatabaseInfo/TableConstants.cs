@@ -16,5 +16,6 @@ namespace LayerDao.DatabaseInfo
         public const string ProjectMemberTypes = "ProjectMemberTypes";
         public const string ProjectNotes = "ProjectNotes";
         public const string ProjectPlatforms = "ProjectPlatforms";
+        public const string LabelType = "LabelType";
     }
 }
