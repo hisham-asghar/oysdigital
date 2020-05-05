@@ -80,16 +80,47 @@
                                 <div class="responsive">
                                     <table class="table table-hover c_table">
                                         <tbody>
+                                            @*@foreach (var item in Model.ProjectPlatforms)
+                                            {*@
+                                                <tr>
+                                                    <td>
+
+                                                        <button type="button" class="btn"><i class="zdmi zdmi-facebook"></i> Facebook</button>
+                                                        <button type="button" class="btn"><i class="zdmi zdmi-whatsapp"></i> WhatsApp</button>
+                                                        <button type="button" class="btn"><i class="zdmi zdmi-twitter"></i> twitter</button>
+
+                                                    </td>
+                                                </tr>
+                                            @*}*@
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card shadow p-3 mb-5 bg-white rounded">
+                                <div class="header">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h2><strong>Project Task</strong></h2>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="pull-right">
+                                                @ButtonHelper.Create($"/ProjectPlatform/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="responsive">
+                                    <table class="table table-hover c_table">
+                                        <tbody>
                                             @foreach (var item in Model.ProjectPlatforms)
                                             {
                                                 <tr>
                                                     <td>
                                                         <div class="hover-zoom-effect social-widget @item.PlatformName-widget">
                                                             <span class="icon"><i class="@item.PlatformIcon"></i></span>
-
-                                                            <span class="text-muted">@ProjectPlatformHelper.GetPostCount(item.PostPerDay, item.PostPerMonth, item.PostPerWeek)</span>
-                                                            <span class="list-name">@ProjectPlatformHelper.GetPostName(item.PostPerDay, item.PostPerWeek, item.PostPerMonth)</span> @@
-                                                            <span class="text-muted">@item.PostSchedulingTime.ToString(hh_mm_tt)</span>
+                                                            <span class="text-muted"></span>
+                                                            <span class="list-name"></span>
+                                                            <span class="text-muted"></span>
                                                         </div>
                                                     </td>
                                                     <td>

@@ -12,14 +12,14 @@
             @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
         }
         @CHtmlHelper.GenerateSingleSelectField("Project", "ProjectId", ViewBag.ProjectDictionary, (isEdit) ? (int)Model.ProjectId : 0)
-        @HtmlInputType.Text.GenerateInputField("Platform Link", Model.PlatformLink, "PlatformLink")
+        @*@HtmlInputType.Text.GenerateInputField("Platform Link", Model.PlatformLink, "PlatformLink")
         @CHtmlHelper.GenerateSingleSelectField("Platform", "PlatformId", ViewBag.PlatformDictionary, (isEdit) ? (int)Model.PlatformId : 0)
         @CHtmlHelper.GenerateSingleSelectField("Mobile Space", "MobileSpaceId", ViewBag.MobileSpacesDictionary, (isEdit) ? (int)Model.MobileSpaceId : 0)
         @CHtmlHelper.GenerateSingleSelectField("Post Scheduler", "PostType", ProjectPlatformHelper.CreatePostScheduling(), (isEdit) ? (int)Model.PostType : 0)
         @CHtmlHelper.GenerateDataTime("Post Scheduling Time", Model.PostSchedulingTime.ToString(), "PostSchedulingTime")
         @HtmlInputType.Text.GenerateInputField("Post Quantity", Model.PostCount.ToString(), "PostCount")
         @CHtmlHelper.GenerateSingleSelectField("Stories Scheduler", "StoriesType", ProjectPlatformHelper.CreateStoriesScheduling(), (isEdit) ? (int)Model.StoriesType : 0)
-        @CHtmlHelper.GenerateDataTime("Storie/Status Scheduling Time", Model.StoriesSchedulingTime.ToString(), "StoriesSchedulingTime")
+        @CHtmlHelper.GenerateDataTime("Storie/Status Scheduling Time", Model.StoriesSchedulingTime.ToString(), "StoriesSchedulingTime")*@
         @HtmlInputType.Text.GenerateInputField("Stories Quantity", Model.StoriesCount.ToString(), "StoriesCount")
         @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)

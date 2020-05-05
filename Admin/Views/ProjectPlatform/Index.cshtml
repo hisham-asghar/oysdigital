@@ -9,13 +9,13 @@
         @CHtmlHelper.TableHead("th", "Post Quantity", "Post Time", "Stories Quantity", "Stories Time", "Created", "Status", "Actions")
         @CHtmlHelper.TableFoot("th", "Post Quantity", "Post Time", "Stories Quantity", "Stories Time", "Created", "Status", "Actions")
         <tbody>
-            @foreach (var item in Model)
+            @*@foreach (var item in Model)
             {
                 @CHtmlHelper.Tr("td", ProjectPlatformHelper.GetPostCount(item.PostPerDay, item.PostPerMonth, item.PostPerWeek).ToString(), item.PostSchedulingTime.ToString(HH_mm), ProjectPlatformHelper.GetPostCount(item.StoriesPerDay, item.StoriesPerWeek, item.StoriesPerMonth).ToString(), item.StoriesSchedulingTime.ToString(HH_mm), item.OnCreated.ToString(dddd_dd_MMMM_yyyy), item.IsActive.CheckTag().ToString(),
                  @ButtonHelper.EditSmall("/ProjectPlatform/Edit/" + item.Id) + "" +
                  @ButtonHelper.DeleteSmall("/ProjectPlatform/Delete/" + item.Id) + "" +
                  @ButtonHelper.DetailSmall("/ProjectPlatform/Detail/" + item.Id).ToString());
-            }
+            }*@
         </tbody>
     </table>
 
