@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.Common;
 using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
@@ -60,7 +61,7 @@ namespace Admin.Controllers
         [Route("/ProjectPlatform/Create")]
         [Route("/ProjectPlatform/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(ProjectPlaformCreateView projectplatform, int id = 0, long projectId = 0, string returnUrl = null)
+        public IActionResult Create(ProjectView projectview, int id = 0, long projectId = 0, string returnUrl = null)
         {
             ProjectPlatforms projectplatformDb = ProjectPlatformsBao.GetById(id);
             if (id > 0 && projectplatformDb == null)
@@ -70,7 +71,7 @@ namespace Admin.Controllers
 
             var userId = User.GetUserId();
 
-            if (projectplatform == null)
+            if (projectview == null)
             {
                 projectplatformDb = projectplatformDb ?? new ProjectPlatforms();
                 ViewBag.IsEdit = id > 0;
@@ -78,15 +79,40 @@ namespace Admin.Controllers
             }
             if (id == 0)
             {
-                ProjectPlatforms project=ProjectPlatformHelper.ProjectPlatformParser(projectplatform);
-                project.SetOnCreate(userId);
-                ProjectPlatformsBao.Insert(project);
-            }
+                ProjectPlatforms projectplatform = new ProjectPlatforms();
+                projectplatform.SetOnCreate(userId);
+                foreach (var item in projectview.ProjectPlatforms)
+                {
+                    projectplatform.PlatformId = item.ToLong();
+                    projectplatform.MobileSpaceId = projectview.MobileSpaceId;
+                    projectplatform.ProjectId = projectview.ProjectId;
+                    projectplatform.Link = projectview.Link;
+                    ProjectPlatformsBao.Insert(projectplatform);
+                }
+                ProjectTask projectTask = new ProjectTask();
+                projectTask.ProjectId = projectview.ProjectId;
+                projectTask.TaskTypeId = TaskType.CheckTaskTypeByName(projectview.PlatformType);
+                projectTask.Frequency = projectview.Quantity;
+                if (projectview.PlatformType == "Stories") {
+                    projectTask.FrequencyTypeId = projectview.StoryType;
+                }
+                else
+                {
+                    projectTask.FrequencyTypeId = 0;
+                }
+                long projecttaskId=ProjectTaskBao.Insert(projectTask);
+                for(int x = 0; x < projectview.Quantity; x++)
+                {
+                    ProjectTaskScheduling projectTaskScheduling = new ProjectTaskScheduling();
+                    projectTaskScheduling.ProjectTaskId = projecttaskId;
+                    projectTaskScheduling.Time = DateTime.Now;
+                }
+               }
             else
             {
-                ProjectPlatforms project = ProjectPlatformHelper.ProjectPlatformParser(projectplatform);
-                project.SetOnUpdate(userId);
-                ProjectPlatformsBao.Update(project);
+               // ProjectPlatforms project = ProjectPlatformHelper.ProjectPlatformParser(projectplatform);
+               // project.SetOnUpdate(userId);
+               // ProjectPlatformsBao.Update(project);
             }
             if (string.IsNullOrWhiteSpace(returnUrl))
                 return RedirectToAction("Index");

@@ -11,5 +11,6 @@ namespace Generics.DataModels.AdminModels
         public int FrequencyTypeId { get; set; }
         public long ProjectId { get; set; }
         public List<ProjectTaskScheduling> ProjectTaskScheduling { get; set; }
+        public List<ProjectPlatforms> ProjectPlatforms { get; set; }
     }
 }

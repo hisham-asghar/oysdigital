@@ -22,9 +22,9 @@ namespace LayerDao
             var where = $"ProjectId={id}";
             return TableConstants.ProjectTask.SelectList<ProjectTask>(where);
         }
-        public static bool Insert(ProjectTask projecttask)
+        public static long Insert(ProjectTask projecttask)
         {
-            return projecttask.Insert(TableConstants.ProjectTask) > 0;
+            return projecttask.Insert(TableConstants.ProjectTask);
         }
         public static bool Update(ProjectTask projecttask)
         {

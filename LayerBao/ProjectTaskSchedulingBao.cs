@@ -18,7 +18,7 @@ namespace LayerBao
         }
         public static List<ProjectTaskScheduling> GetByProjectId(long id)
         {
-            return ProjectTaskSchedulingDao.GetByProjectId(id);
+            return ProjectTaskSchedulingDao.GetByProjectTaskId(id);
         }
         public static bool Insert(ProjectTaskScheduling projecttaskscheduling)
         {

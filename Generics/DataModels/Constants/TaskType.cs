@@ -18,6 +18,15 @@ namespace Generics.DataModels.Constants
             else
                 return "Status";
         }
+        public static int CheckTaskTypeByName(string type)
+        {
+            if (type == "Post")
+                return 0;
+            if (type == "Stories")
+                return 1;
+            else
+                return 2;
+        }
         public static Dictionary<int,string> CreateTaskTypeDictionary()
         {
             Dictionary<int, string> dictionary = new Dictionary<int, string>();

@@ -25,10 +25,19 @@ namespace Generics.DataModels.AdminModels
     }
     public class ProjectPlaformCreateView:ProjectPlatforms
     {
+        
         public int PostCount { get; set; }
         public int StoriesCount { get; set; }
         public int PostType { get; set; }
         public int StoriesType { get; set; }
+    }
+    public class ProjectView : ProjectPlatforms
+    {
+        public new List<string> ProjectPlatforms  { get; set; }
+        public new List<DateTime> PlatformSchedulers { get; set; }
+        public int Quantity { get; set; }
+        public string PlatformType { get; set; }
+        public int StoryType { get; set; }
     }
     
 }

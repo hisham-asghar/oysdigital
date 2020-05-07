@@ -17,15 +17,26 @@ namespace LayerBao
             var projectTask = ProjectTaskDao.GetById(id);
             if (projectTask != null)
             {
-                projectTask.ProjectTaskScheduling = ProjectTaskSchedulingDao.GetByProjectId(id);
+                projectTask.ProjectTaskScheduling = ProjectTaskSchedulingDao.GetByProjectTaskId(projectTask.Id);
+                projectTask.ProjectPlatforms = ProjectPlatformsDao.GetByProjectId(id);
             }
             return projectTask;
         }
         public static List<ProjectTask> GetByProjectId(long id)
         {
-            return ProjectTaskDao.GetByProjectId(id);
+            var data= ProjectTaskDao.GetByProjectId(id);
+            foreach(var item in data)
+            {
+                if (item != null)
+                {
+                    item.ProjectTaskScheduling = ProjectTaskSchedulingDao.GetByProjectTaskId(item.TaskTypeId);
+                    item.ProjectPlatforms = ProjectPlatformsDao.GetByProjectId(item.ProjectId);
+                }
+                
+            }
+            return data;
         }
-        public static bool Insert(ProjectTask projecttask)
+        public static long Insert(ProjectTask projecttask)
         {
             return ProjectTaskDao.Insert(projecttask);
         }

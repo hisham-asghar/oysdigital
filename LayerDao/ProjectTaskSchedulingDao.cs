@@ -17,9 +17,9 @@ namespace LayerDao
         {
             return TableConstants.ProjectTaskScheduling.Select<ProjectTaskScheduling>((int)id);
         }
-        public static List<ProjectTaskScheduling> GetByProjectId(long id)
+        public static List<ProjectTaskScheduling> GetByProjectTaskId(long id)
         {
-            var where = $"ProjectId={id}";
+            var where = $"ProjectTaskId={id}";
             return TableConstants.ProjectTaskScheduling.SelectList<ProjectTaskScheduling>(where);
         }
         public static bool Insert(ProjectTaskScheduling projecttaskscheduling)

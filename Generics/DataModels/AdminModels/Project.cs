@@ -12,9 +12,10 @@ namespace Generics.DataModels.AdminModels
         public string Name { get; set; }
         public long CustomerId { get; set; }
         public bool IsActive { get; set; }
-        public List<ProjectPlatforms> ProjectPlatforms { get; set; }
         public List<ProjectMembers> ProjectMembers { get; set; }
         public List<ProjectAlertMessage> ProjectAlertMessages { get; set; }
         public List<ProjectNotes> ProjectNotes { get; set; }
+        public List<Platform> Platforms { get; set; }
+        public List<ProjectTask> projectTasks { get; set; }
     }
 }

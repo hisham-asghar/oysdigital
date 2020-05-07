@@ -102,12 +102,14 @@ namespace Admin.Controllers
         public IActionResult Detail(long id)
         {
             Project project = ProjectBao.GetById(id);
+            
             if (id > 0 && project == null)
             {
                 // Dont Exist
             }
             else
             {
+                ViewBag.PlatformDictionary = Functions.CreateDictionaryFromModelList(PlatformBao.GetAll());
                 ViewBag.ProjectDictionary = Functions.CreateDictionaryFromModel(project);
             }
             return View(project);

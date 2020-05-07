@@ -17,10 +17,10 @@ namespace LayerBao
             var project = ProjectDao.GetById(id);
             if (project != null)
             {
-                project.ProjectPlatforms = ProjectPlatformsDao.GetByProjectId(id);
                 project.ProjectMembers = ProjectMembersDao.GetByProjectId(id);
                 project.ProjectAlertMessages = ProjectAlertMessageDao.GetByProjectId(id);
                 project.ProjectNotes = ProjectNotesDao.GetByProjectId(id);
+                project.Platforms = PlatformDao.GetAll();
             }
             return project;
         }
