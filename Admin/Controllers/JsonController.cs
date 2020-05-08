@@ -29,26 +29,32 @@ namespace Admin.Controllers
         [HttpGet]
         public JsonResult GenerateTask()
         {
-            List<ProjectTask> p = new List<ProjectTask>();
-            var projecttask = ProjectTaskBao.GetAll();
-            if (projecttask != null)
+            var data = WorkTaskBao.CheckTaskCreated(DateTime.Now.Date);
+            if (data.Count == 0)
             {
-                foreach(var item in projecttask)
+                List<ProjectTask> p = new List<ProjectTask>();
+                var projecttask = ProjectTaskBao.GetAll();
+                if (projecttask != null)
                 {
-                   p.Add(ProjectTaskBao.GetById(item.Id));
+                    foreach (var item in projecttask)
+                    {
+                        p.Add(ProjectTaskBao.GetById(item.Id));
+                    }
                 }
-            }
-           
-            var userId = User.GetUserId();
-                foreach (var work in p) {
-               
-                foreach (var item in work.ProjectTaskScheduling) {
-                    WorkTask workTask = new WorkTask();
-                    workTask.SetOnCreate(userId);
-                    workTask.ProjectId = work.ProjectId;
-                    workTask.ProjectSchedulingTime = item.Time;
-                    var worktaskId=WorkTaskBao.Insert(workTask);
-                    
+
+                var userId = User.GetUserId();
+                foreach (var work in p)
+                {
+
+                    foreach (var item in work.ProjectTaskScheduling)
+                    {
+                        WorkTask workTask = new WorkTask();
+                        workTask.SetOnCreate(userId);
+                        workTask.OnCreated = DateTime.Now.Date;
+                        workTask.ProjectId = work.ProjectId;
+                        workTask.ProjectSchedulingTime = item.Time;
+                        var worktaskId = WorkTaskBao.Insert(workTask);
+
                         foreach (var pl in work.ProjectPlatforms)
                         {
                             WorkTaskPlatforms workTaskPlatforms = new WorkTaskPlatforms();
@@ -56,12 +62,14 @@ namespace Admin.Controllers
                             workTaskPlatforms.WorkTaskId = worktaskId;
                             workTaskPlatforms.Link = pl.Link;
                             WorkTaskPlatformsBao.Insert(workTaskPlatforms);
-                           
+
                         }
-                   
-                 }
+
+                    }
                 }
-             return Json(p);
+                return Json(p);
+            }
+            return Json(null);
         }
 
 

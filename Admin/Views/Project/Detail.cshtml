@@ -3,8 +3,6 @@
     ViewData["Title"] = "Project Detail";
     Layout = "_Layout";
     var host = Context.Request.Scheme + "://" + Context.Request.Host;
-    var myobj = (Dictionary<int, string>)ViewBag.PlatformDictionary;
-    var data1="";
 }
 <div class="block-header">
     <div class="row">
@@ -83,7 +81,7 @@
                         <div class="responsive">
                             <table class="table table-hover c_table">
                                 <tbody>
-                                   
+
                                     <tr>
                                         @foreach (var item in Model.Platforms)
                                         {
@@ -91,8 +89,8 @@
                                                 <button type="button" class="btn"><i class="@item.IconClass"></i> @item.Name </button>
                                             </td>
                                         }
-                                        </tr>
-                                   
+                                    </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -115,34 +113,34 @@
                                 <tbody>
                                     @foreach (var item in Model.projectTasks)
                                     {
-                                    <tr>
-                                        <td>
+                                        <tr>
+                                            <td>
 
-                                            <div class="hover-zoom-effect social-widget-widget">
-                                                
-                                                <ul class="social-links list-unstyled">
-                                                    @foreach (var plat in item.ProjectPlatforms)
-                                                    {
-                                                        <li><span class="icon"><i class="@plat.PlatformIcon"></i> @plat.PlatformName</span></li>
-                                                    }   
-                                                </ul>
-                                                       
+                                                <div class="hover-zoom-effect social-widget-widget">
+
+                                                    <ul class="social-links list-unstyled">
+                                                        @foreach (var plat in item.ProjectPlatforms)
+                                                        {
+                                                            <li><span class="icon"><i class="@plat.PlatformIcon"></i> @plat.PlatformName</span></li>
+                                                        }
+                                                    </ul>
+
                                                 </div>
-                                        </td>
-                                        <td>
+                                            </td>
+                                            <td>
                                                 <p>
-                                                @TaskType.CheckTaskType(item.TaskTypeId)-@FrequencyType.CheckFrequencyType(item.FrequencyTypeId)
-                                                @foreach (var sched in item.ProjectTaskScheduling)
-                                                {
-                                                    <span class="text-muted">(@sched.Time.ToString(HH_mm))</span>
-                                                }
+                                                    @TaskType.CheckTaskType(item.TaskTypeId)-@FrequencyType.CheckFrequencyType(item.FrequencyTypeId)
+                                                    @foreach (var sched in item.ProjectTaskScheduling)
+                                                    {
+                                                        <span class="text-muted">(@sched.Time.ToString(HH_mm))</span>
+                                                    }
                                                 </p>
-                                        </td>
-                                        <td>
-                                            <a role="button" class="btn btn-sm btn-primary btn-round text-white"><i class="zmdi zmdi-edit"></i></a>
-                                            <a role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                            <td>
+                                                <a role="button" class="btn btn-sm btn-primary btn-round text-white"><i class="zmdi zmdi-edit"></i></a>
+                                                <a role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
+                                            </td>
+                                        </tr>
                                     }
                                 </tbody>
                             </table>
@@ -220,7 +218,7 @@
 
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 <script>
 
     async function Process(id) {
@@ -264,7 +262,7 @@
       title: 'Select color',
       input: 'radio',
         inputOptions: inputOptions,
-     
+
       inputValidator: (value) => {
         if (!value) {
           return 'You need to choose Type!'
@@ -330,12 +328,15 @@
     })
     var schedulerhtml="";
     for (var x=0;x<ProjectView.Quantity;x++) {
-     schedulerhtml+="<div class='input-group'><div class='input-group-prepend'><span class='input-group-text'><i class='zmdi zmdi-time'></i></span></div><input type='text' class='form-control timepicker' placeholder='Please choose a time...'></div></br>";
+        schedulerhtml +="<div class='input-group'><div class='input-group-prepend'><span class='input-group-text'><i class='zmdi zmdi-time'></i></span></div><input type='text' id='datetimepicker' class='form-control timepicker' placeholder='Please choose a time...'></div></br>";
     }
 
     await Swal.fire({
       title: 'Select time',
         html: schedulerhtml,
+        onOpen: function () {
+            DateTimePicker();
+        },
         allowOutsideClick: false,
     }).then((accept) => {
         var inputElements = document.getElementsByClassName('timepicker');
@@ -349,7 +350,13 @@
                     data: ProjectView,
                     success: function(d)
                     {
-                        swal("Your request has been received!", "We will contact you for confirmation soon", "success");
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Platform has been generated',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
 
                     }
 

@@ -38,5 +38,9 @@ namespace LayerBao
         {
             return WorkTaskDao.Delete(id);
         }
+        public static List<WorkTask> CheckTaskCreated(DateTime date)
+        {
+            return WorkTaskDao.CheckTaskCreated(date);
+        }
     }
 }

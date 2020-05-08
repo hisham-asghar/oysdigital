@@ -31,5 +31,10 @@ namespace LayerDao
         {
             return TableConstants.WorkTask.Delete((int)id);
         }
+        public static List<WorkTask> CheckTaskCreated(DateTime date)
+        {
+            var query = $"Select WorkTask.*,Project.Name as ProjectName from WorkTask join Project on Project.Id=WorkTask.ProjectId where WorkTask.OnCreated='{date}';";
+            return QueryExecutor.List<WorkTask>(query);
+        }
     }
 }

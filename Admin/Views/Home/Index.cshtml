@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Generics.DataModels.AdminModels.WorkTask>
 @{
     ViewData["Title"] = "Dashboard";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "_Layout";
     var host = Context.Request.Scheme + "://" + Context.Request.Host;
 
 }
@@ -78,12 +78,24 @@
         </div>
         <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="card state_w1">
-                <div class="body d-flex justify-content-between">
-                    <div>
-                        <h5>Today</h5>
-                        <span>Resolve</span>
+                <div class="body d-flex justify-content-between" style="background-color:#04BE5B">
+                    <div class="col-md-12">
+                        <h5>Total</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Total</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="sparkline" data-type="bar" data-width="97%" data-height="55px" data-bar-Width="3" data-bar-Spacing="5" data-bar-Color="#04BE5B">7,5,3,8,4,6,2,9</div>
                 </div>
             </div>
         </div>
@@ -176,9 +188,21 @@
             url: "@host" +"/Json/GenerateTask",
             type: 'GET',
             dataType: 'json',
-            success: function(d)
+            success: function (d)
             {
-                location.reload(true);
+                if (d != null) {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Your tasks has been generated',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    location.reload(true);
+                }
+                
+            },error: function(){
+                debugger;
             }
         });
     }

@@ -25,9 +25,8 @@
 
     <!-- Bootstrap Material Datetime Picker Css -->
     <link href="/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
-
-
-</head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+   </head>
 
 <body class="theme-blush @(ViewData["BodyClass"])">
     @RenderBody()
@@ -49,7 +48,7 @@
     <script src="/plugins/momentjs/moment.js"></script> <!-- Moment Plugin Js -->
     <!-- Bootstrap Material Datetime Picker Plugin Js -->
     <script src="/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
-
+    <script src="~/js/jquery-3.5.1.min.js"></script>
 
     <!-- Basi formElements Js -->
     <!-- Colorpicker Css -->
@@ -64,26 +63,15 @@
     <script src="~/plugins/jquery-validation/jquery.validate.js"></script>
     <script src="~/ValidationScripts/FormsValidation.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @*<script>
-        function checkboxclick() {
-            $('input[type="checkbox"]').click(function () {
-                if ($(this).prop("checked") == true) {
-                    $(this).prop("checked", true);
-                }
-                else {
-                    $(this).prop("checked", false);
-                }
+    <script>
+        function DateTimePicker() {
+            $('#datetimepicker').datetimepicker({
+                format: 'DD/MM/YYYY hh:mm A',
+                defaultDate: new Date()
             });
         }
-        $('input[type="checkbox"]').click(function () {
-            if ($(this).prop("checked") == true) {
-                $(this).prop("checked", true);
-            }
-            else {
-                $(this).prop("checked", false);
-            }
-        });
-    </script>*@
+    </script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>
