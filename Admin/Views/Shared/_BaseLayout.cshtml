@@ -64,6 +64,26 @@
     <script src="~/plugins/jquery-validation/jquery.validate.js"></script>
     <script src="~/ValidationScripts/FormsValidation.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @*<script>
+        function checkboxclick() {
+            $('input[type="checkbox"]').click(function () {
+                if ($(this).prop("checked") == true) {
+                    $(this).prop("checked", true);
+                }
+                else {
+                    $(this).prop("checked", false);
+                }
+            });
+        }
+        $('input[type="checkbox"]').click(function () {
+            if ($(this).prop("checked") == true) {
+                $(this).prop("checked", true);
+            }
+            else {
+                $(this).prop("checked", false);
+            }
+        });
+    </script>*@
     @RenderSection("Scripts", required: false)
 </body>
 </html>

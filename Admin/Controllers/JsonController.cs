@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Generics.DataModels.AdminModels;
+using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,5 +25,45 @@ namespace Admin.Controllers
             var list = MobileSpacesBao.GetAll();
             return Json(list);
         }
+        [Route("/Json/GenerateTask")]
+        [HttpGet]
+        public JsonResult GenerateTask()
+        {
+            List<ProjectTask> p = new List<ProjectTask>();
+            var projecttask = ProjectTaskBao.GetAll();
+            if (projecttask != null)
+            {
+                foreach(var item in projecttask)
+                {
+                   p.Add(ProjectTaskBao.GetById(item.Id));
+                }
+            }
+           
+            var userId = User.GetUserId();
+                foreach (var work in p) {
+               
+                foreach (var item in work.ProjectTaskScheduling) {
+                    WorkTask workTask = new WorkTask();
+                    workTask.SetOnCreate(userId);
+                    workTask.ProjectId = work.ProjectId;
+                    workTask.ProjectSchedulingTime = item.Time;
+                    var worktaskId=WorkTaskBao.Insert(workTask);
+                    
+                        foreach (var pl in work.ProjectPlatforms)
+                        {
+                            WorkTaskPlatforms workTaskPlatforms = new WorkTaskPlatforms();
+                            workTaskPlatforms.PlatformId = pl.PlatformId;
+                            workTaskPlatforms.WorkTaskId = worktaskId;
+                            workTaskPlatforms.Link = pl.Link;
+                            WorkTaskPlatformsBao.Insert(workTaskPlatforms);
+                           
+                        }
+                   
+                 }
+                }
+             return Json(p);
+        }
+
+
     }
 }

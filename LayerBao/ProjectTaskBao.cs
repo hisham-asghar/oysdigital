@@ -18,7 +18,7 @@ namespace LayerBao
             if (projectTask != null)
             {
                 projectTask.ProjectTaskScheduling = ProjectTaskSchedulingDao.GetByProjectTaskId(projectTask.Id);
-                projectTask.ProjectPlatforms = ProjectPlatformsDao.GetByProjectId(id);
+                projectTask.ProjectPlatforms = ProjectPlatformsDao.GetByProjectId(projectTask.ProjectId);
             }
             return projectTask;
         }

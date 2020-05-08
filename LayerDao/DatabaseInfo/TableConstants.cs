@@ -19,5 +19,7 @@ namespace LayerDao.DatabaseInfo
         public const string LabelType = "LabelType";
         public const string ProjectTask = "ProjectTask";
         public const string ProjectTaskScheduling = "ProjectTaskScheduling";
+        public const string WorkTask = "WorkTask";
+        public const string WorkTaskPlatforms = "WorkTaskPlatforms";
     }
 }

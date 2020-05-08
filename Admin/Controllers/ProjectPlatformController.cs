@@ -106,6 +106,7 @@ namespace Admin.Controllers
                     ProjectTaskScheduling projectTaskScheduling = new ProjectTaskScheduling();
                     projectTaskScheduling.ProjectTaskId = projecttaskId;
                     projectTaskScheduling.Time = DateTime.Now;
+                    ProjectTaskSchedulingBao.Insert(projectTaskScheduling);
                 }
                }
             else

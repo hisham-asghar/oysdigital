@@ -17,6 +17,7 @@ namespace LayerBao
             var project = ProjectDao.GetById(id);
             if (project != null)
             {
+                project.projectTasks = ProjectTaskDao.GetByProjectId(id);
                 project.ProjectMembers = ProjectMembersDao.GetByProjectId(id);
                 project.ProjectAlertMessages = ProjectAlertMessageDao.GetByProjectId(id);
                 project.ProjectNotes = ProjectNotesDao.GetByProjectId(id);

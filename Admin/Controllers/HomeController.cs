@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Admin.Models;
 using Microsoft.AspNetCore.Authorization;
+using LayerBao;
 
 namespace Admin.Controllers
 {
@@ -20,7 +21,7 @@ namespace Admin.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(WorkTaskBao.GetAll());
         }
 
         public IActionResult Privacy()

@@ -1,8 +1,185 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<Generics.DataModels.AdminModels.WorkTask>
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var host = Context.Request.Scheme + "://" + Context.Request.Host;
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+}
+<div class="container-fluid">
+    <div class="row clearfix">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card state_w1">
+                <div class="body d-flex justify-content-between">
+                    <div class="col-md-12">
+                        <h5>Over All</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Total</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card state_w1">
+                <div class="body d-flex justify-content-between">
+                    <div class="col-md-12">
+                        <h5>Current Week</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Total</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card state_w1">
+                <div class="body d-flex justify-content-between">
+                    <div class="col-md-12">
+                        <h5>Current Month</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Total</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card state_w1">
+                <div class="body d-flex justify-content-between">
+                    <div>
+                        <h5>Today</h5>
+                        <span>Resolve</span>
+                    </div>
+                    <div class="sparkline" data-type="bar" data-width="97%" data-height="55px" data-bar-Width="3" data-bar-Spacing="5" data-bar-Color="#04BE5B">7,5,3,8,4,6,2,9</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="card project_list">
+
+                <div class="pull-right">
+                    <button class="btn btn-success" onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover c_table">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th>Platforms</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td><strong>@item.ProjectName</strong></td>
+                                    <td>
+                                        @foreach (var plat in item.WorkTaskPlatforms)
+                                        {
+                                            <i class="zmdi zmdi-@plat.PlatformIcon"></i>
+                                        }
+                                    </td>
+                                    <td>@item.OnCreated</td>
+                                    <td><span class="badge badge-warning">To Do</span></td>
+                                    <td><span><i class="zmdi zmdi-plus btn-sm btn btn-success" data-toggle="modal" data-target="#smallModal"></i></span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="modal fade" id="smallModal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="title" id="smallModalLabel">Paltforms</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <input name="platform" type="checkbox">
+                                            <label for="checkbox">Platforms</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <input name="platform1" type="checkbox">
+                                            <label for="checkbox">Platforms</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <input name="platform2" class="checkbox" type="checkbox">
+                                            <label for="checkbox">Platforms</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-info btn-round waves-effect">Updates</button>
+                                    <button type="button" class="btn btn-default btn-round waves-effect" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="pagination pagination-primary mt-4">
+                    <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);">5</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
+<script>
+    function GenerateTask() {
+        $.ajax({
+            url: "@host" +"/Json/GenerateTask",
+            type: 'GET',
+            dataType: 'json',
+            success: function(d)
+            {
+                location.reload(true);
+            }
+        });
+    }
+</script>

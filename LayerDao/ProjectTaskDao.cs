@@ -11,7 +11,8 @@ namespace LayerDao
     {
         public static List<ProjectTask> GetAll()
         {
-            return TableConstants.ProjectTask.SelectAll<ProjectTask>();
+            var query = $"select ProjectTask.*,Project.Name as ProjectName from ProjectTask join Project on Project.Id=ProjectTask.ProjectId;";
+            return QueryExecutor.List<ProjectTask>(query);
         }
         public static ProjectTask GetById(long id)
         {
@@ -20,7 +21,20 @@ namespace LayerDao
         public static List<ProjectTask> GetByProjectId(long id)
         {
             var where = $"ProjectId={id}";
-            return TableConstants.ProjectTask.SelectList<ProjectTask>(where);
+            var data = TableConstants.ProjectTask.SelectList<ProjectTask>(where);
+           
+            if (data != null)
+            {
+               
+                foreach (var item in data)
+                {
+                    var projecttask = $"ProjectTaskId={item.Id}";
+                    var query = $"select ProjectPlatforms.*,Platform.Name as PlatformName,Platform.IconClass as PlatformIcon,MobileSpaces.Name as MobileSpaceName from ProjectPlatforms join MobileSpaces on ProjectPlatforms.MobileSpaceId=MobileSpaces.Id join Platform on platform.Id=ProjectPlatforms.PlatformId where ProjectId={id};";
+                    item.ProjectPlatforms = QueryExecutor.List<ProjectPlatforms>(query);
+                    item.ProjectTaskScheduling = TableConstants.ProjectTaskScheduling.SelectList<ProjectTaskScheduling>(projecttask);
+                }
+            }
+            return data;
         }
         public static long Insert(ProjectTask projecttask)
         {

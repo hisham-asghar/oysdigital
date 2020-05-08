@@ -112,33 +112,39 @@
                         </div>
                         <div class="responsive">
                             <table class="table table-hover c_table">
-                                @*<tbody>
-                                    @foreach (var item in Model.ProjectPlatforms)
+                                <tbody>
+                                    @foreach (var item in Model.projectTasks)
                                     {
-                                        <tr>
-                                            <td>
-                                                <div class="hover-zoom-effect social-widget @item.PlatformName-widget">
-                                                        <span class="icon"><i class="@item."></i></span>
-                                                        <span class="text-muted"></span>
-                                                        <span class="list-name"></span>
-                                                        <span class="text-muted"></span>
-                                                    </div>
-                                            </td>
-                                            <td>
-                                                @if (item.IsActive)
+                                    <tr>
+                                        <td>
+
+                                            <div class="hover-zoom-effect social-widget-widget">
+                                                
+                                                <ul class="social-links list-unstyled">
+                                                    @foreach (var plat in item.ProjectPlatforms)
+                                                    {
+                                                        <li><span class="icon"><i class="@plat.PlatformIcon"></i> @plat.PlatformName</span></li>
+                                                    }   
+                                                </ul>
+                                                       
+                                                </div>
+                                        </td>
+                                        <td>
+                                                <p>
+                                                @TaskType.CheckTaskType(item.TaskTypeId)-@FrequencyType.CheckFrequencyType(item.FrequencyTypeId)
+                                                @foreach (var sched in item.ProjectTaskScheduling)
                                                 {
-                                                    <span class="badge badge-success">Active</span>
+                                                    <span class="text-muted">(@sched.Time.ToString(HH_mm))</span>
                                                 }
-                                                else
-                                                {
-                                                    <span class="badge badge-danger">In Active</span>
-                                                }
-                                                <a role="button" class="btn btn-sm btn-primary btn-round text-white"><i class="zmdi zmdi-edit"></i></a>
-                                                <a role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
-                                            </td>
-                                        </tr>
+                                                </p>
+                                        </td>
+                                        <td>
+                                            <a role="button" class="btn btn-sm btn-primary btn-round text-white"><i class="zmdi zmdi-edit"></i></a>
+                                            <a role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
+                                        </td>
+                                    </tr>
                                     }
-                                </tbody>*@
+                                </tbody>
                             </table>
                         </div>
                     </div>
