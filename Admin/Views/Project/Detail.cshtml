@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="pull-right">
-                                        @ButtonHelper.Create($"/ProjectPlatform/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                        @*@ButtonHelper.Create($"/ProjectPlatform/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")*@
                                     </div>
                                 </div>
                             </div>
@@ -226,7 +226,7 @@
         var mobileSpaces = [];
         $.ajax({
         type: 'GET',
-            url: "@host" +"/Json/Getplatforms",
+            url: "@host" +"/Json/Getplatforms/"+id,
         dataType: 'json',
             success: function (data) {
                 platforms = data;
@@ -271,7 +271,7 @@
         }
       }
     })
-    var platformsLink="<div class='form-group'><input type='text' required placeholder='Platform Link' class='form-control' id='link'></div>";
+        var platformsLink="<div class='form-group'><input type='text' required placeholder='Platform Link' class='form-control' id='link'></div>";
         var platformshtml = "";
         var mobilespaceshtml = "";
         for (var x = 0; x < platforms.length;x++) {
@@ -335,7 +335,10 @@
       title: 'Select time',
         html: schedulerhtml,
         onOpen: function () {
-            DateTimePicker();
+            $('#datetimepicker').datetimepicker({
+                format: 'DD/MM/YYYY hh:mm A',
+                defaultDate: new Date()
+            });
         },
         allowOutsideClick: false,
     }).then((accept) => {

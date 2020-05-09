@@ -6,14 +6,19 @@ using Generics.DataModels.AdminModels;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Web;
+using Nancy.Json;
+using Generics.Common;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Admin.Controllers
 {
     public class JsonController : Controller
     {
-        [Route("/Json/Getplatforms")]
+        [Route("/Json/Getplatforms/{id}")]
         [HttpGet]
-        public JsonResult Getplatforms()
+        public JsonResult Getplatforms(long id)
         {
             var list = PlatformBao.GetAll();
             return Json(list);
@@ -71,7 +76,70 @@ namespace Admin.Controllers
             }
             return Json(null);
         }
+        [Route("/Json/SinglePlatform")]
+        [HttpPost]
+        public JsonResult SinglePlatform(long id,bool status)
+        {
+            var workTaskPlatforms = WorkTaskPlatformsBao.GetById(id);
+            if (workTaskPlatforms != null)
+            {
+                //JsonSerializer JsonConvert = new JsonSerializer(); 
+                //string result = JsonConvert.Serialize(airport.getListItems());
+                workTaskPlatforms.IsDesigned = status;
+                if (WorkTaskPlatformsBao.Update(workTaskPlatforms))
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+            }
+            return Json(null);
+        }
+        [Route("/Json/MultiPlatform")]
+        [HttpPost]
+        public JsonResult MultiPlatform(string[] id)
+        {
+            if (id.Length > 0)
+            {
+                foreach (var item in id)
+                {
+                    var workTask = WorkTaskPlatformsBao.GetById(item.ToLong());
+                    if (workTask != null)
+                    {
+                        if (workTask.IsDesigned != true) {
+                            workTask.IsDesigned = true;
+                            WorkTaskPlatformsBao.Update(workTask);
+                        }
+                        
+                    }
 
+                }
+                return Json(true);
+            }
+            return Json(null);
+        }
 
+        [Route("/Json/ReportTask/{id}")]
+        [HttpGet]
+        public JsonResult ReportTask(long id)
+        {
+            var workTasks = WorkTaskBao.GetById(id);
+            if (workTasks != null)
+            {
+                workTasks.IsReported = true;
+                workTasks.ReportedBy = User.GetUserId();
+                if (WorkTaskBao.Update(workTasks))
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+            }
+            return Json(null);
+        }
     }
 }

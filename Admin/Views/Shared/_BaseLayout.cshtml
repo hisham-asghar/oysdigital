@@ -45,8 +45,8 @@
 
     <!-- SweetAlert Plugin Js -->
     @*<script src="/plugins/sweetalert/sweetalert.min.js"></script>*@
-    <script src="/plugins/momentjs/moment.js"></script> <!-- Moment Plugin Js -->
-    <!-- Bootstrap Material Datetime Picker Plugin Js -->
+    <script src="/plugins/momentjs/moment.js"></script>  Moment Plugin Js 
+     Bootstrap Material Datetime Picker Plugin Js 
     <script src="/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
     <script src="~/js/jquery-3.5.1.min.js"></script>
 
@@ -58,19 +58,11 @@
     <script src="/bundles/mainscripts.bundle.js"></script>
 
     <script src="/js/pages/forms/basic-form-elements.js"></script>
-    @*<script src="/js/pages/forms/advanced-form-elements.js"></script>*@
+    <script src="/js/pages/forms/advanced-form-elements.js"></script>
 
     <script src="~/plugins/jquery-validation/jquery.validate.js"></script>
     <script src="~/ValidationScripts/FormsValidation.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script>
-        function DateTimePicker() {
-            $('#datetimepicker').datetimepicker({
-                format: 'DD/MM/YYYY hh:mm A',
-                defaultDate: new Date()
-            });
-        }
-    </script>
 
     @RenderSection("Scripts", required: false)
 </body>
