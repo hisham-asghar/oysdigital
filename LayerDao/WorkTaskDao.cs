@@ -19,6 +19,11 @@ namespace LayerDao
             var query = $"select WorkTask.*,Project.Name as ProjectName from WorkTask join Project on Project.Id=WorkTask.ProjectId where WorkTask.Id={id};";
             return QueryExecutor.FirstOrDefault<WorkTask>(query);
         }
+        public static List<WorkTask> GetByProjectId(long id)
+        {
+            var query = $"select WorkTask.*,Project.Name as ProjectName from WorkTask join Project on Project.Id=WorkTask.ProjectId where WorkTask.ProjectId={id};";
+            return QueryExecutor.List<WorkTask>(query);
+        }
         public static long Insert(WorkTask worktask)
         {
             return worktask.Insert(TableConstants.WorkTask);

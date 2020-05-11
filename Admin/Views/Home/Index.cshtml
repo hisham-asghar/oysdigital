@@ -4,7 +4,21 @@
     Layout = "_Layout";
     var host = Context.Request.Scheme + "://" + Context.Request.Host;
     var serializer = new JavaScriptSerializer();
-
+    var todayDate = DateTime.Now.Date;
+    var tomorrowDate = DateTime.Now.AddDays(1).Date;
+    var disabled = false;
+    var disabledTomorrow = false;
+    var IsCompleted=false;
+    if (Model != null) {
+        var data = Model.Any(s => s.OnCreated.Date == tomorrowDate && s.IsCompleted==false);
+        disabledTomorrow = data;
+    }
+    if (Model != null)
+    {
+        var data = Model.Any(s => s.OnCreated.Date == todayDate && s.IsCompleted == false);
+        disabled = data;
+    }
+    var memberType = ViewBag.Member.MemberType;
 }
     <style>
         .dot {
@@ -115,8 +129,12 @@
             <div class="card project_list">
                 
                 <div class="pull-right">
-                    <button class="btn btn-success" onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
-                </div>
+                    @if (memberType==UserRoles.Designer)
+                    {
+                        <button class="btn btn-success" disabled="@disabled" onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
+                        <button class="btn btn-success" disabled="@disabledTomorrow" onclick="GenerateNextTask()">Generate tomorrow Task <i class="zmdi zdmi-plus"></i></button>
+                    }
+                    </div>
                
                 <div class="table-responsive">
                     <table class="table table-hover c_table">
@@ -124,7 +142,8 @@
                             <tr>
                                 <th>Project</th>
                                 <th>Platforms</th>
-                                <th>Time</th>
+                                <th>Scheduling Time</th>
+                                @*<th>Time</th>*@
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -132,33 +151,109 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr>
+                                if (memberType == UserRoles.Designer)
+                                {
+                                    if (item.WorkTaskPlatforms.All(s => s.IsDesigned == true))
+                                    {
+                                        IsCompleted = true;
+                                    }
+                                    else
+                                    {
+                                        IsCompleted = false;
+                                    }
+                                }
+                                @if (memberType == UserRoles.Scheduler)
+                                {
+                                    if(item.WorkTaskPlatforms.All(a => a.IsScheduled == true))
+                                    {
+                                        IsCompleted = true;
+                                    }
+                                    else
+                                    {
+                                        IsCompleted = false;
+                                    }
+                                }
+                                <tr style="@((IsCompleted)?"background-color:#04BE5B":"")">
+
+
                                     <td><strong>@item.ProjectName</strong></td>
                                     <td>
                                         @foreach (var plat in item.WorkTaskPlatforms)
                                         {
-                                            if (plat.IsDesigned)
+
+
+                                            @if (memberType == UserRoles.Designer)
                                             {
-                                                <span class="dot" style="background-color: #04BE5B;">
-                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
-                                                </span>
+
+                                                if (plat.IsDesigned)
+                                                {
+                                                    <span class="dot" style="background-color: #04BE5B;">
+                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="dot" style="background-color:gainsboro ;">
+                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                    </span>
+                                                }
                                             }
-                                            else
+                                            @if (memberType == UserRoles.Scheduler)
                                             {
-                                                <span class="dot" style="background-color:gainsboro ;">
-                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
-                                                </span>
+                                                if (plat.IsScheduled)
+                                                {
+                                                    <span class="dot" style="background-color: #04BE5B;">
+                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="dot" style="background-color:gainsboro ;">
+                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                    </span>
+                                                }
+                                            }
+                                            @if (memberType == UserRoles.Admin)
+                                            {
+                                                if (plat.IsCompleted)
+                                                {
+                                                    <span class="dot" style="background-color: #04BE5B;">
+                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="dot" style="background-color:gainsboro ;">
+                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                    </span>
+                                                }
                                             }
                                         }
                                     </td>
-                                    <td>@item.OnCreated</td>
-                                   
-                                    <td><span class="badge badge-warning">To Do</span></td>
+
+                                    <td>@item.ProjectSchedulingTime.ToString(HH_mm)</td>
+                                    @*<td>@item.OnCreated</td>*@
+
+                                <td>
+                                    @if (IsCompleted)
+                                    {
+                                        <span class="badge badge-success">Done</span>
+
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-warning">To Do</span>
+                                    }
+                                </td>
                                     <td>
+                                        @if (!IsCompleted)
+                                        {
                                         <span><i class="zmdi zmdi-plus btn-sm btn btn-success" data-toggle="modal" data-target="#smallModal" onclick="GeneratePlatforms(@item.Id)"></i></span>
-                                      
+                                        }
+                                        @if (memberType == UserRoles.Scheduler)
+                                        {
                                             <span><i class="zmdi zmdi-info btn-sm btn btn-danger" onclick="ReportTask(@item.Id)"> Report</i></span>
-                                           
+                                        }
                                         <div class="my-component" id="@item.Id" data-options="@JsonConvert.SerializeObject(item.WorkTaskPlatforms)"></div>
                                     </td>
                                 </tr>
@@ -195,6 +290,27 @@
     </div>
 </div>
 <script>
+    function GenerateNextTask() {
+         $.ajax({
+             url: "@host" +"/Json/GenerateTomorrowTask",
+            type: 'GET',
+            dataType: 'json',
+            success: function (d)
+            {
+                if (d != null) {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Your next day tasks has been generated',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    location.reload(true);
+                }
+
+            }
+        });
+    }
     function ReportTask(id) {
         $.ajax({
             url: "@host" + "/Json/ReportTask/"+id ,
@@ -235,7 +351,7 @@
             console.log(platforms);
         });
         for (var i = 0; i < platforms.length; i++) {
-            platformHtml += "<div class='form-group'><input type='checkbox' value='" + platforms[i].Id + "' name='PlatformCheckbox' />  " + platforms[i].PlatformName + "</div>"
+            platformHtml += "<div class='form-group'><input type='checkbox' value='" + platforms[i].Id + "' name='PlatformCheckbox'/>  " + platforms[i].PlatformName + "</div>"
         }
         $('#myPlatforms').html(platformHtml);
         }

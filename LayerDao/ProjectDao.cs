@@ -12,16 +12,18 @@ namespace LayerDao
     {
         public static List<Project> GetAll()
         {
-            return TableConstants.Project.SelectAll<Project>();
+            var query = $"select Project.*,MobileSpaces.Name as MobileSpaceName,Customer.Name as CustomerName From Project Join MobileSpaces on Project.MobileSpaceId = MobileSpaces.id join Customer on Customer.Id = Project.CustomerId; ";
+            return QueryExecutor.List<Project>(query);
         }
         public static Project GetById(long id)
         {
-            return TableConstants.Project.Select<Project>((int)id);
+            var query = $"select Project.*,MobileSpaces.Name as MobileSpaceName,Customer.Name as CustomerName From Project Join MobileSpaces on Project.MobileSpaceId = MobileSpaces.id join Customer on Customer.Id = Project.CustomerId where Project.Id = {id}; ";
+            return QueryExecutor.FirstOrDefault<Project>(query);
         }
         public static List<Project> GetByCustomerId(long id)
         {
-            var where = $"CustomerId = {id}";
-            return TableConstants.Project.SelectList<Project>(where);
+            var query = $"select Project.*,MobileSpaces.Name as MobileSpaceName,Customer.Name as CustomerName From Project Join MobileSpaces on Project.MobileSpaceId = MobileSpaces.id join Customer on Customer.Id = Project.CustomerId where Customer.Id = {id}; ";
+            return QueryExecutor.List<Project>(query);
         }
         public static bool Insert(Project project)
         {

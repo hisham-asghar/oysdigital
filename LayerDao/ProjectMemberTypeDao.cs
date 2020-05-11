@@ -18,6 +18,7 @@ namespace LayerDao
         {
             return TableConstants.ProjectMemberTypes.Select<ProjectMemberTypes>((int)id);
         }
+        
         public static List<ProjectMemberTypes> GetByProjectId(long id)
         {
             var where = $"ProjectId={id}";

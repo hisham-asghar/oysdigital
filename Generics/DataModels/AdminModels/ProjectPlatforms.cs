@@ -33,7 +33,6 @@ namespace Generics.DataModels.AdminModels
     }
     public class ProjectView : ProjectPlatforms
     {
-        public new List<string> ProjectPlatforms  { get; set; }
         public new List<DateTime> PlatformSchedulers { get; set; }
         public int Quantity { get; set; }
         public string PlatformType { get; set; }

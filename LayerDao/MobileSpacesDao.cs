@@ -23,6 +23,11 @@ namespace LayerDao
             var where = $"MobileId = {id}";
             return TableConstants.MobileSpaces.SelectList<MobileSpaces>(where);
         }
+        public static List<MobileSpaces> GetByProjectId(long id)
+        {
+            var where = $"ProjectId = {id}";
+            return TableConstants.MobileSpaces.SelectList<MobileSpaces>(where);
+        }
         public static bool Insert(MobileSpaces mobilespaces)
         {
             return mobilespaces.Insert(TableConstants.MobileSpaces) > 0;

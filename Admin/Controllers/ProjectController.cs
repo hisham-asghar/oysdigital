@@ -4,6 +4,7 @@ using Generics.Common;
 using Generics.DataModels.AdminModels;
 using Generics.WebHelper.Extensions;
 using LayerBao;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Admin.Controllers
@@ -29,7 +30,9 @@ namespace Admin.Controllers
             {
                 var customer = CustomerBao.GetById(customerId);
                 if (customer == null)
+                {
                     ViewBag.CustomerDictionary = CustomerBao.GetAll().CreateDictionaryFromModelList();
+                }
                 else
                 {
                     var dictionary = new Dictionary<int, string>();
@@ -38,6 +41,7 @@ namespace Admin.Controllers
                 }
                
             }
+            ViewBag.MobileSpaceDictionary = MobileSpacesBao.GetAll().CreateDictionaryFromModelList();
             ViewBag.IsEdit = id > 0;
             return View(project);
         }
@@ -46,6 +50,7 @@ namespace Admin.Controllers
         [HttpPost]
         public IActionResult Create(Project project, int id = 0, long customerId = 0, string returnUrl = null)
         {
+            var IsActive = Request.Form.CheckBoxStatus("IsActive");
             Project projectDb = ProjectBao.GetById(id);
             if (id > 0 && projectDb == null)
             {
@@ -63,12 +68,14 @@ namespace Admin.Controllers
             if (id == 0)
             {
                 project.SetOnCreate(userId);
+                project.IsActive = IsActive;
                 project.Guid = Guid.NewGuid().ToString();
                 ProjectBao.Insert(project);
             }
             else
             {
                 project.SetOnUpdate(userId);
+                project.IsActive = IsActive;
                 ProjectBao.Update(project);
             }
             if (string.IsNullOrWhiteSpace(returnUrl))

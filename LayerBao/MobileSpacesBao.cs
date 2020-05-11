@@ -16,6 +16,10 @@ namespace LayerBao
         {
             return MobileSpacesDao.GetById(id);
         }
+        public static List<MobileSpaces> GetByProjectId(long id)
+        {
+            return MobileSpacesDao.GetByProjectId(id);
+        }
         public static bool Insert(MobileSpaces mobilespaces)
         {
             return MobileSpacesDao.Insert(mobilespaces);

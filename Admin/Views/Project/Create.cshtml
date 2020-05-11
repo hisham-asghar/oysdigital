@@ -15,9 +15,9 @@
             @CHtmlHelper.GenerateInputField("", Model.Guid, HtmlInputType.Hidden, "Guid")
         }
         @CHtmlHelper.GenerateSingleSelectField("Customer Name", "CustomerId", ViewBag.CustomerDictionary, (isEdit) ? (int)Model.CustomerId : 0)
-
+        @CHtmlHelper.GenerateSingleSelectField("Mobile SpaceName", "MobileSpaceId", ViewBag.MobileSpaceDictionary, (isEdit) ? (int)Model.MobileSpaceId : 0)
         @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
-        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
+        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive", "isactive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
     </form>
 @CHtmlHelper.GetCardFooter()

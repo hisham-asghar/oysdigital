@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using Admin.Models;
 using Microsoft.AspNetCore.Authorization;
 using LayerBao;
+using Generics.WebHelper.Extensions;
+using Generics.DataModels.AdminModels;
 
 namespace Admin.Controllers
 {
@@ -21,7 +23,15 @@ namespace Admin.Controllers
 
         public IActionResult Index()
         {
-            return View(WorkTaskBao.GetAll());
+            var user=ProjectMembersBao.GetByUserId(User.GetUserId());
+            var worktask=new List<WorkTask>();
+            if (user != null)
+            {
+                 worktask = WorkTaskBao.GetByProjectId(user.ProjectId);
+                ViewBag.Member = user;
+            }
+
+            return View(worktask);
         }
 
         public IActionResult Privacy()

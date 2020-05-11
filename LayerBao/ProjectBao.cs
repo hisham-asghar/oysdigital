@@ -21,7 +21,7 @@ namespace LayerBao
                 project.ProjectMembers = ProjectMembersDao.GetByProjectId(id);
                 project.ProjectAlertMessages = ProjectAlertMessageDao.GetByProjectId(id);
                 project.ProjectNotes = ProjectNotesDao.GetByProjectId(id);
-                project.Platforms = PlatformDao.GetAll();
+                project.ProjectPlatforms = ProjectPlatformsBao.GetByProjectId(id);
             }
             return project;
         }
