@@ -16,6 +16,10 @@ namespace LayerBao
         {
             return WorkTaskPlatformsDao.GetById(id);
         }
+        public static List<WorkTaskPlatforms> GetByWorkTaskId(long id)
+        {
+            return WorkTaskPlatformsDao.GetByWorkTaskId(id);
+        }
         public static bool Insert(WorkTaskPlatforms worktaskplatforms)
         {
             return WorkTaskPlatformsDao.Insert(worktaskplatforms);

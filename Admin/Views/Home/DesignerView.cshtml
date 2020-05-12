@@ -1,0 +1,227 @@
+﻿@model IEnumerable<Generics.DataModels.AdminModels.WorkTask>
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_Layout";
+    var host = Context.Request.Scheme + "://" + Context.Request.Host;
+    var serializer = new JavaScriptSerializer();
+    var todayDate = DateTime.Now.Date;
+    var tomorrowDate = DateTime.Now.AddDays(1).Date;
+    var disabled = false;
+    var disabledTomorrow = false;
+    var IsCompleted = false;
+    if (Model != null)
+    {
+        var data = Model.All(s => s.OnCreated.Date==todayDate && s.IsCompleted == false && s.IsDesigned==false);
+        disabledTomorrow = !data;
+    }
+    if (Model != null)
+    {
+        var data = Model.All(s => s.OnCreated.Date == tomorrowDate && s.IsCompleted == false && s.IsDesigned == false);
+        disabled = !data;
+    }
+}
+<style>
+    .dot {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row clearfix">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card state_w1">
+                <div class="body d-flex justify-content-between">
+                    <div class="col-md-12">
+                        <h5>Over All</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Total</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card state_w1">
+                <div class="body d-flex justify-content-between">
+                    <div class="col-md-12">
+                        <h5>Current Week</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Total</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card state_w1">
+                <div class="body d-flex justify-content-between">
+                    <div class="col-md-12">
+                        <h5>Current Month</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Total</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card state_w1">
+                <div class="body d-flex justify-content-between" style="background-color:#04BE5B">
+                    <div class="col-md-12">
+                        <h5>Total</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Total</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>45</h5>
+                                <span>Done</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="card project_list">
+
+                <div class="pull-right">
+                        <button class="btn btn-success" disabled="@disabled" onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
+                        <button class="btn btn-success" disabled="@disabledTomorrow" onclick="GenerateNextTask()">Generate tomorrow Task <i class="zmdi zdmi-plus"></i></button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover c_table">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th>Platforms</th>
+                                <th>Scheduling Time</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                    if (item.WorkTaskPlatforms.All(s => s.IsDesigned == true))
+                                    {
+                                        IsCompleted = true;
+                                    }
+                                    else
+                                    {
+                                        IsCompleted = false;
+                                    }
+                               
+                                <tr style="@((IsCompleted)?"background-color:#04BE5B":"")">
+
+
+                                    <td><strong>@item.ProjectName</strong></td>
+                                    <td>
+                                        @foreach (var plat in item.WorkTaskPlatforms)
+                                        {
+
+                                                if (plat.IsDesigned)
+                                                {
+                                                    <span class="dot" style="background-color: #04BE5B;">
+                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="dot" style="background-color:gainsboro ;">
+                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                    </span>
+                                                }
+                                        }
+                                    </td>
+
+                                    <td>@item.ProjectSchedulingTime.ToString(dddd_dd_MMMM_yyyy_HH_mm_ss)</td>
+
+                                    <td>
+                                        @if (IsCompleted)
+                                        {
+                                            <span class="badge badge-success">Design Done</span>
+
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-warning">To Do</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!IsCompleted)
+                                        {
+                                            <span><i class="zmdi zmdi-plus btn-sm btn btn-success" data-toggle="modal" data-target="#smallModal" onclick="GeneratePlatforms(@item.Id)"></i></span>
+                                        }
+                                        <div class="my-component" id="@item.Id" data-options="@JsonConvert.SerializeObject(item.WorkTaskPlatforms)"></div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="modal fade" id="smallModal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="title" id="smallModalLabel">Paltforms</h4>
+                                </div>
+                                <div class="modal-body" id="myPlatforms">
+                                    <!--data will be append-->
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" onclick="SwalPlatformsOpen()" class="btn btn-info btn-round waves-effect">Updates</button>
+                                    <button type="button" class="btn btn-default btn-round waves-effect" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>

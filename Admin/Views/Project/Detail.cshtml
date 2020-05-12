@@ -30,8 +30,17 @@
                         </div>
                         <div class="col-md-6">
                             <div class="pull-right">
-                                @ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
-                            </div>
+                                @if (Model.ProjectMembers.Where(s => s.MemberType == UserRoles.Designer).Count() == 0)
+                                {
+                                    <a href="/ProjectMembers/Create?projectId=@Model.Id&type=Designer&returnUrl=/Project/Detail/@Model.Id" class="btn btn-success">Add Designer</a>
+                                }
+                                @if (Model.ProjectMembers.Where(s => s.MemberType == UserRoles.Scheduler).Count() == 0)
+                                {
+                                    <a href="/ProjectMembers/Create?projectId=@Model.Id&type=Scheduler&returnUrl=/Project/Detail/@Model.Id" class="btn btn-success">Add Scheduler</a>
+                                }
+                                    @*@ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                     @ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")*@
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -53,7 +62,10 @@
                                         </ul>
                                     </td>
                                     <td>
-                                        <a href="/ProjectMembers/ConfirmDelete/@item.Id&returnUrl=/Project/Detail/{@Model.Id}" role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
+                                        @if (Model.ProjectMembers.Where(s => s.MemberType == UserRoles.Designer).Count() > 0)
+                                        {
+                                            <a onclick="DeleteMember(@item.Id)" role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
+                                        }
                                     </td>
                                 </tr>
                             }
@@ -160,11 +172,11 @@
                                         <td style="vertical-align: top;text-align: left;">
                                             <p>@item.Message bilal saleem</p>
                                         </td>
-                                        <td class="time">
+                                        <td class="time" style="width:auto">
                                             <ul class="social-links list-unstyled">
                                                 <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
                                                 <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
-                                                <li><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></li>
+                                                <li><div class="press"><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></div></li>
                                             </ul>
                                         </td>
                                     </tr>
@@ -193,7 +205,7 @@
                                         <td style="vertical-align: top;text-align: left;">
                                             <p>@item.Message</p>
                                         </td>
-                                        <td class="time">
+                                        <td class="time" style="width:auto">
                                             <ul class="social-links list-unstyled">
                                                 <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
                                                 <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>

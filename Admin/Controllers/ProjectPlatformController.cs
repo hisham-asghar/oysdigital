@@ -43,7 +43,6 @@ namespace Admin.Controllers
                     ViewBag.ProjectDictionary = dictionary;
                 }
                 ViewBag.PlatformDictionary = Functions.CreateDictionaryFromModelList(PlatformBao.GetAll());
-                ViewBag.MobileSpacesDictionary = Functions.CreateDictionaryFromModelList(MobileSpacesBao.GetAll());
             }
             ProjectPlaformCreateView p = new ProjectPlaformCreateView();
 

@@ -21,7 +21,7 @@ namespace LayerDao
         }
         public static List<WorkTask> GetByProjectId(long id)
         {
-            var query = $"select WorkTask.*,Project.Name as ProjectName from WorkTask join Project on Project.Id=WorkTask.ProjectId where WorkTask.ProjectId={id};";
+            var query = $"select WorkTask.*,Project.Name as ProjectName from WorkTask join Project on Project.Id=WorkTask.ProjectId where WorkTask.ProjectId={id} AND WorkTask.IsCompleted='{false}';";
             return QueryExecutor.List<WorkTask>(query);
         }
         public static long Insert(WorkTask worktask)

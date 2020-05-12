@@ -21,6 +21,7 @@ namespace Generics.Services.DatabaseService.AdoNet
             var query = GenericQueries.Update(model, tableName, id, schema);
             return QueryExecutor.FirstOrDefault<TemplateClass<int>>(query, query)?.Result ?? 0;
         }
+
         public static bool Delete(this string tableName, int id, string schema = DefaultSchema)
         {
             var query = GenericQueries.Delete(tableName, id, schema);

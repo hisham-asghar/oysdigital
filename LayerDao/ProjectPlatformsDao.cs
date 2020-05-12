@@ -12,17 +12,17 @@ namespace LayerDao
     {
         public static List<ProjectPlatforms> GetAll()
         {
-            var query = $"SELECT  ProjectPlatforms.*, Platform.Name as PlatformName,Project.Name as ProjectName ,MobileSpaces.Name as MobileSpaceName  FROM [dbo].[ProjectPlatforms] Join dbo.Platform on ProjectPlatforms.PlatformId=Platform.Id Join dbo.Project on ProjectPlatforms.ProjectId=Project.Id Join dbo.MobileSpaces on ProjectPlatforms.MobileSpaceId=MobileSpaces.Id;";
+            var query = $"SELECT  ProjectPlatforms.*, Platform.Name as PlatformName,Project.Name as ProjectName  FROM [dbo].[ProjectPlatforms] Join dbo.Platform on ProjectPlatforms.PlatformId=Platform.Id Join dbo.Project on ProjectPlatforms.ProjectId=Project.Id ;";
             return QueryExecutor.List<ProjectPlatforms>(query);
         }
         public static ProjectPlatforms GetById(long id)
         {
-            var query = $"SELECT  ProjectPlatforms.*, Platform.Name as PlatformName,Platform.IconClass as PlatformIcon,Project.Name as ProjectName ,MobileSpaces.Name as MobileSpaceName  FROM [dbo].[ProjectPlatforms] Join dbo.Platform on ProjectPlatforms.PlatformId=Platform.Id Join dbo.Project on ProjectPlatforms.ProjectId=Project.Id Join dbo.MobileSpaces on ProjectPlatforms.MobileSpaceId=MobileSpaces.Id where ProjectPlatforms.Id={id};";
+            var query = $"SELECT  ProjectPlatforms.*, Platform.Name as PlatformName,Platform.IconClass as PlatformIcon,Project.Name as ProjectName FROM [dbo].[ProjectPlatforms] Join dbo.Platform on ProjectPlatforms.PlatformId=Platform.Id Join dbo.Project on ProjectPlatforms.ProjectId=Project.Id where ProjectPlatforms.Id={id};";
             return QueryExecutor.FirstOrDefault<ProjectPlatforms>(query);
         }
         public static List<ProjectPlatforms> GetByProjectId(long id)
         {
-            var query = $"SELECT  ProjectPlatforms.*, Platform.Name as PlatformName,Platform.IconClass as PlatformIcon,Project.Name as ProjectName ,MobileSpaces.Name as MobileSpaceName  FROM [dbo].[ProjectPlatforms] Join dbo.Platform on ProjectPlatforms.PlatformId=Platform.Id Join dbo.Project on ProjectPlatforms.ProjectId=Project.Id Join dbo.MobileSpaces on ProjectPlatforms.MobileSpaceId=MobileSpaces.Id where ProjectId={id};";
+            var query = $"SELECT  ProjectPlatforms.*, Platform.Name as PlatformName,Platform.IconClass as PlatformIcon,Project.Name as ProjectName FROM [dbo].[ProjectPlatforms] Join dbo.Platform on ProjectPlatforms.PlatformId=Platform.Id Join dbo.Project on ProjectPlatforms.ProjectId=Project.Id where ProjectId={id};";
               return QueryExecutor.List<ProjectPlatforms>(query);
         }
         public static bool Insert(ProjectPlatforms projectplatforms)

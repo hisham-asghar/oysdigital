@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Generics.Common;
 using Generics.Data;
 using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Identity;
@@ -30,7 +31,7 @@ namespace Admin.Controllers
         [Route("/ProjectMembers/Create")]
         [Route("/ProjectMembers/Edit/{id}")]
         [HttpGet]
-        public IActionResult Create(long id = 0,long projectId=0,string returnUrl=null)
+        public IActionResult Create(long id = 0,long projectId=0,string type=null,string returnUrl=null)
         {
             ProjectMembers projectmembers = id <= 0 ? new ProjectMembers() : ProjectMembersBao.GetById(id);
             if (id > 0 && projectmembers == null)
@@ -55,7 +56,16 @@ namespace Admin.Controllers
                                 
             }
             ViewBag.ProjectMemberTypeDictionary = ProjectMemberTypeBao.GetAll().CreateDictionaryFromModelList();
-            var user = _userManager.Users.ToList();
+            var usertype = ProjectMembersBao.GetByUserId(User.GetUserId());
+            var user=new List<ApplicationUser>();
+            if (type != null)
+            {
+                user = RoleManagerBao.GetUsersByRoleName(type);
+            }
+            else
+            {
+                user = RoleManagerBao.GetUsersByRoleName(usertype.MemberType);
+            }
             var dictionary = new Dictionary<string, string>();
             foreach (var item in user)
             {
@@ -68,7 +78,7 @@ namespace Admin.Controllers
         [Route("/ProjectMembers/Create")]
         [Route("/ProjectMembers/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(ProjectMembers projectmembers, int id = 0, long projectId = 0, string returnUrl = null)
+        public IActionResult Create(ProjectMembers projectmembers, int id = 0, long projectId = 0, string type = null, string returnUrl = null)
         {
             ProjectMembers projectmembersDb = ProjectMembersBao.GetById(id);
             if (id > 0 && projectmembersDb == null)
@@ -113,7 +123,7 @@ namespace Admin.Controllers
             }
             return View(projectmembers);
         }
-
+        
         public IActionResult ConfirmDelete(long id, string returnUrl = null)
         {
             if (id != 0)

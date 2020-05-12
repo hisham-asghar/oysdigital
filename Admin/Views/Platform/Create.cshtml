@@ -14,7 +14,7 @@
         @*@CHtmlHelper.GenerateSingleEventSelectField("Platform", "Name", PlatformHelper.GetPlatformDictionar())*@
         <div class='form-group form-float'>
             <label>Platform</label>
-            <select class="form-control" name="IconClass" onchange="myNewFunction(this)">
+            <select class="form-control" id="IconClass" name="IconClass" onchange="myNewFunction()">
                 @foreach (var item in PlatformHelper.GetPlatformDictionar())
                 {
                     <option value="@item.Key">
@@ -31,12 +31,12 @@
 @CHtmlHelper.GetCardFooter()
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    
+    <script type="text/javascript">
+        myNewFunction();
+        function myNewFunction() {
+            var sel = document.getElementById("IconClass");
+            document.getElementById("Name").value = sel.options[sel.selectedIndex].text;
+        }
+
+    </script>
 }
-<script type="text/javascript">
-    function myNewFunction(sel) {
-        //alert(sel.options[sel.selectedIndex].text);
-        document.getElementById("Name").value = sel.options[sel.selectedIndex].text;
-    }
-   
-</script>

@@ -1,21 +1,23 @@
- async function Process(id) {
-        var mobileSpaces = [];
-        $.ajax({
-        type: 'GET',
-            url: "https://localhost:44305" + "/Json/GetMobileSpaces/"+id,
-        dataType: 'json',
-            success: function (data) {
-                mobileSpaces = data;
-        }
-        });
-    var ProjectView={
-        PlatformType:'',
-        Quantity: 0,
-        ProjectId:id,
-        MobileSpaceId:0,
-        PlatformSchedulers:[],
-        StoryType:0,
-    }
+var ProjectView = {
+    PlatformType: '',
+    Quantity: 0,
+    ProjectId:0,
+    //MobileSpaceId:0,
+    PlatformSchedulers: [],
+    StoryType: 0,
+}
+async function Process(id) {
+        //var mobileSpaces = [];
+        //$.ajax({
+        //type: 'GET',
+        //    url: "https://localhost:44305" + "/Json/GetMobileSpaces/"+id,
+        //dataType: 'json',
+        //    success: function (data) {
+        //        mobileSpaces = data;
+        //}
+        //});
+   
+     var mobilespaceshtml = "";
     const inputOptions = new Promise((resolve) => {
       setTimeout(() => {
         resolve({
@@ -28,6 +30,7 @@
             title: 'Select Post Type',
             input: 'radio',
             inputOptions: inputOptions,
+            showCancelButton: true,
             cancelButtonColor: '#d33',
             inputValidator: (value) => {
                 if (!value) {
@@ -37,63 +40,63 @@
                 }
             }
         }).then((result) => {
-            if (result.value) {
-               
+            ProjectView.ProjectId = id;
+            if (result.value == "Stories") {
+                 storyswal();
             }
+            if (result.value == "Post") {
+                 Rangerswal();
+            }  
         })
-        var mobilespaceshtml = "";
 
-     for (var x = 0; x < mobileSpaces.length; x++) {
-         debugger;
-            mobilespaceshtml += "<option value=" + mobileSpaces[x].id + ">" + mobileSpaces[x].name+"</option>";
-        }
-        mobilespaceshtml = "<div class='form-group'><select required class='form-control show-tick' id='MobileSpaces'>" + mobilespaceshtml + "</select></div>";
-
-        if(ProjectView.PlatformType=="Stories")
-        {
-            var selectstory = "<select required class='form-control show-tick' id='StoryType'><option value='0' selected>Story Per Day</option><option value='1'>Story Per Week</option><option value='2'>Story Per Month</option></select>"
-            mobilespaceshtml = "<div class='form-group'>" + selectstory + "</div><div class='form-group'>" + mobilespaceshtml + "</div>";
-        }
-
+}
+async function storyswal() {
+    var selectstory = "";
+    if (ProjectView.PlatformType == "Stories") {
+        var selectstory = "<select required class='form-control show-tick' id='StoryType'><option value='0' selected>Story Per Day</option><option value='1'>Story Per Week</option><option value='2'>Story Per Month</option></select>"
+    }
     await Swal.fire({
-      title: 'Platforms',
-        html: mobilespaceshtml,
+        title: 'Platforms',
+        html: selectstory,
         allowOutsideClick: false,
-      inputValidator: (value) => {
-        if (!value) {
-          return 'You need to choose something!'
+        inputValidator: (value) => {
+            if (!value) {
+                return 'You need to choose something!'
+            }
         }
-      }
     }).then(() => {
         if (ProjectView.PlatformType == "Stories") {
-           ProjectView.StoryType= $('#StoryType').val();
+            ProjectView.StoryType = $('#StoryType').val();
         }
-        ProjectView.MobileSpaceId = $('#MobileSpaces').val();
     })
+    Rangerswal();
+}
+async function Rangerswal() {
+
 
     await Swal.fire({
-      title: 'Select quantity',
-      icon: 'question',
+        title: 'Select quantity',
+        icon: 'question',
         input: 'range',
         allowOutsideClick: false,
-      inputAttributes: {
-        min: 1,
-        max: 50,
-        step: 1
-      },
-      inputValue: 1
+        inputAttributes: {
+            min: 1,
+            max: 50,
+            step: 1
+        },
+        inputValue: 1
     }).then((result) => {
-        
+
         ProjectView.Quantity = result.value;
-        
-     })
-     var schedulerhtml = "";
-     for (var x = 0; x < ProjectView.Quantity; x++) {
-         schedulerhtml += "<div class='input-group'><div class='input-group-prepend'><span class='input-group-text'><i class='zmdi zmdi-time'></i></span></div><input type='text' class='form-control timepicker' placeholder='Please choose a time...'></div></br>";
-     }
-    
+
+    })
+    var schedulerhtml = "";
+    for (var x = 0; x < ProjectView.Quantity; x++) {
+        schedulerhtml += "<div class='input-group'><div class='input-group-prepend'><span class='input-group-text'><i class='zmdi zmdi-time'></i></span></div><input type='text' class='form-control timepicker' placeholder='Please choose a time...'></div></br>";
+    }
+
     await Swal.fire({
-      title: 'Select time',
+        title: 'Select time',
         html: schedulerhtml,
         onOpen: function () {
             $('.timepicker').each(function () {
@@ -106,23 +109,21 @@
         }
     }).then((accept) => {
         var inputElements = document.getElementsByClassName('timepicker');
-       for(var i=0; inputElements[i]; ++i){
-               ProjectView.PlatformSchedulers.push(inputElements[i].value);
-    }
+        for (var i = 0; inputElements[i]; ++i) {
+            ProjectView.PlatformSchedulers.push(inputElements[i].value);
+        }
     }).then((result) => {
-      $.ajax({ // ajax call starts
-          url: "https://localhost:44305" +"/Json/ProjectTaskCreate",
-                    type: 'post',
-                    data: ProjectView,
-                    success: function(data)
-                    {
-                        ShowResult(data);
-                    }
+        $.ajax({ // ajax call starts
+            url: "https://localhost:44305" + "/Json/ProjectTaskCreate",
+            type: 'post',
+            data: ProjectView,
+            success: function (data) {
+                ShowResult(data);
+            }
 
-                });
+        });
     });
-    console.log(ProjectView);
-    }
+}
 function DeletePlatformTask(id) {
     $.ajax({
         type: 'GET',

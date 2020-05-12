@@ -21,5 +21,10 @@ namespace LayerDao.DatabaseInfo
         public const string ProjectTaskScheduling = "ProjectTaskScheduling";
         public const string WorkTask = "WorkTask";
         public const string WorkTaskPlatforms = "WorkTaskPlatforms";
+        public const string AspNetRoles = "AspNetRoles";
+    }
+    public class ViewConstants
+    {
+        public const string UserRoleView = "UserRoleView";
     }
 }

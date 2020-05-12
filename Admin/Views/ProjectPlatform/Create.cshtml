@@ -14,7 +14,6 @@
         @CHtmlHelper.GenerateSingleSelectField("Project", "ProjectId", ViewBag.ProjectDictionary, (isEdit) ? (int)Model.ProjectId : 0)
         @HtmlInputType.Text.GenerateInputField("Link", Model.Link, "Link")
         @CHtmlHelper.GenerateSingleSelectField("Platform", "PlatformId", ViewBag.PlatformDictionary, (isEdit) ? (int)Model.PlatformId : 0)
-        @CHtmlHelper.GenerateSingleSelectField("Mobile Space", "MobileSpaceId", ViewBag.MobileSpacesDictionary, (isEdit) ? (int)Model.MobileSpaceId : 0)
         @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive","isactive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
     </form>

@@ -19,11 +19,15 @@ namespace Generics.DataModels.AdminModels
         {
             var dictionary = new Dictionary<string, string>();
             dictionary.Add("zmdi zmdi-facebook", "facebook");
-            dictionary.Add("zmdi zmdi-whatsapp", "WhatsApp");
-            dictionary.Add("zmdi zmdi-youtube-play", "youtube");
+            dictionary.Add("zmdi zmdi-whatsapp", "whatsApp");
+            dictionary.Add("zmdi zmdi-youtube-play", "youtube play");
             dictionary.Add("zmdi zmdi-google-plus", "Google Plus");
             dictionary.Add("zmdi zmdi-twitter", "twitter");
             dictionary.Add("zmdi zmdi-linkedin", "linked In");
+            dictionary.Add("zmdi zmdi-instagram", "instagram");
+            dictionary.Add("zmdi zmdi-flickr", "flickr");
+            dictionary.Add("zmdi zmdi-youtube", "youtube");
+            dictionary.Add("zmdi zmdi-google", "google");
             return dictionary;
         }
     }

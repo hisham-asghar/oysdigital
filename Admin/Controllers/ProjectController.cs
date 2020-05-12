@@ -116,8 +116,8 @@ namespace Admin.Controllers
             }
             else
             {
-                ViewBag.PlatformDictionary = Functions.CreateDictionaryFromModelList(PlatformBao.GetAll());
-                ViewBag.ProjectDictionary = Functions.CreateDictionaryFromModel(project);
+            //   ViewBag.PlatformDictionary = Functions.CreateDictionaryFromModelList(PlatformBao.GetAll());
+              //  ViewBag.ProjectDictionary = Functions.CreateDictionaryFromModel(project);
             }
             return View(project);
         }

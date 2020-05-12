@@ -36,100 +36,106 @@ namespace Admin.Controllers
         [HttpGet]
         public JsonResult GenerateTask()
         {
-            var user = ProjectMembersBao.GetByUserId(User.GetUserId());
+           // var user = ProjectMembersBao.GetByUserId(User.GetUserId());
+            var user= ProjectMembersBao.GetByUserIdList(User.GetUserId());
             if (user != null)
             {
-                var data = WorkTaskBao.CheckTaskCreated(DateTime.Now.Date);
-                if (data.Count == 0)
+                foreach(var u in user)
                 {
-                    List<ProjectTask> p = new List<ProjectTask>();
-                    var projecttask = ProjectTaskBao.GetByProjectId(user.ProjectId);
-                    if (projecttask != null)
-                    {
-                        foreach (var item in projecttask)
+                    List<ProjectTask> projectTask = GetProjectTask(u.ProjectId);
+                        var userId = User.GetUserId();
+                        foreach (var worktask in projectTask)
                         {
-                            p.Add(ProjectTaskBao.GetById(item.Id));
-                        }
-                    }
 
-                    var userId = User.GetUserId();
-                    foreach (var work in p)
-                    {
-
-                        foreach (var item in work.ProjectTaskScheduling)
-                        {
-                            WorkTask workTask = new WorkTask();
-                            workTask.SetOnCreate(userId);
-                            workTask.OnCreated = DateTime.Now.Date;
-                            workTask.OnModified = DateTime.Now.Date;
-                            workTask.ProjectId = work.ProjectId;
-                            workTask.ProjectSchedulingTime = item.Time;
-                            var worktaskId = WorkTaskBao.Insert(workTask);
-
-                            foreach (var pl in work.ProjectPlatforms)
+                            foreach (var item in worktask.ProjectTaskScheduling)
                             {
-                                WorkTaskPlatforms workTaskPlatforms = new WorkTaskPlatforms();
-                                workTaskPlatforms.PlatformId = pl.PlatformId;
-                                workTaskPlatforms.WorkTaskId = worktaskId;
-                                workTaskPlatforms.Link = pl.Link;
-                                WorkTaskPlatformsBao.Insert(workTaskPlatforms);
+                                if (worktask.ProjectPlatforms != null)
+                                {
+                                    WorkTask workTask = new WorkTask();
+                                    workTask.SetOnCreate(userId);
+                                    workTask.OnCreated = DateTime.Now.Date;
+                                    workTask.OnModified = DateTime.Now.Date;
+                                    workTask.ProjectId = worktask.ProjectId;
+                                    workTask.ProjectSchedulingTime = item.Time;
+                                    var worktaskId = WorkTaskBao.Insert(workTask);
 
+                                    foreach (var pl in worktask.ProjectPlatforms)
+                                    {
+                                        WorkTaskPlatforms workTaskPlatforms = new WorkTaskPlatforms();
+                                        workTaskPlatforms.PlatformId = pl.PlatformId;
+                                        workTaskPlatforms.WorkTaskId = worktaskId;
+                                        workTaskPlatforms.Link = pl.Link;
+                                        WorkTaskPlatformsBao.Insert(workTaskPlatforms);
+
+                                    }
+                                }
+                               
                             }
-
                         }
-                    }
-                    return Json(p);
+                                  
                 }
             }
             return Json(null);
         }
+        public List<ProjectTask> GetProjectTask(long id)
+        {
+            var List = new List<ProjectTask>();
+            var projecttask = ProjectTaskBao.GetByProjectId(id);
+            if (projecttask != null)
+            {
+                foreach (var item in projecttask)
+                {
+                    List.Add(ProjectTaskBao.GetById(item.Id));
+                }
+            }
+            return List;
+        }
+
+
         [Route("/Json/GenerateTomorrowTask")]
         [HttpGet]
         public JsonResult GenerateTomorrowTask()
         {
             var dateTimetomorrow = DateTime.Now.AddDays(1);
-            var data=WorkTaskBao.CheckTaskCreated(dateTimetomorrow.Date);
-            if (data.Count == 0)
+            var user = ProjectMembersBao.GetByUserIdList(User.GetUserId());
+            if (user != null)
             {
-                List<ProjectTask> p = new List<ProjectTask>();
-                var projecttask = ProjectTaskBao.GetAll();
-                if (projecttask != null)
+                foreach (var u in user)
                 {
-                    foreach (var item in projecttask)
+                    List<ProjectTask> projectTask = GetProjectTask(u.ProjectId);
+                    var userId = User.GetUserId();
+                    foreach (var worktask in projectTask)
                     {
-                        p.Add(ProjectTaskBao.GetById(item.Id));
-                    }
-                }
 
-                var userId = User.GetUserId();
-                foreach (var work in p)
-                {
-
-                    foreach (var item in work.ProjectTaskScheduling)
-                    {
-                        WorkTask workTask = new WorkTask();
-                        workTask.SetOnCreate(userId);
-                        workTask.OnCreated = dateTimetomorrow.Date;
-                        workTask.OnModified = dateTimetomorrow.Date;
-                        workTask.ProjectId = work.ProjectId;
-                        workTask.ProjectSchedulingTime = item.Time;
-                        var worktaskId = WorkTaskBao.Insert(workTask);
-
-                        foreach (var pl in work.ProjectPlatforms)
+                        foreach (var item in worktask.ProjectTaskScheduling)
                         {
-                            WorkTaskPlatforms workTaskPlatforms = new WorkTaskPlatforms();
-                            workTaskPlatforms.PlatformId = pl.PlatformId;
-                            workTaskPlatforms.WorkTaskId = worktaskId;
-                            workTaskPlatforms.Link = pl.Link;
-                            WorkTaskPlatformsBao.Insert(workTaskPlatforms);
+                            if (worktask.ProjectPlatforms != null)
+                            {
+                                WorkTask workTask = new WorkTask();
+                                workTask.SetOnCreate(userId);
+                                workTask.OnCreated = dateTimetomorrow.Date;
+                                workTask.OnModified = dateTimetomorrow.Date;
+                                workTask.ProjectId = worktask.ProjectId;
+                                workTask.ProjectSchedulingTime = item.Time;
+                                var worktaskId = WorkTaskBao.Insert(workTask);
+
+                                foreach (var pl in worktask.ProjectPlatforms)
+                                {
+                                    WorkTaskPlatforms workTaskPlatforms = new WorkTaskPlatforms();
+                                    workTaskPlatforms.PlatformId = pl.PlatformId;
+                                    workTaskPlatforms.WorkTaskId = worktaskId;
+                                    workTaskPlatforms.Link = pl.Link;
+                                    WorkTaskPlatformsBao.Insert(workTaskPlatforms);
+
+                                }
+                            }
 
                         }
-
                     }
+
                 }
-                return Json(p);
             }
-                return Json(null);
+            return Json(null);
            
         }
 
@@ -141,29 +147,79 @@ namespace Admin.Controllers
             var workTaskPlatforms = WorkTaskPlatformsBao.GetById(id);
             if (workTaskPlatforms != null)
             {
+                
                 var user = ProjectMembersBao.GetByUserId(User.GetUserId());
                 if (user != null)
                 {
                     if (user.MemberType==UserRoles.Designer)
                     {
                         workTaskPlatforms.IsDesigned = status;
+                        WorkTaskPlatformsBao.Update(workTaskPlatforms);
+                        if (showstatus(workTaskPlatforms.WorkTaskId, user.MemberType))
+                        {
+                            var worktask=WorkTaskBao.GetById(workTaskPlatforms.WorkTaskId);
+                            worktask.IsDesigned = true;
+                            WorkTaskBao.Update(worktask);
+                        }
                     }
                     if (user.MemberType == UserRoles.Scheduler)
                     {
+                        if (status == false)
+                        {
+                            workTaskPlatforms.IsCompleted = status;
+                        }
                         workTaskPlatforms.IsScheduled = status;
+                        WorkTaskPlatformsBao.Update(workTaskPlatforms);
+                        if (showstatus(workTaskPlatforms.WorkTaskId, user.MemberType))
+                        {
+                            workTaskPlatforms.IsCompleted = true;
+                            WorkTaskPlatformsBao.Update(workTaskPlatforms);
+                            var worktask = WorkTaskBao.GetById(workTaskPlatforms.WorkTaskId);
+                            worktask.IsScheduled = true;
+                            worktask.IsCompleted = true;
+                            WorkTaskBao.Update(worktask);
+                        }
                     }
-                    if (WorkTaskPlatformsBao.Update(workTaskPlatforms))
-                    {
+                        
+                    
                         return Json(true);
-                    }
-                    else
-                    {
-                        return Json(false);
-                    }
+                  
+                    
                 }
                 return Json(null);
             }
             return Json(null);
+        }
+        public bool showstatus(long worktaskId,string role)
+        {
+            var data = WorkTaskPlatformsBao.GetByWorkTaskId(worktaskId);
+            var count = 0;
+            if (data.Count > 0)
+            {
+                foreach(var item in data)
+                {
+                    if (role == UserRoles.Designer)
+                    {
+                        if (item.IsDesigned == false)
+                        {
+                            count++;
+                        }
+                    }
+                    if (role == UserRoles.Scheduler)
+                    {
+                        if (item.IsScheduled == false)
+                        {
+                            count++;
+                        }
+                    }
+
+                }
+              return  (count > 0) ? false : true;
+            }
+            else
+            {
+                return false;
+            }
         }
         [Route("/Json/MultiPlatform")]
         [HttpPost]
@@ -183,6 +239,12 @@ namespace Admin.Controllers
                             {
                                 workTask.IsDesigned = true;
                                 WorkTaskPlatformsBao.Update(workTask);
+                                if (showstatus(workTask.WorkTaskId, user.MemberType))
+                                {
+                                    var worktask = WorkTaskBao.GetById(workTask.WorkTaskId);
+                                    worktask.IsDesigned = true;
+                                    WorkTaskBao.Update(worktask);
+                                }
                             }
                                
                         }
@@ -192,6 +254,15 @@ namespace Admin.Controllers
                             {
                                 workTask.IsScheduled = true;
                                 WorkTaskPlatformsBao.Update(workTask);
+                                if (showstatus(workTask.WorkTaskId, user.MemberType))
+                                {
+                                    workTask.IsCompleted = true;
+                                    WorkTaskPlatformsBao.Update(workTask);
+                                    var worktask = WorkTaskBao.GetById(workTask.WorkTaskId);
+                                    worktask.IsScheduled = true;
+                                    worktask.IsCompleted = true;
+                                    WorkTaskBao.Update(worktask);
+                                }
                             }
                         }
                         if (user.MemberType == UserRoles.Admin)
@@ -274,11 +345,32 @@ namespace Admin.Controllers
         [HttpGet]
         public JsonResult DeletePlatformTask(long id)
         {
-            if (ProjectTaskBao.GetById(id) != null)
+            var data = ProjectTaskBao.GetById(id);
+            if (data != null)
             {
+                var schedulars=ProjectTaskSchedulingBao.GetByProjectId(data.ProjectId);
+                if (schedulars != null)
+                {
+                    foreach(var item in schedulars)
+                    {
+                       var check= ProjectTaskSchedulingBao.Delete(item.Id);
+                    }
+                }
                 return Json(ProjectTaskBao.Delete(id));
             }
             return Json(null);
+        }
+        [Route("/Json/DeleteMember/{id}")]
+        [HttpGet]
+        public JsonResult DeleteMember(long id)
+        {
+            if (id != 0)
+            {
+                ProjectMembersBao.Delete(id);
+                return Json(true);
+            }
+            return Json(false);
+
         }
     }
 }

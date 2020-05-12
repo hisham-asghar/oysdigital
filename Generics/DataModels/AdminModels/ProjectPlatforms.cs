@@ -9,7 +9,6 @@ namespace Generics.DataModels.AdminModels
     public class ProjectPlatforms:BaseEntity
     {
         public string Link { get; set; }
-        public long MobileSpaceId { get; set; }
         public long PlatformId { get; set; }
         public long ProjectId { get; set; }
         public bool IsActive { get; set; }
@@ -19,8 +18,6 @@ namespace Generics.DataModels.AdminModels
         public string PlatformName { get; set; }
         [Ignore]
         public string PlatformIcon { get; set; }
-        [Ignore]
-        public string MobileSpaceName { get; set; }
 
     }
     public class ProjectPlaformCreateView:ProjectPlatforms
