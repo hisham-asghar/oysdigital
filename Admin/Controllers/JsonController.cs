@@ -12,6 +12,8 @@ using Nancy.Json;
 using Generics.Common;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Generics.DataModels.Constants;
+using Admin.Models;
+using Org.BouncyCastle.Bcpg;
 
 namespace Admin.Controllers
 {
@@ -36,46 +38,11 @@ namespace Admin.Controllers
         [HttpGet]
         public JsonResult GenerateTask()
         {
-           // var user = ProjectMembersBao.GetByUserId(User.GetUserId());
-            var user= ProjectMembersBao.GetByUserIdList(User.GetUserId());
-            if (user != null)
-            {
-                foreach(var u in user)
-                {
-                    List<ProjectTask> projectTask = GetProjectTask(u.ProjectId);
-                        var userId = User.GetUserId();
-                        foreach (var worktask in projectTask)
-                        {
-
-                            foreach (var item in worktask.ProjectTaskScheduling)
-                            {
-                                if (worktask.ProjectPlatforms != null)
-                                {
-                                    WorkTask workTask = new WorkTask();
-                                    workTask.SetOnCreate(userId);
-                                    workTask.OnCreated = DateTime.Now.Date;
-                                    workTask.OnModified = DateTime.Now.Date;
-                                    workTask.ProjectId = worktask.ProjectId;
-                                    workTask.ProjectSchedulingTime = item.Time;
-                                    var worktaskId = WorkTaskBao.Insert(workTask);
-
-                                    foreach (var pl in worktask.ProjectPlatforms)
-                                    {
-                                        WorkTaskPlatforms workTaskPlatforms = new WorkTaskPlatforms();
-                                        workTaskPlatforms.PlatformId = pl.PlatformId;
-                                        workTaskPlatforms.WorkTaskId = worktaskId;
-                                        workTaskPlatforms.Link = pl.Link;
-                                        WorkTaskPlatformsBao.Insert(workTaskPlatforms);
-
-                                    }
-                                }
-                               
-                            }
-                        }
-                                  
-                }
-            }
-            return Json(null);
+            var  userId = User.GetUserId();
+            var users = ProjectMembersBao.GetByUserIdList(User.GetUserId());
+            var projecttasks = TaskHelper.GetProjectTask(users.Select(s => s.ProjectId).ToList());
+            return Json(TaskHelper.WorkTaskToGenerate(projecttasks, DateTime.Now.Date, userId));
+         
         }
         public List<ProjectTask> GetProjectTask(long id)
         {
@@ -96,47 +63,11 @@ namespace Admin.Controllers
         [HttpGet]
         public JsonResult GenerateTomorrowTask()
         {
-            var dateTimetomorrow = DateTime.Now.AddDays(1);
-            var user = ProjectMembersBao.GetByUserIdList(User.GetUserId());
-            if (user != null)
-            {
-                foreach (var u in user)
-                {
-                    List<ProjectTask> projectTask = GetProjectTask(u.ProjectId);
-                    var userId = User.GetUserId();
-                    foreach (var worktask in projectTask)
-                    {
+            var userId = User.GetUserId();
+            var users = ProjectMembersBao.GetByUserIdList(User.GetUserId());
+            var projecttasks = TaskHelper.GetProjectTask(users.Select(s => s.ProjectId).ToList());
+            return Json(TaskHelper.WorkTaskToGenerate(projecttasks, DateTime.Now.AddDays(1).Date, userId));
 
-                        foreach (var item in worktask.ProjectTaskScheduling)
-                        {
-                            if (worktask.ProjectPlatforms != null)
-                            {
-                                WorkTask workTask = new WorkTask();
-                                workTask.SetOnCreate(userId);
-                                workTask.OnCreated = dateTimetomorrow.Date;
-                                workTask.OnModified = dateTimetomorrow.Date;
-                                workTask.ProjectId = worktask.ProjectId;
-                                workTask.ProjectSchedulingTime = item.Time;
-                                var worktaskId = WorkTaskBao.Insert(workTask);
-
-                                foreach (var pl in worktask.ProjectPlatforms)
-                                {
-                                    WorkTaskPlatforms workTaskPlatforms = new WorkTaskPlatforms();
-                                    workTaskPlatforms.PlatformId = pl.PlatformId;
-                                    workTaskPlatforms.WorkTaskId = worktaskId;
-                                    workTaskPlatforms.Link = pl.Link;
-                                    WorkTaskPlatformsBao.Insert(workTaskPlatforms);
-
-                                }
-                            }
-
-                        }
-                    }
-
-                }
-            }
-            return Json(null);
-           
         }
 
         [Route("/Json/SinglePlatform")]
@@ -322,6 +253,8 @@ namespace Admin.Controllers
                 {
                     projectTask.FrequencyTypeId = 0;
                 }
+                var userId = User.GetUserId();
+                projectTask.SetOnCreate(userId);
                 long projecttaskId = ProjectTaskBao.Insert(projectTask);
                 if (projecttaskId > 0)
                 {
@@ -371,6 +304,18 @@ namespace Admin.Controllers
             }
             return Json(false);
 
+        }
+        [Route("/Json/DashBoardFilter")]
+        [HttpGet]
+        public JsonResult DashBoardFilter(string startDate,string endDate,string userId)
+        {
+            if (startDate != null && endDate != null && userId != null)
+            {
+                var user = ProjectMembersBao.GetByUserIdList(User.GetUserId());
+                var worktask = TaskHelper.GetWorkTask(user.Select(s => s.ProjectId).ToList());
+               // return worktask.Where(s => ).;
+            }
+            return Json(false);
         }
     }
 }

@@ -22,6 +22,8 @@ namespace LayerDao.DatabaseInfo
         public const string WorkTask = "WorkTask";
         public const string WorkTaskPlatforms = "WorkTaskPlatforms";
         public const string AspNetRoles = "AspNetRoles";
+        public const string AspNetUsers = "AspNetUsers";
+        public const string WorkTaskMembers = "WorkTaskMembers";
     }
     public class ViewConstants
     {

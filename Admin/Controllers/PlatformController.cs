@@ -6,14 +6,17 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.Common;
 using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Admin.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin)]
     public class PlatformController : Controller
     {
         [Obsolete]
@@ -28,6 +31,7 @@ namespace Admin.Controllers
         {
             return View(PlatformBao.GetAll());
         }
+        [Authorize(Roles =UserRoles.Admin)]
         [Route("/Platform/Create")]
         [Route("/Platform/Edit/{id}")]
         [HttpGet]

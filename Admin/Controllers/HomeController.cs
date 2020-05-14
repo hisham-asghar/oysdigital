@@ -24,52 +24,37 @@ namespace Admin.Controllers
 
         public IActionResult Index()
         {
-            var user=ProjectMembersBao.GetByUserIdList(User.GetUserId());
-            var projecttasks = new List<ProjectTask>();
-            foreach(var item in user)
-            {
-                var tasks = new List<ProjectTask>();
-                tasks=ProjectTaskBao.GetByProjectId(item.ProjectId);
-                projecttasks.AddRange(tasks);
-            }
-            var work=new List<WorkTask>();
-            if (projecttasks != null)
-            {
-                foreach(var item in projecttasks)
-                {
-                   var datalist=WorkTaskBao.GetByProjectId(item.ProjectId);
-                    if (datalist != null)
-                    {
-                        work.AddRange(datalist);
-                    }
-                }
-            }
-            ViewBag.GenerateTask = (work.Count > 0) ? true : false;
             var usermember = ProjectMembersBao.GetByUserId(User.GetUserId());
-            var worktask = new List<WorkTask>();
-            foreach (var item in user)
-            { 
-                var list=new List<WorkTask>();
-                if (user != null)
+            var data = new List<WorkTaskMembers>();
+            if (usermember != null)
+            {
+                data = TaskHelper.GetTaskCount(usermember.AspNetUserId, usermember.ProjectMemberTypeId);
+            }
+            ViewBag.OverAll = data.Count();
+            ViewBag.Week = data.Select(s => s.OnCreated.DayOfWeek == DateTime.Now.DayOfWeek).Count();
+            ViewBag.Month = data.Select(s => s.OnCreated.Month == DateTime.Now.Month).Count();
+            var user =ProjectMembersBao.GetByUserIdList(User.GetUserId());
+            var worktask= TaskHelper.GetWorkTask(user.Select(s => s.ProjectId).ToList());
+            var projecttask = TaskHelper.GetProjectTask(user.Select(s => s.ProjectId).ToList());
+            ViewBag.GenerateToday = !TaskHelper.WorkTaskStatus(projecttask, DateTime.Now.Date);
+            ViewBag.GenerateTomorrow = !TaskHelper.WorkTaskStatus(projecttask, DateTime.Now.AddDays(1).Date);
+            if (usermember != null)
+            {
+                ViewBag.Member = user??null;
+                if (usermember.MemberType == UserRoles.Designer)
                 {
-                    list=WorkTaskBao.GetByProjectId(item.ProjectId);
-                    worktask.AddRange(list);
-                    ViewBag.Member = user;
+                    return View("DesignerView", worktask);
+                }
+                if (usermember.MemberType == UserRoles.Scheduler)
+                {
+                    return View("SchedulerView", worktask);
+                }
+                else
+                {
+                    return View("AdminView", worktask);
                 }
             }
-            if (usermember.MemberType == UserRoles.Designer)
-            {
-                return View("DesignerView", worktask);
-            }
-            if (usermember.MemberType == UserRoles.Scheduler)
-            {
-                return View("SchedulerView", worktask);
-            }
-            else
-            {
-                return View("AdminView", worktask);
-            }
-
+            return View(new List<WorkTask>());
         }
         public IActionResult Privacy()
         {

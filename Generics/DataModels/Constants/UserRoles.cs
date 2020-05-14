@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Amazon.S3.Model;
 
 namespace Generics.DataModels.Constants
 {

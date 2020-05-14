@@ -24,6 +24,13 @@ namespace LayerDao
             var query = $"select WorkTaskPlatforms.*,Platform.Name as PlatformName,Platform.IconClass as PlatformIcon from WorkTaskPlatforms join Platform on Platform.Id=WorkTaskPlatforms.PlatformId where WorkTaskId={id};";
             return QueryExecutor.List<WorkTaskPlatforms>(query);
         }
+
+        public static bool CheckWorkTaskPlatformExist(long workTaskId,long platformId)
+        {
+            var query = $"select WorkTaskPlatforms.*,Platform.Name as PlatformName,Platform.IconClass as PlatformIcon from WorkTaskPlatforms join Platform on Platform.Id=WorkTaskPlatforms.PlatformId where WorkTaskPlatforms.WorkTaskId={workTaskId} AND PlatformId={platformId};";
+            return QueryExecutor.FirstOrDefault<WorkTaskPlatforms>(query) == null ? false : true;
+        }
+
         public static bool Insert(WorkTaskPlatforms worktaskplatfroms)
         {
             return worktaskplatfroms.Insert(TableConstants.WorkTaskPlatforms) > 0;

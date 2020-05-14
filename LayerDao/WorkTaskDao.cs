@@ -41,5 +41,11 @@ namespace LayerDao
             var query = $"Select WorkTask.*,Project.Name as ProjectName from WorkTask join Project on Project.Id=WorkTask.ProjectId where WorkTask.OnCreated='{date}';";
             return QueryExecutor.List<WorkTask>(query);
         }
+
+        public static WorkTask CheckSchedulingTaskExist(ProjectTaskScheduling scheduling,DateTime date)
+        {
+            var query = $"Select WorkTask.*,Project.Name as ProjectName from WorkTask join Project on Project.Id=WorkTask.ProjectId where ProjectSchedulingTime='{scheduling.Time}' AND WorkTask.OnCreated='{date}';";
+             return QueryExecutor.FirstOrDefault<WorkTask>(query);
+        }
     }
 }

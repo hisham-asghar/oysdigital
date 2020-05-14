@@ -12,5 +12,9 @@ namespace LayerBao
         {
             return RoleManagerDao.GetUsersByRoleName(roleName);
         }
+        public static Rolemanager GetUserById(string userId)
+        {
+            return RoleManagerDao.GetUserById(userId);
+        }
     }
 }

@@ -186,7 +186,7 @@
                                         }
                                     </td>
 
-                                    <td>@item.ProjectSchedulingTime.ToString(dddd_dd_MMMM_yyyy_HH_mm_ss)</td>
+                                    <td>@item.OnCreated.ToString(MMMM_dd_yyyy) @item.ProjectSchedulingTime.ToString(hh_mm_tt)</td>
 
                                     <td>
                                         @if (item.IsDesigned)

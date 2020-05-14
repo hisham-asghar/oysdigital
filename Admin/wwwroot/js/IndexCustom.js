@@ -80,7 +80,7 @@ function DeleteMember(id) {
             console.log(platforms);
         });
         for (var i = 0; i < platforms.length; i++) {
-            platformHtml += "<div class='form-group'><input type='checkbox' value='" + platforms[i].Id + "' name='PlatformCheckbox'/>  " + platforms[i].PlatformName + "</div>"
+            platformHtml += "<div class='form-group'><input type='checkbox'  value='"  + platforms[i].Id + "' name='PlatformCheckbox'/>  " + platforms[i].PlatformName + "</div>"
         }
         $('#myPlatforms').html(platformHtml);
         }
@@ -93,7 +93,6 @@ function DeleteMember(id) {
                 TaskPlatforms.push(inputElements[i].value );
             }
         }
-        console.log(TaskPlatforms);
          $.ajax({
              url: host + "/Json/MultiPlatform" ,
                      type: 'POST',
@@ -203,8 +202,43 @@ function DeleteMember(id) {
                         timer: 1500
                     })
                     location.reload(true);
+                } else {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'warning',
+                        title: 'Tasks already generated',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
                 }
 
             }
         });
+}
+function selectAll() {
+    var inputElements = document.getElementsByName('PlatformCheckbox');
+    for (var i = 0; inputElements[i]; ++i) {
+        inputElements[i].checked = source.checked;
     }
+}
+function FilterTable(startDate,endDate,userId) {
+    $.ajax({
+        url: host + "/Json/DashBoardFilter",
+        type: 'GET',
+        data: { startDate: startDate, endDate: endDate, userId: userId },
+        dataType: 'json',
+        success: function (d) {
+            if (d == true) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Member Deleted Succefully',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                location.reload(true);
+            }
+
+        }
+    });
+}

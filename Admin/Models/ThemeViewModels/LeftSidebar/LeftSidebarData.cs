@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Generics.DataModels.Constants;
+using Generics.WebHelper.Extensions;
+using LayerBao;
 
 namespace Admin.Models.ThemeViewModels.LeftSidebar
 {
@@ -9,7 +13,20 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
     {
         public static List<LeftSidebarDto> GetData()
         {
-            var data = new List<LeftSidebarDto>
+            var user = RoleManagerBao.GetUserById();
+            var data = new List<LeftSidebarDto>();
+            UserRoles.IsUserInRole("Admin");
+            if (user.RoleName != UserRoles.Admin)
+            {
+                data = new List<LeftSidebarDto>
+            {
+                new LeftSidebarDto("Dashboard", "/", "home"),
+                new LeftSidebarDto("Projects", "/Project", "assignment"),
+            };
+            }
+            else
+            {
+                data = new List<LeftSidebarDto>
             {
                 new LeftSidebarDto("Dashboard", "/", "home"),
                 new LeftSidebarDto("Customers", "/Customer", "accounts"),
@@ -17,6 +34,7 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
                 new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"),
                 new LeftSidebarDto("Platforms", "/Platform", "delicious")
             };
+            }
             return data;
         }
     }

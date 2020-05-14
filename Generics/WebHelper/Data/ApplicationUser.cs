@@ -1,4 +1,5 @@
-﻿using Generics.DataModels;
+﻿using Generics.Common.Attributes;
+using Generics.DataModels;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,9 @@ namespace Generics.Data
         [PersonalData]
         public string ProfilePic { get; set; }
 
+    }
+    public class Rolemanager: ApplicationUser
+    {
+        public string RoleName { get; set; }
     }
 }

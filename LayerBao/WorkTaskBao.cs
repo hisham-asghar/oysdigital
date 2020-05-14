@@ -54,5 +54,11 @@ namespace LayerBao
         {
             return WorkTaskDao.CheckTaskCreated(date);
         }
+
+        public static WorkTask CheckSchedulingTaskExist(ProjectTaskScheduling scheduling, DateTime date)
+        {
+           return WorkTaskDao.CheckSchedulingTaskExist(scheduling,date);
+        }
+        
     }
 }

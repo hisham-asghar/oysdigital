@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using Generics.Common;
 using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +18,7 @@ namespace Admin.Controllers
             var projects = ProjectBao.GetAll();
             return View(projects);
         }
+        [Authorize(Roles = UserRoles.Admin)]
         [Route("/Project/Create")]
         [Route("/Project/Edit/{id}")]
         [HttpGet]
@@ -45,6 +48,7 @@ namespace Admin.Controllers
             ViewBag.IsEdit = id > 0;
             return View(project);
         }
+        [Authorize(Roles = UserRoles.Admin)]
         [Route("/Project/Create")]
         [Route("/Project/Edit/{id}")]
         [HttpPost]
@@ -84,6 +88,7 @@ namespace Admin.Controllers
                 return RedirectPermanent(returnUrl);
 
         }
+        [Authorize(Roles = UserRoles.Admin)]
         public IActionResult Delete(long id)
         {
             Project project = ProjectBao.GetById(id);

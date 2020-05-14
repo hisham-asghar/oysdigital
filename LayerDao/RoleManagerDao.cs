@@ -18,9 +18,10 @@ namespace LayerDao
             }
             return ViewConstants.UserRoleView.SelectList<ApplicationUser>($"NormalizedRoleName = '{roleName.ToUpper()}'");
         }
-        public static AspNetRoles GetById(long id)
+        public static Rolemanager GetUserById(string userId)
         {
-            return TableConstants.AspNetRoles.Select<AspNetRoles>((int)id);
+            var query = $"SELECT AspNetUsers.*, AspNetRoles.NormalizedName as RoleName FROM AspNetUserRoles INNER JOIN AspNetUsers ON AspNetUsers.Id = AspNetUserRoles.UserId INNER JOIN AspNetRoles ON AspNetRoles.Id = AspNetUserRoles.RoleId WHERE AspNetUsers.Id = '{userId}';";
+            return QueryExecutor.FirstOrDefault<Rolemanager>(query);
         }
         public static bool Insert(AspNetRoles platform)
         {

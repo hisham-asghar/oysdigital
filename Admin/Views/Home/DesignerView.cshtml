@@ -3,22 +3,12 @@
     ViewData["Title"] = "Dashboard";
     Layout = "_Layout";
     var host = Context.Request.Scheme + "://" + Context.Request.Host;
-    var serializer = new JavaScriptSerializer();
     var todayDate = DateTime.Now.Date;
     var tomorrowDate = DateTime.Now.AddDays(1).Date;
-    var disabled = false;
-    var disabledTomorrow = false;
     var IsCompleted = false;
-    if (Model != null)
-    {
-        var data = Model.All(s => s.OnCreated.Date==todayDate && s.IsCompleted == false && s.IsDesigned==false);
-        disabledTomorrow = !data;
-    }
-    if (Model != null)
-    {
-        var data = Model.All(s => s.OnCreated.Date == tomorrowDate && s.IsCompleted == false && s.IsDesigned == false);
-        disabled = !data;
-    }
+    var overAll = ViewBag.OverAll;
+    var week = ViewBag.Week;
+    var month = ViewBag.Month;
 }
 <style>
     .dot {
@@ -31,13 +21,14 @@
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-3 col-md-6 col-sm-6">
+            <button class="btn btn-primary" onclick="FilterTable('@todayDate','@tomorrowDate','eb8cdcc8-5137-4397-bf1f-2d6be802c120')">Check Filter</button>
             <div class="card state_w1">
                 <div class="body d-flex justify-content-between">
                     <div class="col-md-12">
                         <h5>Over All</h5>
                         <div class="row">
                             <div class="col-md-4">
-                                <h5>45</h5>
+                                <h5>@overAll</h5>
                                 <span>Total</span>
                             </div>
                             <div class="col-md-4">
@@ -60,7 +51,7 @@
                         <h5>Current Week</h5>
                         <div class="row">
                             <div class="col-md-4">
-                                <h5>45</h5>
+                                <h5>@week</h5>
                                 <span>Total</span>
                             </div>
                             <div class="col-md-4">
@@ -83,7 +74,7 @@
                         <h5>Current Month</h5>
                         <div class="row">
                             <div class="col-md-4">
-                                <h5>45</h5>
+                                <h5>@month</h5>
                                 <span>Total</span>
                             </div>
                             <div class="col-md-4">
@@ -128,8 +119,8 @@
             <div class="card project_list">
 
                 <div class="pull-right">
-                        <button class="btn btn-success" disabled="@disabled" onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
-                        <button class="btn btn-success" disabled="@disabledTomorrow" onclick="GenerateNextTask()">Generate tomorrow Task <i class="zmdi zdmi-plus"></i></button>
+                        <button class="btn btn-success" disabled="@ViewBag.GenerateToday"  onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
+                        <button class="btn btn-success" disabled="@ViewBag.GenerateTomorrow" onclick="GenerateNextTask()">Generate tomorrow Task <i class="zmdi zdmi-plus"></i></button>
                 </div>
 
                 <div class="table-responsive">
@@ -144,9 +135,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @foreach (var workTask in Model)
                             {
-                                    if (item.WorkTaskPlatforms.All(s => s.IsDesigned == true))
+                                    if (workTask.WorkTaskPlatforms.All(s => s.IsDesigned == true))
                                     {
                                         IsCompleted = true;
                                     }
@@ -155,50 +146,49 @@
                                         IsCompleted = false;
                                     }
                                
-                                <tr style="@((IsCompleted)?"background-color:#04BE5B":"")">
+                            <tr style="@((IsCompleted)?"background-color:#04BE5B":"")">
 
 
-                                    <td><strong>@item.ProjectName</strong></td>
-                                    <td>
-                                        @foreach (var plat in item.WorkTaskPlatforms)
+                                <td><strong>@workTask.ProjectName</strong></td>
+                                <td>
+                                    @foreach (var plat in workTask.WorkTaskPlatforms)
+                                    {
+
+                                        if (plat.IsDesigned)
                                         {
-
-                                                if (plat.IsDesigned)
-                                                {
-                                                    <span class="dot" style="background-color: #04BE5B;">
-                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
-                                                    </span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="dot" style="background-color:gainsboro ;">
-                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
-                                                    </span>
-                                                }
-                                        }
-                                    </td>
-
-                                    <td>@item.ProjectSchedulingTime.ToString(dddd_dd_MMMM_yyyy_HH_mm_ss)</td>
-
-                                    <td>
-                                        @if (IsCompleted)
-                                        {
-                                            <span class="badge badge-success">Design Done</span>
-
+                                            <span class="dot" style="background-color: #04BE5B;">
+                                                <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                            </span>
                                         }
                                         else
                                         {
-                                            <span class="badge badge-warning">To Do</span>
+                                            <span class="dot" style="background-color:gainsboro ;">
+                                                <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                            </span>
                                         }
-                                    </td>
-                                    <td>
-                                        @if (!IsCompleted)
-                                        {
-                                            <span><i class="zmdi zmdi-plus btn-sm btn btn-success" data-toggle="modal" data-target="#smallModal" onclick="GeneratePlatforms(@item.Id)"></i></span>
-                                        }
-                                        <div class="my-component" id="@item.Id" data-options="@JsonConvert.SerializeObject(item.WorkTaskPlatforms)"></div>
-                                    </td>
-                                </tr>
+                                    }
+                                </td>
+
+                                <td>@workTask.OnCreated.ToString(MMMM_dd_yyyy) @workTask.ProjectSchedulingTime.ToString(hh_mm_tt)</td>
+                                <td>
+                                    @if (IsCompleted)
+                                    {
+                                        <span class="badge badge-success">Design Done</span>
+
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-warning">To Do</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!IsCompleted)
+                                    {
+                                        <span><i class="zmdi zmdi-plus btn-sm btn btn-success" data-toggle="modal" data-target="#smallModal" onclick="GeneratePlatforms(@workTask.Id)"></i></span>
+                                    }
+                                    <div class="my-component" id="@workTask.Id" data-options="@JsonConvert.SerializeObject(workTask.WorkTaskPlatforms)"></div>
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
@@ -212,6 +202,7 @@
                                     <!--data will be append-->
 
                                 </div>
+                                <button type="button" onclick="selectAll()">Select All</button>
                                 <div class="modal-footer">
                                     <button type="button" onclick="SwalPlatformsOpen()" class="btn btn-info btn-round waves-effect">Updates</button>
                                     <button type="button" class="btn btn-default btn-round waves-effect" data-dismiss="modal">Cancel</button>

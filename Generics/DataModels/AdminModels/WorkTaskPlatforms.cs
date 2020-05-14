@@ -28,33 +28,6 @@ namespace Generics.DataModels.AdminModels
         public bool Status { get; set; }
         public string Link { get; set; }
     }
-    public partial class TaskPlatforms
-    {
-        public string Id { get; set; }
-    }
 
-    public partial class TaskPlatforms
-    {
-        public static List<TaskPlatforms> FromJson(string json) => JsonConvert.DeserializeObject<List<TaskPlatforms>>(json);
-    }
-
-    public static class Serialize
-    {
-        public static string ToJson(this List<TaskPlatforms> self) => JsonConvert.SerializeObject(self);
-
-
-        internal static class Converter
-        {
-            public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
-            {
-                MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
-                DateParseHandling = DateParseHandling.None,
-                Converters =
-            {
-                new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
-            },
-            };
-        }
-    }
 }
 
