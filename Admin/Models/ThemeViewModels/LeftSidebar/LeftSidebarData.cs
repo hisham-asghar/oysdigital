@@ -13,20 +13,29 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
     {
         public static List<LeftSidebarDto> GetData()
         {
-            var user = RoleManagerBao.GetUserById();
-            var data = new List<LeftSidebarDto>();
-            UserRoles.IsUserInRole("Admin");
-            if (user.RoleName != UserRoles.Admin)
-            {
-                data = new List<LeftSidebarDto>
-            {
-                new LeftSidebarDto("Dashboard", "/", "home"),
-                new LeftSidebarDto("Projects", "/Project", "assignment"),
-            };
-            }
-            else
-            {
-                data = new List<LeftSidebarDto>
+          // var user = RoleManagerBao.GetUserById("");
+           // var data = new List<LeftSidebarDto>();
+          //  UserRoles.IsUserInRole("Admin");
+            //if (user.RoleName != UserRoles.Admin)
+            //{
+            //    data = new List<LeftSidebarDto>
+            //{
+            //    new LeftSidebarDto("Dashboard", "/", "home"),
+            //    new LeftSidebarDto("Projects", "/Project", "assignment"),
+            //};
+            //}
+            //else
+            //{
+            //    data = new List<LeftSidebarDto>
+            //{
+            //    new LeftSidebarDto("Dashboard", "/", "home"),
+            //    new LeftSidebarDto("Customers", "/Customer", "accounts"),
+            //    new LeftSidebarDto("Projects", "/Project", "assignment"),
+            //    new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"),
+            //    new LeftSidebarDto("Platforms", "/Platform", "delicious")
+            //};
+            //}
+           var  data = new List<LeftSidebarDto>
             {
                 new LeftSidebarDto("Dashboard", "/", "home"),
                 new LeftSidebarDto("Customers", "/Customer", "accounts"),
@@ -34,7 +43,6 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
                 new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"),
                 new LeftSidebarDto("Platforms", "/Platform", "delicious")
             };
-            }
             return data;
         }
     }
