@@ -1,4 +1,7 @@
 ﻿using Generics.Common;
+using Generics.Data;
+using Generics.DataModels.AdminModels;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -15,6 +18,7 @@ namespace Generics.WebHelper.Extensions
 
             return principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
+                
         public static int GetCustomerId(this ClaimsPrincipal principal)
         {
             if (principal == null)
@@ -31,4 +35,5 @@ namespace Generics.WebHelper.Extensions
             return principal.FindFirst(u => u.Type == "Name")?.Value;
         }
     }
+    
 }

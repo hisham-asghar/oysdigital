@@ -7,8 +7,10 @@ using Amazon.S3.Encryption.Internal;
 using Generics.Common;
 using Generics.Data;
 using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -17,6 +19,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CustomerController : Controller
     {
         // GET: /<controller>/

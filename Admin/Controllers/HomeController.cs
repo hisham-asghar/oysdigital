@@ -24,6 +24,12 @@ namespace Admin.Controllers
 
         public IActionResult Index()
         {
+            User.Claims.ToList();
+            var roles = AspNetUserRolesBao.GetByUserId(User.GetUserId());
+            if (roles == null)
+            {
+                return View("RoleRequestView");
+            }
             var usermember = ProjectMembersBao.GetByUserId(User.GetUserId());
             var data = new List<WorkTaskMembers>();
             if (usermember != null)

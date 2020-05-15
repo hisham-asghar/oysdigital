@@ -61,7 +61,7 @@ namespace Generics.Common
         }
         public static Dictionary<int, string> CreateDictionaryFromModelList<T>(this List<T> items, string key = "Id", string value = "Name")
         {
-            Dictionary<int, string> dictionary = new Dictionary<int, string>();
+            var dictionary = new Dictionary<int, string>();
             if (items != null && items.Count > 0)
             {
                 var list = typeof(T)

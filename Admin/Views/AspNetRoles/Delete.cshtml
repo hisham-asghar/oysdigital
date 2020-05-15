@@ -1,0 +1,14 @@
+﻿@model AspNetRoles
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "_DetailLayout";
+}
+<h1>Delete</h1>
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Roles</h4>
+    <hr />
+    @CHtmlHelper.Dl(ViewBag.AspNetRolesDictionary)
+    @ButtonHelper.DeleteSmall("/AspNetRoles/ConfirmDelete/" + Model.Id)
+    @ButtonHelper.BackToListSmall("/AspNetRoles/Index")
+</div>

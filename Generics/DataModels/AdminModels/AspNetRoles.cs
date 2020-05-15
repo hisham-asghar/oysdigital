@@ -12,14 +12,4 @@ namespace Generics.DataModels.AdminModels
         public string NormalizedName { get; set; }
         public string ConcurrencyStamp { get; set; }
     }
-    //public static AspNetRoles Parser(IdentityRole role)
-    //{
-    //    return AspNetRoles(new=>
-    //    {
-    //        Name = role.Name,
-    //        NormalizedName = role.NormalizedName,
-    //        Id = role.Id,
-    //        ConcurrencyStamp = role.ConcurrencyStamp
-    //    }
-    //}
 }

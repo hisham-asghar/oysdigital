@@ -1,0 +1,34 @@
+﻿@model IEnumerable<AspNetUserRoles>
+@{
+    ViewData["Title"] = "User Roles";
+    Layout = "_TableLayout";
+    ViewBag.AddNewLink = "/AspNetUserRoles/Create";
+}
+
+<table class="table table-bordered table-striped table-hover dataTable js-exportable">
+    @CHtmlHelper.TableHead("th", "Name", "Email", "Roles", "Actions")
+    @CHtmlHelper.TableFoot("th", "Name", "Email", "Roles", "Actions")
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td> @item.UserName</td>
+            <td> @item.Email</td>
+            <td>
+                <ul class='unstyled'>
+                    @foreach (var data in item.Roles)
+                    {
+                        <li>@data</li>
+                    }
+                </ul>
+            </td>
+            <td>
+                @ButtonHelper.EditSmall("/AspNetUserRoles/Edit/" + item.UserId)
+                @ButtonHelper.DeleteSmall("/AspNetUserRoles/Delete/" + item.UserId) 
+                @ButtonHelper.DetailSmall("/AspNetUserRoles/Detail/" + item.UserId)
+            </td>
+
+        </tr>
+        }
+    </tbody>
+</table>

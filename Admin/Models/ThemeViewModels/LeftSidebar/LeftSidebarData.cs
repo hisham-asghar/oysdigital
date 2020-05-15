@@ -13,37 +13,46 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
     {
         public static List<LeftSidebarDto> GetData()
         {
-          // var user = RoleManagerBao.GetUserById("");
-           // var data = new List<LeftSidebarDto>();
-          //  UserRoles.IsUserInRole("Admin");
-            //if (user.RoleName != UserRoles.Admin)
-            //{
-            //    data = new List<LeftSidebarDto>
-            //{
-            //    new LeftSidebarDto("Dashboard", "/", "home"),
-            //    new LeftSidebarDto("Projects", "/Project", "assignment"),
-            //};
-            //}
-            //else
-            //{
-            //    data = new List<LeftSidebarDto>
-            //{
-            //    new LeftSidebarDto("Dashboard", "/", "home"),
-            //    new LeftSidebarDto("Customers", "/Customer", "accounts"),
-            //    new LeftSidebarDto("Projects", "/Project", "assignment"),
-            //    new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"),
-            //    new LeftSidebarDto("Platforms", "/Platform", "delicious")
-            //};
-            //}
-           var  data = new List<LeftSidebarDto>
+            
+            var  data = new List<LeftSidebarDto>
             {
                 new LeftSidebarDto("Dashboard", "/", "home"),
                 new LeftSidebarDto("Customers", "/Customer", "accounts"),
                 new LeftSidebarDto("Projects", "/Project", "assignment"),
                 new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"),
-                new LeftSidebarDto("Platforms", "/Platform", "delicious")
+                new LeftSidebarDto("Platforms", "/Platform", "delicious"),
+                new LeftSidebarDto("Roles", "/AspNetRoles", "delicious"),
+                new LeftSidebarDto("Assign Roles", "/AspNetUserRoles", "delicious")
             };
             return data;
         }
-    }
+
+        public static List<LeftSidebarDto> GetData(string userId)
+        {
+            var user = AspNetUserRolesBao.GetByUserId(userId);
+            var data = new List<LeftSidebarDto>();
+            if (user.Roles != null)
+            {
+                foreach (var item in user.Roles)
+                {
+                    if (item == UserRoles.Admin || item == UserRoles.Hr)
+                    {
+
+                    }
+                    else
+                    {
+                        data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
+                        data.Add(new LeftSidebarDto("Customers", "/Customer", "accounts"));
+                        data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
+                        data.Add(new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"));
+                        data.Add(new LeftSidebarDto("Platforms", "/Platform", "delicious"));
+                        data.Add(new LeftSidebarDto("Roles", "/AspNetRoles", "delicious"));
+                        data.Add(new LeftSidebarDto("Assign Roles", "/AspNetUserRoles", "delicious"));
+                    }
+                }
+
+            }
+            return data;
+        }
+     }
 }

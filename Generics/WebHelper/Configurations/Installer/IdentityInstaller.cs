@@ -28,10 +28,11 @@ namespace Generics.Configurations.Installer
 
         public void InstallServices(IServiceCollection services, IConfiguration configuration, ProjectType projectType)
         {
-            services.AddIdentity<ApplicationUser,IdentityRole>
+            services.AddIdentity<ApplicationUser, IdentityRole>
                 ()//(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddClaimsPrincipalFactory<MyUserClaimsPrincipalFactory>() 
+                .AddClaimsPrincipalFactory<MyUserClaimsPrincipalFactory>()
+                .AddRoles<IdentityRole>()
                 .AddDefaultTokenProviders();
             services.Configure<IdentityOptions>(options =>
             {
@@ -67,7 +68,10 @@ namespace Generics.Configurations.Installer
 
             var jwtSettings = new JwtSettings();
             configuration.Bind(nameof(jwtSettings), jwtSettings);
-
+            services.AddAuthentication();
+            //services.AddAuthorization(
+            //    options=>options.AddPolicy("Admin", policy => { policy.RequireRole("Admin"); }));
+            services.AddAuthorization();
             if (jwtSettings == null || jwtSettings.Secret == null) return; 
 
             services.AddSingleton(jwtSettings);
@@ -109,6 +113,8 @@ namespace Generics.Configurations.Installer
                     }
                 };
             });
+            
         }
+        
     }
 }

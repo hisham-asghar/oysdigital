@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Generics.Common;
 using Generics.DataModels.AdminModels;
 using Generics.DataModels.Constants;
@@ -16,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Admin.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin)]
+    [Authorize(Roles = UserRoles.Admin+","+UserRoles.Hr)]
     public class PlatformController : Controller
     {
         [Obsolete]

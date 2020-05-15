@@ -16,5 +16,9 @@ namespace LayerBao
         {
             return RoleManagerDao.GetUserById(userId);
         }
+        public static List<ApplicationUser> GetAll()
+        {
+            return RoleManagerDao.GetAll();
+        }
     }
 }

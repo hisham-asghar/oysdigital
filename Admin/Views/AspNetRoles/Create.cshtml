@@ -1,0 +1,20 @@
+﻿@model AspNetRoles
+@{
+    var isEdit = ViewBag.IsEdit;
+    var title = (isEdit ? "Edit " : "Create ") + "Roles";
+    ViewData["Title"] = title;
+}
+@CHtmlHelper.GenerateHeader(title, "/AspNetRoles", "Back to Roles List")
+@CHtmlHelper.GetCardHeader(12, title)
+    <form method="post" name="roles">
+        @if (isEdit)
+        {
+            @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
+        }
+        @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
+        @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
+    </form>
+@CHtmlHelper.GetCardFooter()
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

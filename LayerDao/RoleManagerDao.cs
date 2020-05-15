@@ -18,22 +18,16 @@ namespace LayerDao
             }
             return ViewConstants.UserRoleView.SelectList<ApplicationUser>($"NormalizedRoleName = '{roleName.ToUpper()}'");
         }
+
+        public static List<ApplicationUser> GetAll()
+        {
+            return TableConstants.AspNetUsers.SelectAll<ApplicationUser>();
+        }
+
         public static Rolemanager GetUserById(string userId)
         {
             var query = $"SELECT AspNetUsers.*, AspNetRoles.NormalizedName as RoleName FROM AspNetUserRoles INNER JOIN AspNetUsers ON AspNetUsers.Id = AspNetUserRoles.UserId INNER JOIN AspNetRoles ON AspNetRoles.Id = AspNetUserRoles.RoleId WHERE AspNetUsers.Id = '{userId}';";
             return QueryExecutor.FirstOrDefault<Rolemanager>(query);
-        }
-        public static bool Insert(AspNetRoles platform)
-        {
-            return platform.Insert(TableConstants.AspNetRoles) > 0;
-        }
-        //public static bool Update(AspNetRoles platform)
-        //{
-        //    return platform.Update(TableConstants.AspNetRoles, platform.Id) > 0;
-        //}
-        public static bool Delete(long id)
-        {
-            return TableConstants.AspNetRoles.Delete((int)id);
         }
     }
 }

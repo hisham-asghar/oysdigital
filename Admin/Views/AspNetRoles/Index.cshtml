@@ -1,0 +1,20 @@
+﻿@model IEnumerable<AspNetRoles>
+@{
+    ViewData["Title"] = "Roles";
+    Layout = "_TableLayout";
+    ViewBag.AddNewLink = "/AspNetRoles/Create";
+}
+
+<table class="table table-bordered table-striped table-hover dataTable js-exportable">
+    @CHtmlHelper.TableHead("th", "Name","NormalizedName", "Actions")
+    @CHtmlHelper.TableFoot("th", "Name", "NormalizedName", "Actions")
+    <tbody>
+        @foreach (var item in Model)
+        {
+            @Html.TrHtml("td", item.Name,item.NormalizedName ,
+             @ButtonHelper.EditSmall("/AspNetRoles/Edit/" + item.Id) + "" +
+             @ButtonHelper.DeleteSmall("/AspNetRoles/Delete/" + item.Id) + "" +
+             @ButtonHelper.DetailSmall("/AspNetRoles/Detail/" + item.Id).ToString());
+        }
+    </tbody>
+</table>
