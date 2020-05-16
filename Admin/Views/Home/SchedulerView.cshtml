@@ -11,16 +11,16 @@
     var IsCompleted = false;
     var instagramstatus = false;
     var otherstatus = 0;
-    if (Model != null)
-    {
-        var data = Model.All(s => s.OnCreated.Date == todayDate && s.IsCompleted == false && s.IsScheduled == false);
-        disabledTomorrow = !data;
-    }
-    if (Model != null)
-    {
-        var data = Model.All(s => s.OnCreated.Date == tomorrowDate && s.IsCompleted == false && s.IsScheduled == false);
-        disabled = !data;
-    }
+    //if (Model != null)
+    //{
+    //    var data = Model.All(s => s.OnCreated.Date == todayDate && s.IsCompleted == false && s.IsScheduled == false);
+    //    disabledTomorrow = !data;
+    //}
+    //if (Model != null)
+    //{
+    //    var data = Model.All(s => s.OnCreated.Date == tomorrowDate && s.IsCompleted == false && s.IsScheduled == false);
+    //    disabled = !data;
+    //}
 }
 <style>
     .dot {
@@ -162,10 +162,6 @@
                                             {
                                                 instagramstatus = true;
                                             }
-                                            else
-                                            {
-                                                instagramstatus = false;
-                                            }
                                             if (plat.PlatformName.ToLower()!="instagram" && plat.IsScheduled == false)
                                             {
                                                 otherstatus ++;
@@ -219,7 +215,7 @@
                                             }
                                             @if(item.IsCompleted)
                                             {
-                                                <li><span class="badge badge-danger">Completed</span></li>
+                                                <li><span class="badge" style="background-color:white">Completed</span></li>
                                             }
 
                                         </ul>

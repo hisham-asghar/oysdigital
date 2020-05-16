@@ -58,7 +58,8 @@ namespace Admin.Controllers
                 {
                     return View("AdminView", worktask);
                 }
-            }if(User.IsInRole(UserRoles.Admin)|| User.IsInRole(UserRoles.Hr))
+            }
+            if(User.IsInRole(UserRoles.Admin)|| User.IsInRole(UserRoles.Hr))
             {
                return View("AdminView",WorkTaskBao.GetAll()??new List<WorkTask>());
             }

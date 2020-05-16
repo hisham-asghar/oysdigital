@@ -136,13 +136,13 @@
                                                 if (plat.IsCompleted)
                                                 {
                                                     <span class="dot" style="background-color: #04BE5B;">
-                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id"></i>
                                                     </span>
                                                 }
                                                 else
                                                 {
                                                     <span class="dot" style="background-color:gainsboro ;">
-                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id"></i>
                                                     </span>
                                                 }
                                             
@@ -154,7 +154,7 @@
                                     <td>
                                         @if (item.IsCompleted)
                                         {
-                                            <span class="badge badge-success">Completed</span>
+                                            <span class="badge" style="background-color:white">Completed</span>
 
                                         }
                                         else
