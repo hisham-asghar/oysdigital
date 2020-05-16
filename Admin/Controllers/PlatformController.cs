@@ -47,6 +47,8 @@ namespace Admin.Controllers
         [Obsolete]
         public IActionResult Create(Platform platform,int id = 0)
         {
+            var IsActive = Request.Form.CheckBoxStatus("IsActive");
+            platform.IsActive = IsActive;
             Platform platformDb = PlatformBao.GetById(id);
             if (id > 0 && platformDb == null)
             {

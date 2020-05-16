@@ -5,13 +5,16 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.Common;
 using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Admin.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class ProjectMemberTypeController : Controller
     {
         public IActionResult Index()
@@ -36,6 +39,8 @@ namespace Admin.Controllers
         [HttpPost]
         public IActionResult Create(ProjectMemberTypes projectmembertypes, int id = 0)
         {
+            var IsActive = Request.Form.CheckBoxStatus("IsActive");
+            projectmembertypes.IsActive = IsActive;
             ProjectMemberTypes projectmembertypeDb = ProjectMemberTypeBao.GetById(id);
             if (id > 0 && projectmembertypeDb == null)
             {

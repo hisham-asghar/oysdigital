@@ -5,13 +5,16 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Generics.Common;
 using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Admin.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class ProjectNotesController : Controller
     {
         public IActionResult Index()

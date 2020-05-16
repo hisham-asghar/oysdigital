@@ -35,11 +35,7 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
             {
                 foreach (var item in user.Roles)
                 {
-                    if (item == UserRoles.Admin || item == UserRoles.Hr)
-                    {
-
-                    }
-                    else
+                    if (item == UserRoles.Admin.ToUpper() || item == UserRoles.Hr.ToUpper())
                     {
                         data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
                         data.Add(new LeftSidebarDto("Customers", "/Customer", "accounts"));
@@ -48,6 +44,11 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
                         data.Add(new LeftSidebarDto("Platforms", "/Platform", "delicious"));
                         data.Add(new LeftSidebarDto("Roles", "/AspNetRoles", "delicious"));
                         data.Add(new LeftSidebarDto("Assign Roles", "/AspNetUserRoles", "delicious"));
+                    }
+                    if (item == UserRoles.Designer.ToUpper() || item == UserRoles.Scheduler.ToUpper())
+                    {
+                        data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
+                        data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
                     }
                 }
 

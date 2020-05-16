@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 using Generics.Common;
 using Generics.Data;
 using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Admin.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class MobileController : Controller
     {
         public IActionResult Index()
@@ -38,6 +41,8 @@ namespace Admin.Controllers
         [HttpPost]
         public IActionResult Create(Mobile mobile, int id = 0)
         {
+            var IsActive = Request.Form.CheckBoxStatus("IsActive");
+            mobile.IsActive = IsActive;
             Mobile mobileDb = MobileBao.GetById(id);
             if(id > 0 && mobileDb == null)
             {

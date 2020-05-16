@@ -24,7 +24,7 @@
             </select>
         </div>
        <input type="hidden" name="Name" id="Name" value="@Model.Name" />
-        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
+        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive", "IsActive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
         @ButtonHelper.BackToListSmall("/Platform/Index")
     </form>

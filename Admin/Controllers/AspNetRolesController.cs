@@ -4,13 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Generics.Common;
 using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Admin.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class AspNetRolesController : Controller
     {
         public IActionResult Index()

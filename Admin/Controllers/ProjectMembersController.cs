@@ -9,12 +9,14 @@ using Generics.DataModels.AdminModels;
 using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Admin.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class ProjectMembersController : Controller
     {
         private UserManager<ApplicationUser> _userManager;
@@ -80,6 +82,8 @@ namespace Admin.Controllers
         [HttpPost]
         public IActionResult Create(ProjectMembers projectmembers, int id = 0, long projectId = 0, string type = null, string returnUrl = null)
         {
+            var IsActive = Request.Form.CheckBoxStatus("IsActive");
+            projectmembers.IsActive = IsActive;
             ProjectMembers projectmembersDb = ProjectMembersBao.GetById(id);
             if (id > 0 && projectmembersDb == null)
             {

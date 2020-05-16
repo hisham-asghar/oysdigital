@@ -29,6 +29,8 @@
                             <h2><strong>Members</strong></h2>
                         </div>
                         <div class="col-md-6">
+                            @if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
+                            {
                             <div class="pull-right">
                                 @if (Model.ProjectMembers.Where(s => s.MemberType == UserRoles.Designer).Count() == 0)
                                 {
@@ -40,7 +42,8 @@
                                 }
                                     @*@ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
                                      @ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")*@
-                                </div>
+                           </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -85,10 +88,12 @@
                                     <h2><strong>Platform</strong></h2>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="pull-right">
-                                        @ButtonHelper.Create($"/ProjectPlatform/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
-
-                                    </div>
+                                    @if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
+                                    {
+                                        <div class="pull-right">
+                                            @ButtonHelper.Create($"/ProjectPlatform/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -118,9 +123,12 @@
                                     <h2><strong>Project Task</strong></h2>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="pull-right">
-                                        <button class="btn btn-success float-right" onclick="Process(@Model.Id)"><i class="zdmi zdmi-plus"></i> Project Task</button>
-                                    </div>
+                                    @if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
+                                    {
+                                        <div class="pull-right">
+                                            <button class="btn btn-success float-right" onclick="Process(@Model.Id)"><i class="zdmi zdmi-plus"></i> Project Task</button>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -158,9 +166,12 @@
                                     <h2><strong>Notes</strong></h2>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="pull-right">
-                                        @ButtonHelper.Create($"/ProjectNotes/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
-                                    </div>
+                                    @if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
+                                    {
+                                        <div class="pull-right">
+                                            @ButtonHelper.Create($"/ProjectNotes/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -191,10 +202,13 @@
                                     <h2><strong>Alert Messages</strong></h2>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="pull-right">
-                                        @ButtonHelper.Create($"/ProjectAlertMessage/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
-                                    </div>
-                                </div>
+                                    @if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
+                                    {
+                                        <div class="pull-right">
+                                            @ButtonHelper.Create($"/ProjectAlertMessage/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                        </div>
+                                    }
+                                 </div>
                             </div>
                         </div>
                         <div class="responsive">

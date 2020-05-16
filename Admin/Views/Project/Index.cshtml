@@ -2,22 +2,44 @@
 @{
     ViewData["Title"] = "Projects";
     Layout = "_TableLayout";
-    ViewBag.AddNewLink = "/Project/Create";
+    if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
+    {
+        ViewBag.AddNewLink = "/Project/Create";
+    }
+    else
+    {
+        ViewBag.AddNewLink = null;
+    }
 }
-
-<table class="table table-bordered table-striped table-hover dataTable js-exportable">
-    @CHtmlHelper.TableHead("th", "Name","Mobile SpaceName", "Created", "Status", "Actions")
-    @CHtmlHelper.TableFoot("th", "Name","Mobile SpaceName", "Created", "Status", "Actions")
-    <tbody>
-        @foreach (var item in Model)
-        {
-            @CHtmlHelper.Tr("td", item.Name,item.MobileSpaceName.ToString(), item.OnCreated.ToString(dddd_dd_MMMM_yyyy), item.IsActive.CheckTag().ToString(),
-             @ButtonHelper.EditSmall("/Project/Edit/" + item.Id) + "" +
-             @ButtonHelper.DeleteSmall("/Project/Delete/" + item.Id) + "" +
-             @ButtonHelper.DetailSmall("/Project/Detail/" + item.Id).ToString());
-        }
-    </tbody>
-</table>
+@if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
+{
+    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+        @CHtmlHelper.TableHead("th", "Name", "Mobile SpaceName", "Created", "Status", "Actions")
+        @CHtmlHelper.TableFoot("th", "Name", "Mobile SpaceName", "Created", "Status", "Actions")
+        <tbody>
+            @foreach (var item in Model)
+            {
+                @CHtmlHelper.Tr("td", item.Name, item.MobileSpaceName.ToString(), item.OnCreated.ToString(dddd_dd_MMMM_yyyy), item.IsActive.CheckTag().ToString(),
+                  @ButtonHelper.EditSmall("/Project/Edit/" + item.Id) + "" +
+                  @ButtonHelper.DeleteSmall("/Project/Delete/" + item.Id) + "" +
+                  @ButtonHelper.DetailSmall("/Project/Detail/" + item.Id).ToString());
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+        @CHtmlHelper.TableHead("th", "Name", "Mobile SpaceName", "Created", "Status")
+        @CHtmlHelper.TableFoot("th", "Name", "Mobile SpaceName", "Created", "Status")
+        <tbody>
+            @foreach (var item in Model)
+            {
+                @CHtmlHelper.Tr("td", item.Name, item.MobileSpaceName.ToString(), item.OnCreated.ToString(dddd_dd_MMMM_yyyy), item.IsActive.CheckTag().ToString());
+            }
+        </tbody>
+    </table>
+}
 
 
 

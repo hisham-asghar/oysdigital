@@ -10,7 +10,7 @@ namespace Admin.Models.ThemeViewModels
 {
     public class ThemeData
     {
-        public static List<LeftSidebarDto> leftSidebarDtos = LeftSidebarData.GetData();
+        //public static List<LeftSidebarDto> leftSidebarDtos = LeftSidebarData.GetData();
         public static List<LeftSidebarDto> GetLeftSidebarDtos(string userId)
         {
 

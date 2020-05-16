@@ -7,10 +7,12 @@ using Generics.DataModels.AdminModels;
 using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Admin.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class ProjectTaskController : Controller
     {
         public IActionResult Index()
@@ -52,6 +54,8 @@ namespace Admin.Controllers
         [HttpPost]
         public IActionResult Create(ProjectView projectView, int id = 0, long projectId = 0, string returnUrl = null)
         {
+            var IsActive = Request.Form.CheckBoxStatus("IsActive");
+           // projectplatforms.IsActive = IsActive;
             ProjectTask projecttaskDb = ProjectTaskBao.GetById(id);
             if (id > 0 && projecttaskDb == null)
             {

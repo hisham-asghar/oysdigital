@@ -15,7 +15,7 @@
         }
         @CHtmlHelper.GenerateSingleSelectField("Mobile", "MobileId", ViewBag.MobileDictionary, (isEdit) ? (int)Model.MobileId : 0, false)
         @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
-        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
+        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive", "IsActive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
     </form>
 @CHtmlHelper.GetCardFooter()

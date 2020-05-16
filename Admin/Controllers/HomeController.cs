@@ -24,7 +24,6 @@ namespace Admin.Controllers
 
         public IActionResult Index()
         {
-            User.Claims.ToList();
             var roles = AspNetUserRolesBao.GetByUserId(User.GetUserId());
             if (roles == null)
             {
@@ -59,6 +58,9 @@ namespace Admin.Controllers
                 {
                     return View("AdminView", worktask);
                 }
+            }if(User.IsInRole(UserRoles.Admin)|| User.IsInRole(UserRoles.Hr))
+            {
+               return View("AdminView",WorkTaskBao.GetAll()??new List<WorkTask>());
             }
             return View(new List<WorkTask>());
         }

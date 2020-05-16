@@ -13,12 +13,31 @@ namespace Admin.Controllers
 {
     public class ProjectController : Controller
     {
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr+","+ UserRoles.Designer + "," + UserRoles.Scheduler)]
         public IActionResult Index()
         {
-            var projects = ProjectBao.GetAll();
-            return View(projects);
+            var projects = new List<Project>();
+            if (User.IsInRole(UserRoles.Designer) || User.IsInRole(UserRoles.Scheduler))
+            {
+                var usermember = ProjectMembersBao.GetByUserId(User.GetUserId());
+                if (usermember != null)
+                {
+                   var data= ProjectBao.GetByMemberTypeId(usermember.ProjectMemberTypeId)??new List<Project>();
+                    return View(data);
+                }
+                return View(projects);
+            }
+            if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
+            {
+                projects = ProjectBao.GetAll();
+                return View(projects);
+            }
+            else
+            {
+                return View(projects);
+            }
         }
-        [Authorize(Roles = UserRoles.Admin)]
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
         [Route("/Project/Create")]
         [Route("/Project/Edit/{id}")]
         [HttpGet]
@@ -48,13 +67,14 @@ namespace Admin.Controllers
             ViewBag.IsEdit = id > 0;
             return View(project);
         }
-        [Authorize(Roles = UserRoles.Admin)]
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
         [Route("/Project/Create")]
         [Route("/Project/Edit/{id}")]
         [HttpPost]
         public IActionResult Create(Project project, int id = 0, long customerId = 0, string returnUrl = null)
         {
             var IsActive = Request.Form.CheckBoxStatus("IsActive");
+            project.IsActive = IsActive;
             Project projectDb = ProjectBao.GetById(id);
             if (id > 0 && projectDb == null)
             {
@@ -72,14 +92,12 @@ namespace Admin.Controllers
             if (id == 0)
             {
                 project.SetOnCreate(userId);
-                project.IsActive = IsActive;
                 project.Guid = Guid.NewGuid().ToString();
                 ProjectBao.Insert(project);
             }
             else
             {
                 project.SetOnUpdate(userId);
-                project.IsActive = IsActive;
                 ProjectBao.Update(project);
             }
             if (string.IsNullOrWhiteSpace(returnUrl))
@@ -88,7 +106,7 @@ namespace Admin.Controllers
                 return RedirectPermanent(returnUrl);
 
         }
-        [Authorize(Roles = UserRoles.Admin)]
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
         public IActionResult Delete(long id)
         {
             Project project = ProjectBao.GetById(id);
@@ -102,7 +120,7 @@ namespace Admin.Controllers
             }
             return View(project);
         }
-
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
         public IActionResult ConfirmDelete(long id)
         {
             if (id != 0)
@@ -111,6 +129,7 @@ namespace Admin.Controllers
             }
             return RedirectToAction("Index");
         }
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
         public IActionResult Detail(long id)
         {
             Project project = ProjectBao.GetById(id);

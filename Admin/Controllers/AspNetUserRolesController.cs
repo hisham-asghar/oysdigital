@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using Generics.Common;
 using Generics.Data;
 using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
 using LayerBao;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Admin.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class AspNetUserRolesController : Controller
     {
         public IActionResult Index()

@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Admin.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin)]
+    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class ProjectAlertMessageController : Controller
     {
         public IActionResult Index()

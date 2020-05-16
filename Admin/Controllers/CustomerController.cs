@@ -19,7 +19,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Admin.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = UserRoles.Admin+","+UserRoles.Hr)]
     public class CustomerController : Controller
     {
         // GET: /<controller>/
@@ -47,6 +47,8 @@ namespace Admin.Controllers
         [HttpPost]
         public IActionResult Create(Customer customer, int id = 0)
         {
+            var IsActive = Request.Form.CheckBoxStatus("IsActive");
+            customer.IsActive = IsActive;
             Customer customerDb = CustomerBao.GetById(id);
             if (id > 0 && customerDb == null)
             {

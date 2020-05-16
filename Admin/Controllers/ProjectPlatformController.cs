@@ -8,11 +8,13 @@ using Generics.DataModels.AdminModels;
 using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Admin.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class ProjectPlatformController : Controller
     {
         public IActionResult Index()
@@ -62,6 +64,8 @@ namespace Admin.Controllers
         [HttpPost]
         public IActionResult Create(ProjectPlatforms projectplatforms, int id = 0, long projectId = 0, string returnUrl = null)
         {
+            var IsActive = Request.Form.CheckBoxStatus("IsActive");
+            projectplatforms.IsActive = IsActive;
             ProjectPlatforms projectplatformDb = ProjectPlatformsBao.GetById(id);
             if (id > 0 && projectplatformDb == null)
             {

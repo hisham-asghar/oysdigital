@@ -10,7 +10,20 @@ namespace LayerBao
     {
         public static List<ProjectTask> GetAll()
         {
-            return ProjectTaskDao.GetAll();
+            var data= ProjectTaskDao.GetAll();
+            if (data.Count > 0)
+            {
+                foreach (var item in data)
+                {
+                    if (item != null)
+                    {
+                        item.ProjectTaskScheduling = ProjectTaskSchedulingDao.GetByProjectTaskId(item.TaskTypeId);
+                        item.ProjectPlatforms = ProjectPlatformsDao.GetByProjectId(item.ProjectId);
+                    }
+
+                }
+            }
+            return data;
         }
         public static ProjectTask GetById(long id)
         {

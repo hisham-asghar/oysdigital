@@ -25,6 +25,11 @@ namespace LayerDao
             var query = $"select Project.*,MobileSpaces.Name as MobileSpaceName,Customer.Name as CustomerName From Project Join MobileSpaces on Project.MobileSpaceId = MobileSpaces.id join Customer on Customer.Id = Project.CustomerId where Customer.Id = {id}; ";
             return QueryExecutor.List<Project>(query);
         }
+        public static List<Project> GetByMemberTypeId(long id)
+        {
+            var query = $"SELECT Project.*,MobileSpaces.Name as MobileSpaceName,Customer.Name as CustomerName FROM ProjectMembers INNER JOIN Project ON Project.Id = ProjectMembers.ProjectId INNER JOIN MobileSpaces on Project.MobileSpaceId = MobileSpaces.id WHERE ProjectMembers.ProjectMemberTypeId = {id}; ";
+            return QueryExecutor.List<Project>(query);
+        }
         public static bool Insert(Project project)
         {
             return project.Insert(TableConstants.Project) > 0;
