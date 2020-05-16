@@ -31,7 +31,7 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
         {
             var user = AspNetUserRolesBao.GetByUserId(userId);
             var data = new List<LeftSidebarDto>();
-            if (user.Roles != null)
+            if (user!=null)
             {
                 foreach (var item in user.Roles)
                 {
