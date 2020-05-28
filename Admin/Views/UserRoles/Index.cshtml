@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "User Roles";
     Layout = "_TableLayout";
-    ViewBag.AddNewLink = "/AspNetUserRoles/Create";
+    ViewBag.AddNewLink = "/UserRoles/Create";
 }
 
 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
@@ -15,17 +15,14 @@
             <td> @item.UserName</td>
             <td> @item.Email</td>
             <td>
-                <ul class='unstyled'>
                     @foreach (var data in item.Roles)
                     {
-                        <li>@data</li>
+                <span>@data , </span>
                     }
-                </ul>
             </td>
             <td>
-                @ButtonHelper.EditSmall("/AspNetUserRoles/Edit/" + item.UserId)
-                @ButtonHelper.DeleteSmall("/AspNetUserRoles/Delete/" + item.UserId) 
-                @ButtonHelper.DetailSmall("/AspNetUserRoles/Detail/" + item.UserId)
+                @ButtonHelper.EditSmall("/UserRoles/Edit/" + item.UserId)
+                @ButtonHelper.DeleteSmall("/UserRoles/Delete/" + item.UserId)
             </td>
 
         </tr>

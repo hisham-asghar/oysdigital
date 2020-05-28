@@ -12,16 +12,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Admin.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
-    public class AspNetUserRolesController : Controller
+   // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
+    public class UserRolesController : Controller
     {
         public IActionResult Index()
         {
             return View(AspNetUserRolesBao.GetAll() ?? new List<AspNetUserRoles>());
         }
 
-        [Route("/AspNetUserRoles/Create")]
-        [Route("/AspNetUserRoles/Edit/{id}")]
+        [Route("/UserRoles/Create")]
+        [Route("/UserRoles/Edit/{id}")]
         [HttpGet]
         public IActionResult Create(string id = null)
         {
@@ -45,8 +45,8 @@ namespace Admin.Controllers
             ViewBag.IsEdit = (id == null) ? false : true;
             return View(aspNetUserRoles);
         }
-        [Route("/AspNetUserRoles/Create")]
-        [Route("/AspNetUserRoles/Edit/{id}")]
+        [Route("/UserRoles/Create")]
+        [Route("/UserRoles/Edit/{id}")]
         [HttpPost]
         public IActionResult Create(AspNetUserRoles aspNetUserRoles,List<string> Roles, string id = null)
         {
@@ -86,7 +86,7 @@ namespace Admin.Controllers
             return RedirectToAction("Index");
 
         }
-        [Route("/AspNetUserRoles/Delete/{id}")]
+        [Route("/UserRoles/Delete/{id}")]
         public IActionResult Delete(string id)
         {
             AspNetUserRoles aspNetUserRoles = AspNetUserRolesBao.GetByUserId(id);

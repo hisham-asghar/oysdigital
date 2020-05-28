@@ -17,6 +17,7 @@ namespace Generics.Data
         [PersonalData]
         public string ProfilePic { get; set; }
 
+
     }
     public class Rolemanager: ApplicationUser
     {

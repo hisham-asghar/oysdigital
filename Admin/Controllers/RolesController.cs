@@ -13,16 +13,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Admin.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
-    public class AspNetRolesController : Controller
+   // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
+    public class RolesController : Controller
     {
+        private RoleManager<IdentityRole> _roleManager;
+
+        public RolesController(RoleManager<IdentityRole> roleManager)
+        {
+            _roleManager = roleManager;
+        }
         public IActionResult Index()
         {
             return View(AspNetRolesBao.GetAll()??new List<AspNetRoles>());
         }
 
-        [Route("/AspNetRoles/Create")]
-        [Route("/AspNetRoles/Edit/{id}")]
+        [Route("/Roles/Create")]
+        [Route("/Roles/Edit/{id}")]
         [HttpGet]
         public IActionResult Create(string id = null)
         {
@@ -35,10 +41,10 @@ namespace Admin.Controllers
             ViewBag.IsEdit = (id == null) ? false:true ;
             return View(aspNetRoles);
         }
-        [Route("/AspNetRoles/Create")]
-        [Route("/AspNetRoles/Edit/{id}")]
+        [Route("/Roles/Create")]
+        [Route("/Roles/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(AspNetRoles aspNetRoles, string id = null)
+        public async Task<IActionResult> CreateAsync(AspNetRoles aspNetRoles, string id = null)
         {
             AspNetRoles aspNetRolesDb = AspNetRolesBao.GetById(id);
             if (id != null && aspNetRolesDb == null)
@@ -55,19 +61,26 @@ namespace Admin.Controllers
 
             if (id == null)
             {
-                aspNetRoles.NormalizedName = aspNetRoles.Name.ToUpper();
-                AspNetRolesBao.Insert(aspNetRoles);
+                
+                    var result=await _roleManager.CreateAsync(new IdentityRole(aspNetRoles.Name));
+               
             }
             else
             {
-                aspNetRoles.NormalizedName = aspNetRoles.Name.ToUpper();
-                AspNetRolesBao.Update(aspNetRoles);
+               
+                    var role = await _roleManager.FindByIdAsync(id);
+                    if (role != null)
+                    {
+                        role.Name = aspNetRoles.Name;
+                        await _roleManager.UpdateAsync(role);
+                    }
+              
             }
 
             return RedirectToAction("Index");
 
         }
-        [Route("/AspNetRoles/Delete/{id}")]
+        [Route("/Roles/Delete/{id}")]
         public IActionResult Delete(string id)
         {
             AspNetRoles aspNetRoles = AspNetRolesBao.GetById(id);

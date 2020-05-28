@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Roles";
     Layout = "_TableLayout";
-    ViewBag.AddNewLink = "/AspNetRoles/Create";
+    ViewBag.AddNewLink = "/Roles/Create";
 }
 
 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
@@ -12,9 +12,8 @@
         @foreach (var item in Model)
         {
             @Html.TrHtml("td", item.Name,item.NormalizedName ,
-             @ButtonHelper.EditSmall("/AspNetRoles/Edit/" + item.Id) + "" +
-             @ButtonHelper.DeleteSmall("/AspNetRoles/Delete/" + item.Id) + "" +
-             @ButtonHelper.DetailSmall("/AspNetRoles/Detail/" + item.Id).ToString());
+             @ButtonHelper.EditSmall("/Roles/Edit/" + item.Id) + "" +
+             @ButtonHelper.DeleteSmall("/Roles/Delete/" + item.Id).ToString());
         }
     </tbody>
 </table>

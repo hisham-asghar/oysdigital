@@ -37,13 +37,15 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
                 {
                     if (item == UserRoles.Admin.ToUpper() || item == UserRoles.Hr.ToUpper())
                     {
-                        data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
-                        data.Add(new LeftSidebarDto("Customers", "/Customer", "accounts"));
-                        data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
-                        data.Add(new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"));
-                        data.Add(new LeftSidebarDto("Platforms", "/Platform", "delicious"));
-                        data.Add(new LeftSidebarDto("Roles", "/AspNetRoles", "delicious"));
-                        data.Add(new LeftSidebarDto("Assign Roles", "/AspNetUserRoles", "delicious"));
+                            data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
+                            data.Add(new LeftSidebarDto("Customers", "/Customer", "accounts"));
+                            data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
+                            data.Add(new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"));
+                            data.Add(new LeftSidebarDto("Platforms", "/Platform", "delicious"));
+                            data.Add(new LeftSidebarDto("Roles", "/Roles", "delicious"));
+                            data.Add(new LeftSidebarDto("Assign Roles", "/UserRoles", "delicious"));
+                            data.Add(new LeftSidebarDto("Users", "/User", "user"));
+
                     }
                     if (item == UserRoles.Designer.ToUpper() || item == UserRoles.Scheduler.ToUpper())
                     {
@@ -53,7 +55,19 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
                 }
 
             }
-            return data;
+            var list = new List<LeftSidebarDto>();
+            foreach(var item in data)
+            {
+                if (list.Contains(item))
+                {
+                    
+                }
+                else
+                {
+                    list.Add(item);
+                }
+            }
+            return list;
         }
      }
 }

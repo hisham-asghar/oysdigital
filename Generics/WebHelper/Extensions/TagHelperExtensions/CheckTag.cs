@@ -20,6 +20,8 @@ namespace Generics.WebHelper.Extensions
         DropdownList = 6,
         File = 7,
         Select=8,
+        Password=9,
+        Email=10,
 
     };
     public enum HtmlButtonType
@@ -38,6 +40,8 @@ namespace Generics.WebHelper.Extensions
             return htmlInputType switch
             {
                 HtmlInputType.Text => "text",
+                HtmlInputType.Password => "password",
+                HtmlInputType.Email => "email",
                 HtmlInputType.Number => "number",
                 HtmlInputType.Hidden => "hidden",
                 HtmlInputType.Checbox => "checkbox",
