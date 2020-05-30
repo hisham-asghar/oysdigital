@@ -20,6 +20,18 @@ namespace Admin.Models
             }
             return new List<WorkTaskMembers>();
         }
+        public static List<WorkTaskMembers> GetAllTask()
+        {
+           return WorkTaskMembersBao.GetAllTask();
+           }
+        public static List<WorkTaskMembers> GetTaskCount(string userId)
+        {
+            if (userId != null)
+            {
+                return WorkTaskMembersBao.GetByUserId(userId);
+            }
+            return new List<WorkTaskMembers>();
+        }
         public static List<ProjectTask> GetProjectTask(List<long> item)
         {
             if (item.Count > 0)

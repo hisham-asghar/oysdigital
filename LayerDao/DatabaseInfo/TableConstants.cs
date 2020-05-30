@@ -29,5 +29,6 @@ namespace LayerDao.DatabaseInfo
     public class ViewConstants
     {
         public const string UserRoleView = "UserRoleView";
+        public const string UserTaskView = "UserTaskView";
     }
 }

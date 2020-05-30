@@ -36,8 +36,10 @@ namespace Admin.Controllers
                 data = TaskHelper.GetTaskCount(usermember.AspNetUserId, usermember.ProjectMemberTypeId);
             }
             ViewBag.OverAll = data.Count();
+           // ViewBag.Pending = data.Select(s =>  == DateTime.Now.DayOfWeek).Count();
             ViewBag.Week = data.Select(s => s.OnCreated.DayOfWeek == DateTime.Now.DayOfWeek).Count();
             ViewBag.Month = data.Select(s => s.OnCreated.Month == DateTime.Now.Month).Count();
+            ViewBag.Today = data.Select(s => s.OnCreated.Date == DateTime.Now.Date).Count();
             var user =ProjectMembersBao.GetByUserIdList(User.GetUserId());
             var worktask= TaskHelper.GetWorkTask(user.Select(s => s.ProjectId).ToList());
             var projecttask = TaskHelper.GetProjectTask(user.Select(s => s.ProjectId).ToList());
@@ -59,9 +61,10 @@ namespace Admin.Controllers
                     return View("AdminView", worktask);
                 }
             }
-            if(User.IsInRole(UserRoles.Admin)|| User.IsInRole(UserRoles.Hr))
+            if(User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
             {
-               return View("AdminView",WorkTaskBao.GetAll()??new List<WorkTask>());
+               var count = TaskHelper.GetAllTask();
+                return View("AdminView",WorkTaskBao.GetAll()??new List<WorkTask>());
             }
             return View(new List<WorkTask>());
         }

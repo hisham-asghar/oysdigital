@@ -24,6 +24,12 @@ namespace LayerBao
         {
             return WorkTaskMembersDao.GetByUserId(id);
         }
+
+        public static List<WorkTaskMembers> GetAllTask()
+        {
+            return WorkTaskMembersDao.GetAllTask();
+        }
+
         public static bool CheckMemberExists(string userId, long memberTypeId, long workTaskId)
         {
             return WorkTaskMembersDao.CheckMemberExists(userId,memberTypeId,workTaskId);
