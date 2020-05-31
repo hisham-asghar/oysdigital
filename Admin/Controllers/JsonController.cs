@@ -258,15 +258,6 @@ namespace Admin.Controllers
                         Time = s
                     }).ToList();
                     ProjectTaskSchedulingBao.Insert(tasks);
-                    //for (int x = 0; x < projectView.Quantity; x++)
-                    //{
-                    //    ProjectTaskScheduling projectTaskScheduling = new ProjectTaskScheduling
-                    //    {
-                    //        ProjectTaskId = projecttaskId,
-                    //        Time = projectView.PlatformSchedulers[x]
-                    //    };
-                    //    ProjectTaskSchedulingBao.Insert(projectTaskScheduling);
-                    //}
                 }
                 else
                 {
