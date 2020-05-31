@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Generics.DataModels.AdminModels;
+﻿using Generics.DataModels.AdminModels;
 using Generics.Services.DatabaseService.AdoNet;
 using LayerDao.DatabaseInfo;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LayerDao
 {
@@ -25,6 +24,11 @@ namespace LayerDao
         public static bool Insert(ProjectTaskScheduling projecttaskscheduling)
         {
             return projecttaskscheduling.Insert(TableConstants.ProjectTaskScheduling) > 0;
+        }
+        public static bool Insert(List<ProjectTaskScheduling> projectTaskSchedulings)
+        {
+            if (projectTaskSchedulings == null || projectTaskSchedulings.Count <= 0) return false;
+            return (projectTaskSchedulings.Insert(TableConstants.ProjectTaskScheduling) ?? new List<int>()).Count(i => i > 0) == projectTaskSchedulings.Count;
         }
         public static bool Update(ProjectTaskScheduling projecttaskscheduling)
         {

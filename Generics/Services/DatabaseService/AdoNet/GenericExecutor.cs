@@ -1,5 +1,6 @@
 ﻿using Generics.DataModels;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Generics.Services.DatabaseService.AdoNet
 {
@@ -12,6 +13,14 @@ namespace Generics.Services.DatabaseService.AdoNet
             var query = GenericQueries.Insert(model, tableName, new List<string>(), schema);
             return QueryExecutor.FirstOrDefault<TemplateClass<int>>(query, query)?.Result ?? 0;
         }
+        public static List<int> Insert<T>(this List<T> list, string tableName, string schema = DefaultSchema)
+        {
+            if (list == null || list.Count <= 0 || string.IsNullOrWhiteSpace(tableName)) return new List<int>();
+            var query = GenericQueries.Insert(list, tableName, new List<string>(), schema);
+            return (QueryExecutor.List<TemplateClass<int>>(query, query) ?? new List<TemplateClass<int>>())
+                .Select(r => r.Result).ToList();
+        }
+
         public static int InsertWithExtraIgnore<T>(this T model, string tableName, List<string> ignoreColumns, string schema = DefaultSchema)
         {
             if (model == null || string.IsNullOrWhiteSpace(tableName)) return 0;

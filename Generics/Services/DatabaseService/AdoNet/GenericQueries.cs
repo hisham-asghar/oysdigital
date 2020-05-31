@@ -37,13 +37,14 @@ namespace Generics.Services.DatabaseService.AdoNet
                 if (!type.IsSimple())
                     continue;
 
-                var ignoreByAttribute = prop.CustomAttributes
-                    .FirstOrDefault(c => c.AttributeType == typeof(DbGenerated) || c.AttributeType == typeof(Ignore)) != null;
+                var ignoreByAttribute = prop.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(Ignore)) != null;
                 if (ignoreByAttribute)
                 {
                     if (columnName.ToLower() == "id") haveIdColumn = false;
-                    continue; 
+                    continue;
                 }
+                var ignoreByDbGeneratedAttribute = prop.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(DbGenerated)) != null;
+                if (ignoreByDbGeneratedAttribute) continue;
 
                 var ignoreByAttributeIfValueNull = prop.CustomAttributes
                     .FirstOrDefault(c => c.AttributeType == typeof(IgnoreIfNull)) != null;
@@ -71,6 +72,80 @@ namespace Generics.Services.DatabaseService.AdoNet
                 $"VALUES ({columnValues})";
             return query;
         }
+
+
+        public static string Insert<T>(List<T> list, string tableName, List<string> ignoreColumns, string schema)
+        {
+            if (list == null || list.Count <= 0) return null;
+            var columns = "";
+            var allRowsColumnValues = new List<string>();
+            var haveIdColumn = false;
+            var isColumnNameListDone = false;
+            foreach (var model in list)
+            {
+                var columnValues = "";
+                foreach (PropertyInfo prop in model.GetType().GetProperties())
+                {
+                    var columnName = prop.Name;
+                    if (columnName.ToLower() == "id") haveIdColumn = true;
+                    if (ignoreColumns != null && ignoreColumns.Count > 0)
+                    {
+                        if (ignoreColumns.FirstOrDefault(c => c != null && c.ToLower() == columnName.ToLower()) != null)
+                            continue;
+                    }
+                    var value = prop.GetValue(model, null)?.ToString();
+
+                    var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+                    if (!type.IsSimple())
+                        continue;
+
+                    var ignoreByAttribute = prop.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(Ignore)) != null;
+                    if (ignoreByAttribute)
+                    {
+                        if (columnName.ToLower() == "id") haveIdColumn = false;
+                        continue;
+                    }
+                    var ignoreByDbGeneratedAttribute = prop.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(DbGenerated)) != null;
+                    if (ignoreByDbGeneratedAttribute) continue;
+
+                    var ignoreByAttributeIfValueNull = prop.CustomAttributes
+                        .FirstOrDefault(c => c.AttributeType == typeof(IgnoreIfNull)) != null;
+                    if (ignoreByAttributeIfValueNull && value == null) continue;
+
+                    if (!isColumnNameListDone) columns += $"[{columnName}], ";
+
+                    if (value == null)
+                        columnValues += $"NULL, ";
+                    else if (type == typeof(string))
+                        columnValues += $"'{value.Replace("'", "''")}', ";
+                    else if (type == typeof(DateTime))
+                        columnValues += $"'{value}', ";
+                    else if (type == typeof(bool))
+                        columnValues += $"{value.ToBoolInt()}, ";
+                    else
+                        columnValues += $"{value.ToLong()}, ";
+
+                }
+                isColumnNameListDone = true;
+                if (columnValues.EndsWith(", "))
+                    columnValues = columnValues[0..^2];
+                allRowsColumnValues.Add($"({columnValues})");
+            }
+
+            if (columns.EndsWith(", "))
+                columns = columns.Substring(0, columns.Length - 2);
+            string allRowsValues;
+            if (allRowsColumnValues.Count == 1)
+                allRowsValues = allRowsColumnValues.FirstOrDefault();
+            else
+                allRowsValues = allRowsColumnValues.Aggregate((c, n) => $"{c},{n}");
+
+            var query = $"INSERT INTO [{schema}].[{tableName}] ({columns}) " +
+                (haveIdColumn ? $"OUTPUT INSERTED.Id AS Result " : "") +
+                $"VALUES {allRowsValues}";
+            return query;
+        }
+
         public static string Update<T>(T model, string tableName, long id, List<string> ignoreColumns, string schema)
         {
             var columnsAndValues = "";

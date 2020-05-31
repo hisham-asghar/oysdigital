@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Generics.DataModels.AdminModels;
+﻿using Generics.DataModels.AdminModels;
 using LayerDao;
+using System.Collections.Generic;
 
 namespace LayerBao
 {
@@ -20,9 +18,13 @@ namespace LayerBao
         {
             return ProjectTaskSchedulingDao.GetByProjectTaskId(id);
         }
-        public static bool Insert(ProjectTaskScheduling projecttaskscheduling)
+        public static bool Insert(ProjectTaskScheduling projectTaskScheduling)
         {
-            return ProjectTaskSchedulingDao.Insert(projecttaskscheduling);
+            return ProjectTaskSchedulingDao.Insert(projectTaskScheduling);
+        }
+        public static bool Insert(List<ProjectTaskScheduling> projectTaskSchedulings)
+        {
+            return ProjectTaskSchedulingDao.Insert(projectTaskSchedulings);
         }
         public static bool Update(ProjectTaskScheduling projecttaskscheduling)
         {

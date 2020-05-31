@@ -114,7 +114,7 @@ async function Rangerswal() {
         }
     }).then((result) => {
         $.ajax({ // ajax call starts
-            url: "https://localhost:44305" + "/Json/ProjectTaskCreate",
+            url: "/Json/ProjectTaskCreate",
             type: 'post',
             data: ProjectView,
             success: function (data) {
@@ -127,7 +127,7 @@ async function Rangerswal() {
 function DeletePlatformTask(id) {
     $.ajax({
         type: 'GET',
-        url: "https://localhost:44305" + "/Json/DeletePlatformTask/"+id,
+        url: "/Json/DeletePlatformTask/"+id,
         dataType: 'json',
         success: function (data) {
             ShowResult(data);
@@ -144,13 +144,13 @@ function ShowResult(data) {
             timer: 1500
         })
         location.reload(true);
-    } if (d == false) {
+    } if (data == false) {
         Swal.fire(
             'Error',
             'Error while adding data.',
             'error'
         );
-    } if (d == null) {
+    } if (data == null) {
         Swal.fire(
             'Not Found',
             'Data not found.',
