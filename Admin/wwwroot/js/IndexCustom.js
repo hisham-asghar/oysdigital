@@ -1,4 +1,4 @@
-var host ="https://localhost:44305"
+var host =""
 function GenerateNextTask() {
     $.ajax({
         url: host + "/Json/GenerateTomorrowTask",

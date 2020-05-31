@@ -35,7 +35,7 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
                     data.Add(new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"));
                     data.Add(new LeftSidebarDto("Platforms", "/Platform", "delicious"));
                     data.Add(new LeftSidebarDto("Labels", "/LabelType", "label"));
-                    data.Add(new LeftSidebarDto("Users", "/User", "accounts"));
+                    data.Add(new LeftSidebarDto("Users", "/Users", "accounts"));
 
                 }
                 else if (user.NormalizedRoles.Contains(UserRoles.Designer.ToUpper()) || user.NormalizedRoles.Contains(UserRoles.Scheduler.ToUpper()))
