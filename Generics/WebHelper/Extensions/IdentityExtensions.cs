@@ -1,11 +1,7 @@
 ﻿using Generics.Common;
-using Generics.Data;
-using Generics.DataModels.AdminModels;
-using Microsoft.AspNetCore.Identity;
+using Generics.DataModels.Constants;
 using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 
 namespace Generics.WebHelper.Extensions
 {
@@ -18,7 +14,7 @@ namespace Generics.WebHelper.Extensions
 
             return principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
-                
+
         public static int GetCustomerId(this ClaimsPrincipal principal)
         {
             if (principal == null)
@@ -34,6 +30,30 @@ namespace Generics.WebHelper.Extensions
 
             return principal.FindFirst(u => u.Type == "Name")?.Value;
         }
+        public static bool HaveAnyRole(this ClaimsPrincipal principal)
+        {
+            if (principal == null) return false;
+
+            return principal.IsInRole(UserRoles.Admin) || principal.IsInRole(UserRoles.Hr) || principal.IsInRole(UserRoles.Designer) || principal.IsInRole(UserRoles.Scheduler);
+        }
+        public static bool IsDesigner(this ClaimsPrincipal principal)
+        {
+            if (principal == null) return false;
+
+            return principal.IsInRole(UserRoles.Designer);
+        }
+        public static bool IsScheduler(this ClaimsPrincipal principal)
+        {
+            if (principal == null) return false;
+
+            return principal.IsInRole(UserRoles.Scheduler);
+        }
+        public static bool IsAdminOrHr(this ClaimsPrincipal principal)
+        {
+            if (principal == null) return false;
+
+            return principal.IsInRole(UserRoles.Admin) || principal.IsInRole(UserRoles.Hr);
+        }
     }
-    
+
 }

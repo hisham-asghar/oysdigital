@@ -29,12 +29,8 @@ namespace Admin.Controllers
 
             var myId = User.GetUserId();
             var roles = AspNetUserRolesBao.GetByUserId(myId);
-            if (roles == null || roles.Roles == null || roles.Roles.Count == 0)
-            {
-                return View("RoleRequestView");
-            }
 
-            //var userProjectMember = ProjectMembersBao.GetByUserId(myId);
+            if (!User.HaveAnyRole()) return View("RoleRequestView");
 
             var statsModel = TaskHelper.GetUserStats(myId);
 
@@ -53,18 +49,16 @@ namespace Admin.Controllers
 
             var tuple = new Tuple<List<WorkTask>, StatsModel>(workTask, statsModel);
             ViewBag.Member = user ?? null;
-            if (User.IsInRole(UserRoles.Designer))
-            {
+
+            if (User.IsDesigner())
                 return View("DesignerView", tuple);
-            }
-            if (User.IsInRole(UserRoles.Scheduler))
-            {
+
+            if (User.IsScheduler())
                 return View("SchedulerView", tuple);
-            }
-            else if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
-            {
+
+            else if (User.IsAdminOrHr())
                 return View("AdminView", tuple);
-            }
+
             return View("RoleRequestView");
         }
         public IActionResult Privacy()
