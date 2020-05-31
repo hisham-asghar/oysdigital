@@ -1,10 +1,7 @@
-﻿using System;
+﻿using Generics.DataModels.AdminModels;
+using LayerDao;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Generics.Data;
-using Generics.DataModels.AdminModels;
-using LayerDao;
 
 namespace LayerBao
 {
@@ -12,17 +9,21 @@ namespace LayerBao
     {
         public static List<AspNetUserRoles> GetAll()
         {
-            var data= AspNetUserRolesDao.GetAll();
-            
+            var data = AspNetUserRolesDao.GetAll();
+
             if (data.Count > 0)
             {
-                foreach(var item in data)
+                var grouped = data.GroupBy(g => g.Id).ToDictionary(k => k.Key, v => v.ToList());
+                var list = new List<AspNetUserRoles>();
+                foreach (var item in grouped)
                 {
-                    var list = new List<AspNetUserRoles>();
-                    list.AddRange(AspNetUserRolesDao.GetByUserId(item.UserId));
-                    item.Roles = list.Select(s=>s.RoleName).ToList();
+                    var user = item.Value.FirstOrDefault();
+                    user.UserId = user.Id;
+                    user.Roles = item.Value.Select(u => u.RoleName).ToList();
+                    user.NormalizedRoles = item.Value.Select(u => u.RoleName.ToUpper()).ToList();
+                    list.Add(user);
                 }
-                
+                return list;
             }
             return data;
         }
@@ -31,16 +32,23 @@ namespace LayerBao
             var data = AspNetUserRolesDao.GetByUserId(id);
             if (data.Count > 0)
             {
-                foreach (var item in data)
+                var grouped = data.GroupBy(g => g.Id).ToDictionary(k => k.Key, v => v.ToList());
+                var list = new List<AspNetUserRoles>();
+                foreach (var item in grouped)
                 {
-                    var list = new List<AspNetUserRoles>();
-                    list.AddRange(AspNetUserRolesDao.GetByUserId(item.UserId));
-                    item.Roles = list.Select(s => s.RoleName).ToList();
-                    break;
+                    var user = item.Value.FirstOrDefault();
+                    user.UserId = user.Id;
+                    user.Roles = item.Value.Select(u => u.RoleName).ToList();
+                    user.NormalizedRoles = item.Value.Select(u => u.RoleName.ToUpper()).ToList();
+                    list.Add(user);
                 }
-
             }
             return data.FirstOrDefault();
+        }
+        public static List<string> GetRoleIdsByUserId(string id)
+        {
+            var data = AspNetUserRolesDao.GetByUserId(id) ?? new List<AspNetUserRoles>();
+            return data.Select(d => d.RoleId).ToList();
         }
         public static bool Insert(AspNetUserRoles aspNetUserRoles)
         {
@@ -54,9 +62,9 @@ namespace LayerBao
         {
             return AspNetUserRolesDao.Delete(id);
         }
-        public static AspNetUserRoles IsExist(string userId,string roleId)
+        public static AspNetUserRoles IsExist(string userId, string roleId)
         {
-            return AspNetUserRolesDao.IsExist(userId,roleId);
+            return AspNetUserRolesDao.IsExist(userId, roleId);
         }
     }
 }

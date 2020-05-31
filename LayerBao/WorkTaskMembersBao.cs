@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Generics.DataModels.AdminModels;
+﻿using Generics.DataModels.AdminModels;
 using LayerDao;
+using System.Collections.Generic;
 
 namespace LayerBao
 {
@@ -16,9 +14,13 @@ namespace LayerBao
         {
             return WorkTaskMembersDao.GetById(id);
         }
-        public static List<WorkTaskMembers> GetByUserId(string id,long memberTypeId)
+        public static List<WorkTaskMembers> GetByUserId(string id, long memberTypeId)
         {
             return WorkTaskMembersDao.GetByUserId(id, memberTypeId);
+        }
+        public static List<UserTask> GetUserTasks(string id)
+        {
+            return WorkTaskMembersDao.GetUserTasks(id);
         }
         public static List<WorkTaskMembers> GetByUserId(string id)
         {
@@ -32,7 +34,7 @@ namespace LayerBao
 
         public static bool CheckMemberExists(string userId, long memberTypeId, long workTaskId)
         {
-            return WorkTaskMembersDao.CheckMemberExists(userId,memberTypeId,workTaskId);
+            return WorkTaskMembersDao.CheckMemberExists(userId, memberTypeId, workTaskId);
         }
         public static bool Insert(WorkTaskMembers workTaskMembers)
         {

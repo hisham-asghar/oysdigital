@@ -1,0 +1,45 @@
+﻿@model IEnumerable<KeyValuePair<Generics.Data.ApplicationUser, List<string>>>
+@{
+    ViewData["Title"] = "User";
+    Layout = "_TableLayout";
+    ViewBag.AddNewLink = "/User/Create";
+}
+
+<table class="table table-bordered table-striped table-hover dataTable js-exportable">
+    @CHtmlHelper.TableHead("th", "Name", "Email", "Roles", "Actions")
+    @CHtmlHelper.TableFoot("th", "Name", "Email", "Roles", "Actions")
+    <tbody>
+        @foreach (var pair in Model)
+        {
+
+            var item = pair.Key;
+            var roles = pair.Value;
+
+            <tr>
+                <td> @item.UserName</td>
+                <td> @item.Email</td>
+                <td>
+                    @if (roles != null)
+                    {
+                        @foreach (var data in roles)
+                        {
+                            <span>@data, </span>
+                        }
+                    }
+                </td>
+                <td>
+                    @ButtonHelper.EditSmall("/Users/Edit/" + item.Id)
+                    @if (!item.LockoutEnabled)
+                    {
+                        ButtonHelper.PlainSuccessSmall("Deactivate", "/Users/UpdateUserStatus/" + item.Id + "?status=False");
+                    }
+                    else
+                    {
+                        ButtonHelper.PlainDeleteSmall("Activate", "/Users/UpdateUserStatus/" + item.Id + "?status=True");
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

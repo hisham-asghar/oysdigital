@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Generics.Services.DatabaseService.AdoNet
 {
@@ -18,7 +17,7 @@ namespace Generics.Services.DatabaseService.AdoNet
             $"SELECT * FROM [{schema}].[{tableName}]";
         public static string Select(string tableName, string schema) =>
             $"SELECT TOP 1 * FROM [{schema}].[{tableName}]";
-        public static string Insert<T>(T model, string tableName, string schema)
+        public static string Insert<T>(T model, string tableName, List<string> ignoreColumns, string schema)
         {
             var columns = "";
             var columnValues = "";
@@ -27,7 +26,11 @@ namespace Generics.Services.DatabaseService.AdoNet
             {
                 var columnName = prop.Name;
                 if (columnName.ToLower() == "id") haveIdColumn = true;
-
+                if (ignoreColumns != null && ignoreColumns.Count > 0)
+                {
+                    if (ignoreColumns.FirstOrDefault(c => c != null && c.ToLower() == columnName.ToLower()) != null)
+                        continue;
+                }
                 var value = prop.GetValue(model, null)?.ToString();
 
                 var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
@@ -36,17 +39,21 @@ namespace Generics.Services.DatabaseService.AdoNet
 
                 var ignoreByAttribute = prop.CustomAttributes
                     .FirstOrDefault(c => c.AttributeType == typeof(DbGenerated) || c.AttributeType == typeof(Ignore)) != null;
-                if (ignoreByAttribute) continue;
+                if (ignoreByAttribute)
+                {
+                    if (columnName.ToLower() == "id") haveIdColumn = false;
+                    continue; 
+                }
 
                 var ignoreByAttributeIfValueNull = prop.CustomAttributes
                     .FirstOrDefault(c => c.AttributeType == typeof(IgnoreIfNull)) != null;
                 if (ignoreByAttributeIfValueNull && value == null) continue;
 
                 columns += $"[{columnName}], ";
-                if(value == null)
+                if (value == null)
                     columnValues += $"NULL, ";
                 else if (type == typeof(string))
-                    columnValues += $"'{value.Replace("'","''")}', ";
+                    columnValues += $"'{value.Replace("'", "''")}', ";
                 else if (type == typeof(DateTime))
                     columnValues += $"'{value}', ";
                 else if (type == typeof(bool))
@@ -64,7 +71,7 @@ namespace Generics.Services.DatabaseService.AdoNet
                 $"VALUES ({columnValues})";
             return query;
         }
-        public static string Update<T>(T model, string tableName, long id, string schema)
+        public static string Update<T>(T model, string tableName, long id, List<string> ignoreColumns, string schema)
         {
             var columnsAndValues = "";
             var haveIdColumn = false;
@@ -74,6 +81,11 @@ namespace Generics.Services.DatabaseService.AdoNet
 
                 if (columnName.ToLower() == "id") haveIdColumn = true;
 
+                if (ignoreColumns != null && ignoreColumns.Count > 0)
+                {
+                    if (ignoreColumns.FirstOrDefault(c => c != null && c.ToLower() == columnName.ToLower()) != null)
+                        continue;
+                }
                 var value = prop.GetValue(model, null)?.ToString();
 
                 var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
@@ -109,7 +121,7 @@ namespace Generics.Services.DatabaseService.AdoNet
                 $"WHERE Id = {id}";
             return query;
         }
-        public static string Update<T>(T model, string tableName, string id, string schema)
+        public static string Update<T>(T model, string tableName, string id, List<string> ignoreColumns, string schema)
         {
             var columnsAndValues = "";
             var haveIdColumn = false;
@@ -119,6 +131,11 @@ namespace Generics.Services.DatabaseService.AdoNet
 
                 if (columnName.ToLower() == "id") haveIdColumn = true;
 
+                if (ignoreColumns != null && ignoreColumns.Count > 0)
+                {
+                    if (ignoreColumns.FirstOrDefault(c => c != null && c.ToLower() == columnName.ToLower()) != null)
+                        continue;
+                }
                 var value = prop.GetValue(model, null)?.ToString();
 
                 var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;

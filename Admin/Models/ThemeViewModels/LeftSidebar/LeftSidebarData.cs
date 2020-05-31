@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Generics.DataModels.Constants;
-using Generics.WebHelper.Extensions;
+﻿using Generics.DataModels.Constants;
 using LayerBao;
+using System.Collections.Generic;
 
 namespace Admin.Models.ThemeViewModels.LeftSidebar
 {
@@ -13,16 +8,15 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
     {
         public static List<LeftSidebarDto> GetData()
         {
-            
-            var  data = new List<LeftSidebarDto>
+
+            var data = new List<LeftSidebarDto>
             {
                 new LeftSidebarDto("Dashboard", "/", "home"),
                 new LeftSidebarDto("Customers", "/Customer", "accounts"),
                 new LeftSidebarDto("Projects", "/Project", "assignment"),
                 new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"),
                 new LeftSidebarDto("Platforms", "/Platform", "delicious"),
-                new LeftSidebarDto("Roles", "/AspNetRoles", "delicious"),
-                new LeftSidebarDto("Assign Roles", "/AspNetUserRoles", "delicious")
+                new LeftSidebarDto("Users", "/Users", "persons"),
             };
             return data;
         }
@@ -31,43 +25,35 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
         {
             var user = AspNetUserRolesBao.GetByUserId(userId);
             var data = new List<LeftSidebarDto>();
-            if (user!=null)
+            if (user != null)
             {
-                foreach (var item in user.Roles)
+                if (user.NormalizedRoles.Contains(UserRoles.Admin.ToUpper()) || user.NormalizedRoles.Contains(UserRoles.Hr.ToUpper()))
                 {
-                    if (item == UserRoles.Admin.ToUpper() || item == UserRoles.Hr.ToUpper())
-                    {
-                            data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
-                            data.Add(new LeftSidebarDto("Customers", "/Customer", "accounts"));
-                            data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
-                            data.Add(new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"));
-                            data.Add(new LeftSidebarDto("Platforms", "/Platform", "delicious"));
-                            data.Add(new LeftSidebarDto("Roles", "/Roles", "delicious"));
-                            data.Add(new LeftSidebarDto("Assign Roles", "/UserRoles", "delicious"));
-                            data.Add(new LeftSidebarDto("Users", "/User", "user"));
+                    data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
+                    data.Add(new LeftSidebarDto("Customers", "/Customer", "accounts"));
+                    data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
+                    data.Add(new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"));
+                    data.Add(new LeftSidebarDto("Platforms", "/Platform", "delicious"));
+                    data.Add(new LeftSidebarDto("Labels", "/LabelType", "label"));
+                    data.Add(new LeftSidebarDto("Users", "/User", "accounts"));
 
-                    }
-                    if (item == UserRoles.Designer.ToUpper() || item == UserRoles.Scheduler.ToUpper())
-                    {
-                        data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
-                        data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
-                    }
+                }
+                else if (user.NormalizedRoles.Contains(UserRoles.Designer.ToUpper()) || user.NormalizedRoles.Contains(UserRoles.Scheduler.ToUpper()))
+                {
+                    data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
+                    data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
                 }
 
             }
             var list = new List<LeftSidebarDto>();
-            foreach(var item in data)
+            foreach (var item in data)
             {
-                if (list.Contains(item))
-                {
-                    
-                }
-                else
+                if (!list.Contains(item))
                 {
                     list.Add(item);
                 }
             }
             return list;
         }
-     }
+    }
 }

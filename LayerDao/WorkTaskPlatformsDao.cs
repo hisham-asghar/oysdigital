@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Generics.DataModels.AdminModels;
+﻿using Generics.DataModels.AdminModels;
 using Generics.Services.DatabaseService.AdoNet;
 using LayerDao.DatabaseInfo;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LayerDao
 {
@@ -24,8 +23,17 @@ namespace LayerDao
             var query = $"select WorkTaskPlatforms.*,Platform.Name as PlatformName,Platform.IconClass as PlatformIcon from WorkTaskPlatforms join Platform on Platform.Id=WorkTaskPlatforms.PlatformId where WorkTaskId={id};";
             return QueryExecutor.List<WorkTaskPlatforms>(query);
         }
+        public static List<WorkTaskPlatforms> GetByProjectIds(List<long> ids)
+        {
+            if (ids == null || ids.Count == 0) return new List<WorkTaskPlatforms>();
+            string idStr;
+            if (ids.Count == 1)
+                idStr = ids.FirstOrDefault() + "";
+            else idStr = ids.Select(id => id + "").Aggregate((c, n) => $"{c},{n}");
+            return ViewConstants.WORK_TASK_PLATFORM_VIEW.SelectList<WorkTaskPlatforms>($" WorkTaskId IN (SELECT Id FROM dbo.WorkTask WHERE ProjectId IN ({idStr})) ");
+        }
 
-        public static bool CheckWorkTaskPlatformExist(long workTaskId,long platformId)
+        public static bool CheckWorkTaskPlatformExist(long workTaskId, long platformId)
         {
             var query = $"select WorkTaskPlatforms.*,Platform.Name as PlatformName,Platform.IconClass as PlatformIcon from WorkTaskPlatforms join Platform on Platform.Id=WorkTaskPlatforms.PlatformId where WorkTaskPlatforms.WorkTaskId={workTaskId} AND PlatformId={platformId};";
             return QueryExecutor.FirstOrDefault<WorkTaskPlatforms>(query) == null ? false : true;

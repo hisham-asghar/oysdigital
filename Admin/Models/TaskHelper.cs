@@ -1,29 +1,65 @@
-﻿using System;
+﻿using Generics.Common;
+using Generics.DataModels.AdminModels;
+using Generics.DataModels.Enums;
+using LayerBao;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Generics.DataModels.AdminModels;
-using LayerBao;
-using Generics.WebHelper.Extensions;
-using Microsoft.AspNetCore.Razor.Language;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Admin.Models
 {
     public static class TaskHelper
     {
-        public static List<WorkTaskMembers> GetTaskCount(string userId,long memberTypeId)
+        public static List<UserTask> GetUserTasks(string userId)
         {
-            if(userId!=null && memberTypeId > 0)
-            {
-               return WorkTaskMembersBao.GetByUserId(userId,memberTypeId);
-            }
-            return new List<WorkTaskMembers>();
+            if (userId == null) return new List<UserTask>();
+
+            return WorkTaskMembersBao.GetUserTasks(userId);
+        }
+        public static StatsModel GetUserStats(string userId)
+        {
+            var data = GetUserTasks(userId);
+            if (data == null) return null;
+
+            var today = DateTime.Now;
+            var statsModel = new StatsModel();
+            statsModel.OverallTotal = data.Count();
+            statsModel.OverallDone = data.Count(d => d.IsDone());
+            statsModel.OverallDonePercent = statsModel.OverallTotal == 0 ? 0 : ((int)((statsModel.OverallDone * 100 * 100) / statsModel.OverallTotal)) / 100.0;
+            statsModel.OverallPending = statsModel.OverallTotal - statsModel.OverallDone;
+
+
+            var currentMonthData = data.Where(d => d.OnCreated.Month == today.Month && d.OnCreated.Year == today.Year);
+            statsModel.CurrentMonthTotal = currentMonthData.Count();
+            statsModel.CurrentMonthDone = currentMonthData.Count(d => d.IsDone());
+            statsModel.CurrentMonthDonePercent = statsModel.CurrentMonthTotal == 0 ? 0 : ((int)((statsModel.CurrentMonthDone * 100 * 100) / statsModel.CurrentMonthTotal)) / 100.0;
+            statsModel.CurrentMonthPending = statsModel.CurrentMonthTotal - statsModel.CurrentMonthDone;
+
+            var currentWeekData = data.Where(d => d.OnCreated.DateInsideOneWeek(today));
+            statsModel.CurrentWeekTotal = currentWeekData.Count();
+            statsModel.CurrentWeekDone = currentWeekData.Count(d => d.IsDone());
+            statsModel.CurrentWeekDonePercent = statsModel.CurrentWeekTotal == 0 ? 0 : ((int)((statsModel.CurrentWeekDone * 100 * 100) / statsModel.CurrentWeekTotal)) / 100.0;
+            statsModel.CurrentWeekPending = statsModel.CurrentWeekTotal - statsModel.CurrentWeekDone;
+
+            var todayData = data.Where(d => d.OnCreated.Date == today.Date);
+            statsModel.TodayTotal = todayData.Count();
+            statsModel.TodayDone = todayData.Count(d => d.IsDone());
+            statsModel.TodayDonePercent = statsModel.TodayTotal == 0 ? 0 : ((int)((statsModel.TodayDone * 100 * 100) / statsModel.TodayTotal)) / 100.0;
+            statsModel.TodayPending = statsModel.TodayTotal - statsModel.TodayDone;
+
+
+            var tomorrowData = data.Where(d => d.OnCreated.Date == today.Date.AddDays(1));
+            statsModel.TomorrowTotal = tomorrowData.Count();
+            statsModel.TomorrowDone = tomorrowData.Count(d => d.IsDone());
+            statsModel.TomorrowDonePercent = statsModel.TomorrowTotal == 0 ? 0 : ((int)((statsModel.TomorrowDone * 100 * 100) / statsModel.TomorrowTotal)) / 100.0;
+            statsModel.TomorrowPending = statsModel.TomorrowTotal - statsModel.TomorrowDone;
+
+            return statsModel;
         }
         public static List<WorkTaskMembers> GetAllTask()
         {
-           return WorkTaskMembersBao.GetAllTask();
-           }
+            return WorkTaskMembersBao.GetAllTask();
+        }
         public static List<WorkTaskMembers> GetTaskCount(string userId)
         {
             if (userId != null)
@@ -39,7 +75,7 @@ namespace Admin.Models
                 var projectTaskList = new List<ProjectTask>();
                 foreach (var id in item)
                 {
-                    
+
                     var projectTask = ProjectTaskBao.GetByProjectId(id);
                     if (projectTask != null)
                     {
@@ -63,32 +99,82 @@ namespace Admin.Models
         }
         public static List<WorkTask> GetWorkTask(List<long> item)
         {
-            if (item.Count > 0)
-            {
-                var workTaskList = new List<WorkTask>();
-                foreach (var id in item)
-                {
+            if (item.Count <= 0)
+                return new List<WorkTask>();
 
-                    var projectTask = WorkTaskBao.GetByProjectId(id);
-                    if (projectTask != null)
+            var workTaskList = new List<WorkTask>();
+            foreach (var id in item)
+            {
+                var projectTask = WorkTaskBao.GetByProjectId(id);
+                if (projectTask != null)
+                {
+                    foreach (var task in projectTask)
                     {
-                        foreach (var task in projectTask)
-                        {
-                            var List = new List<WorkTask>();
-                            List.Add(WorkTaskBao.GetById(task.Id));
-                            if (List != null)
+                        var list = new List<WorkTask>
                             {
-                                workTaskList.AddRange(List);
-                            }
-                        }
+                                WorkTaskBao.GetById(task.Id)
+                            };
+                        workTaskList.AddRange(list);
                     }
                 }
-                return workTaskList;
             }
-            else
-            {
+            return workTaskList;
+        }
+        public static List<WorkTask> GetWorkTasksByProjectIds(List<long> item, string userId)
+        {
+            if (item.Count <= 0)
                 return new List<WorkTask>();
+
+            return WorkTaskBao.GetByProjectIds(item, userId);
+        }
+
+        public static List<WorkTask> GetWorkTask(List<long> item, string userId, TaskTimeFilter time, TaskStatusFilter status)
+        {
+            var workTasks = GetWorkTasksByProjectIds(item, userId);
+            var today = DateTime.Now;
+            switch (time)
+            {
+                case TaskTimeFilter.Today:
+                    {
+                        workTasks = workTasks.Where(w => w.OnCreated.Date == today.Date).ToList();
+                        break;
+                    }
+
+                case TaskTimeFilter.Tomorrow:
+                    {
+                        workTasks = workTasks.Where(w => w.OnCreated.Date == today.Date.AddDays(1)).ToList();
+                        break;
+                    }
+
+                case TaskTimeFilter.CurrentWeek:
+                    {
+                        workTasks = workTasks.Where(w => w.OnCreated.DateInsideOneWeek(today)).ToList();
+                        break;
+                    }
+                case TaskTimeFilter.CurrentMonth:
+                    {
+                        workTasks = workTasks.Where(w => w.OnCreated.Month == today.Month && w.OnCreated.Year == today.Year).ToList();
+                        break;
+                    }
             }
+
+            switch (status)
+            {
+                case TaskStatusFilter.Done:
+                    {
+                        workTasks = workTasks.Where(w => w.IsDone()).ToList();
+                        break;
+                    }
+
+                case TaskStatusFilter.Pending:
+                    {
+                        workTasks = workTasks.Where(w => w.IsPending()).ToList();
+                        break;
+                    }
+            }
+
+
+            return workTasks;
         }
         public static bool WorkTaskStatus(List<ProjectTask> projectTask, DateTime date)
         {
@@ -124,7 +210,7 @@ namespace Admin.Models
             }
             return false;
         }
-        public static bool WorkTaskToGenerate(List<ProjectTask> projectTask,DateTime date,string userId)
+        public static bool WorkTaskToGenerate(List<ProjectTask> projectTask, DateTime date, string userId)
         {
             if (projectTask.Count > 0)
             {
@@ -178,28 +264,28 @@ namespace Admin.Models
             }
             return true;
         }
-        public static bool WorkTaskMembersCreate(WorkTask workTask ,string userId)
+        public static bool WorkTaskMembersCreate(WorkTask workTask, string userId)
         {
-            if(workTask != null)
+            if (workTask != null)
             {
-               var data = ProjectMembersBao.GetByProjectId(workTask.ProjectId);
-                    if (data != null)
+                var data = ProjectMembersBao.GetByProjectId(workTask.ProjectId);
+                if (data != null)
+                {
+                    foreach (var member in data)
                     {
-                        foreach(var member in data)
+                        if (!WorkTaskMembersBao.CheckMemberExists(member.AspNetUserId, member.ProjectMemberTypeId, workTask.Id))
                         {
-                            if (!WorkTaskMembersBao.CheckMemberExists(member.AspNetUserId, member.ProjectMemberTypeId, workTask.Id))
-                            {
-                                var workTaskMembers = new WorkTaskMembers();
-                                workTaskMembers.AspNetUserId = member.AspNetUserId;
-                                workTaskMembers.MemberTypeId = member.ProjectMemberTypeId;
-                                workTaskMembers.IsActive = true;
-                                workTaskMembers.WorkTaskId = workTask.Id;
-                                workTaskMembers.SetOnCreate(userId);
-                                WorkTaskMembersBao.Insert(workTaskMembers);
-                            }
+                            var workTaskMembers = new WorkTaskMembers();
+                            workTaskMembers.AspNetUserId = member.AspNetUserId;
+                            workTaskMembers.MemberTypeId = member.ProjectMemberTypeId;
+                            workTaskMembers.IsActive = true;
+                            workTaskMembers.WorkTaskId = workTask.Id;
+                            workTaskMembers.SetOnCreate(userId);
+                            WorkTaskMembersBao.Insert(workTaskMembers);
                         }
                     }
-               
+                }
+
             }
             return false;
         }

@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using Generics.Common;
+﻿using Generics.Common;
 using Generics.DataModels.AdminModels;
 using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Admin.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class ProjectController : Controller
     {
-        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr+","+ UserRoles.Designer + "," + UserRoles.Scheduler)]
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr + "," + UserRoles.Designer + "," + UserRoles.Scheduler)]
+
         public IActionResult Index()
         {
             var projects = new List<Project>();
@@ -22,7 +24,7 @@ namespace Admin.Controllers
                 var usermember = ProjectMembersBao.GetByUserId(User.GetUserId());
                 if (usermember != null)
                 {
-                   var data= ProjectBao.GetByMemberTypeId(usermember.ProjectMemberTypeId)??new List<Project>();
+                    var data = ProjectBao.GetByMemberTypeId(usermember.ProjectMemberTypeId) ?? new List<Project>();
                     return View(data);
                 }
                 return View(projects);
@@ -37,7 +39,6 @@ namespace Admin.Controllers
                 return View(projects);
             }
         }
-        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
         [Route("/Project/Create")]
         [Route("/Project/Edit/{id}")]
         [HttpGet]
@@ -61,9 +62,9 @@ namespace Admin.Controllers
                     dictionary.Add((int)customer.Id, customer.Name);
                     ViewBag.CustomerDictionary = dictionary;
                 }
-               
+
             }
-            ViewBag.MobileSpaceDictionary = MobileSpacesBao.GetAll().CreateDictionaryFromModelList();
+            ViewBag.MobileSpaceDictionary = MobileSpacesBao.GetAll().CreateDictionaryFromModelList("Id", "DetailedName");
             ViewBag.IsEdit = id > 0;
             return View(project);
         }
@@ -133,16 +134,18 @@ namespace Admin.Controllers
         public IActionResult Detail(long id)
         {
             Project project = ProjectBao.GetById(id);
-            
+
             if (id > 0 && project == null)
             {
-                // Dont Exist
+                return RedirectToAction("Error", "Home");
             }
             else
             {
-            //   ViewBag.PlatformDictionary = Functions.CreateDictionaryFromModelList(PlatformBao.GetAll());
-              //  ViewBag.ProjectDictionary = Functions.CreateDictionaryFromModel(project);
+                //   ViewBag.PlatformDictionary = Functions.CreateDictionaryFromModelList(PlatformBao.GetAll());
+                //  ViewBag.ProjectDictionary = Functions.CreateDictionaryFromModel(project);
             }
+            project.ProjectNotes = (project.ProjectNotes ?? new List<ProjectNotes>()).OrderByDescending(u => u.OnCreated).ToList();
+            project.ProjectAlertMessages = (project.ProjectAlertMessages ?? new List<ProjectAlertMessage>()).OrderByDescending(u => u.OnCreated).ToList();
             return View(project);
         }
     }

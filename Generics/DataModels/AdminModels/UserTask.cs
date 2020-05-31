@@ -1,25 +1,18 @@
 ﻿using Generics.Common.Attributes;
 using System;
-using System.Collections.Generic;
 
 namespace Generics.DataModels.AdminModels
 {
-    public class WorkTask : BaseEntity
+    public class UserTask
     {
-        public long ProjectId { get; set; }
-        [Ignore]
-        public string ProjectName { get; set; }
-        public DateTime ProjectSchedulingTime { get; set; }
+        public int WorkTaskId { get; set; }
         public bool IsCompleted { get; set; }
         public bool IsDesigned { get; set; }
         public bool IsScheduled { get; set; }
-        public DateTime OnReported { get; set; }
-        public bool IsReported { get; set; }
-        public string ReportedBy { get; set; }
-        public List<WorkTaskPlatforms> WorkTaskPlatforms { get; set; }
-        [Ignore]
+        public int ProjectMemberTypeId { get; set; }
         public string MemberType { get; set; }
-
+        public string AspNetUserId { get; set; }
+        public DateTime OnCreated { get; set; }
         [Ignore]
         public bool IsDone()
         {

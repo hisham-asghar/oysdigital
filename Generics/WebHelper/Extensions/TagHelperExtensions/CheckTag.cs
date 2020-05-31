@@ -1,12 +1,6 @@
-﻿using Generics.DataModels;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.OpenApi.Extensions;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Generics.WebHelper.Extensions
 {
@@ -19,16 +13,16 @@ namespace Generics.WebHelper.Extensions
         TextArea = 5,
         DropdownList = 6,
         File = 7,
-        Select=8,
-        Password=9,
-        Email=10,
+        Select = 8,
+        Password = 9,
+        Email = 10,
 
     };
     public enum HtmlButtonType
     {
 
-         SUBMIT = 1,
-         BUTTON = 2
+        SUBMIT = 1,
+        BUTTON = 2
     };
 
     public static class CHtmlHelper
@@ -63,7 +57,7 @@ namespace Generics.WebHelper.Extensions
         }
 
 
-     
+
         const string TrueStatus = "<div class='icon-container text-center'><span class='ti-check text-info font-bold'></span></div>";
         const string FalseStatus = "<div class='icon-container text-center'><span class='ti-close text-danger font-bold'></span></div>";
 
@@ -79,17 +73,17 @@ namespace Generics.WebHelper.Extensions
             return new HtmlString(html);
         }
 
-        public static IHtmlContent GenerateButton(string name,HtmlButtonType htmlButtonType)
+        public static IHtmlContent GenerateButton(string name, HtmlButtonType htmlButtonType)
         {
             var str = $"<button class='btn btn-raised btn-primary waves-effect' type='{ParseButtonTypes(htmlButtonType)}'>{name}</button>";
             return new HtmlString(str);
         }
-        public static IHtmlContent GenerateDataTime(string name,string value,string mappingName)
+        public static IHtmlContent GenerateDataTime(string name, string value, string mappingName)
         {
             var str = $"<div class='form-group form-float'><label>{name}</label><div class='input-group'><div class='input-group-prepend'><span class='input-group-text'><i class='zmdi zmdi-time'></i></span></div><input type='text' class='form-control timepicker' name='{mappingName}' value='{value}' placeholder='Please choose a time...'></div></div>";
             return new HtmlString(str);
         }
-        public static IHtmlContent GenerateHeader(string heading,string link,string linkText)
+        public static IHtmlContent GenerateHeader(string heading, string link, string linkText)
         {
             var str = $"<div class='block-header'> " +
                 $"<div class='row'> " +
@@ -107,7 +101,7 @@ namespace Generics.WebHelper.Extensions
         }
         public static IHtmlContent CheckTag(this bool status)
             => new HtmlString(status ? TrueStatus : FalseStatus);
-        
+
         public static IHtmlContent GenerateTableHeader(params string[] items)
         {
             var tr = Tr(items);
@@ -158,16 +152,16 @@ namespace Generics.WebHelper.Extensions
             var end = ("</thead>");
             return new HtmlString(start + Tr(items) + end);
         }
-        public static IHtmlContent Dl(Dictionary<string,object> dic)
+        public static IHtmlContent Dl(Dictionary<string, object> dic)
         {
             var dls = "";
             if (dic != null && dic.Count > 0)
             {
-                foreach(var item in dic)
+                foreach (var item in dic)
                 {
-                    if (item.Value.ToString()!="" && item.Value.ToString() != "0")
-                    dls += $"<dt>{item.Key}</dt>" + $"<dd>{item.Value}</dd>";
-                   
+                    if (item.Value.ToString() != "" && item.Value.ToString() != "0")
+                        dls += $"<dt>{item.Key}</dt>" + $"<dd>{item.Value}</dd>";
+
                 }
             }
             var dl = $"<dl>{dls}</dl>";
@@ -180,11 +174,11 @@ namespace Generics.WebHelper.Extensions
             return new HtmlString(start + Tr(items) + end);
         }
 
-        public static IHtmlContent GetCardHeader(int col,string heading)
+        public static IHtmlContent GetCardHeader(int col, string heading)
         {
             var card = $"<div class='row clearfix'> <div class='col-lg-{col} col-md-{col} col-sm-{col}'> <div class='card'>" +
                 $" <div class='header'> <h2><strong> {heading} </strong></h2> </div><div class='body'>";
-            return  new  HtmlString(card);
+            return new HtmlString(card);
         }
         public static IHtmlContent GetCardFooter()
         {
@@ -196,7 +190,7 @@ namespace Generics.WebHelper.Extensions
 
             var required = isRequired ? "required" : "";
             var options = "";
-            foreach(var pair in pairs)
+            foreach (var pair in pairs)
             {
                 var selected = pair.Key == value ? "selected=''" : "";
                 options += $"<option {selected} value='{pair.Key}'>{pair.Value}</option>";
@@ -226,7 +220,8 @@ namespace Generics.WebHelper.Extensions
             {
                 str = $"<div class='form-group'> <div class='checkbox'> <input id='{id}' {(value == "True" ? "checked=''" : "")} type='{htmlInputTypeValue}' name='{mappingName}' {value}> " +
                     $"<label for='{id}' name='{mappingName}'>{displayName}</label></div></div>";
-            }else
+            }
+            else
             {
                 str = $"<div class='form-group form-float'><label>{displayName}</label><input type='{htmlInputTypeValue}' class='form-control' " +
                               $"value='{value}' placeholder='{displayName}' name='{mappingName}' {required}>" +
@@ -236,18 +231,18 @@ namespace Generics.WebHelper.Extensions
 
             return new HtmlString(str);
         }
-        public static IHtmlContent GenerateInputField(string displayName, string value,HtmlInputType htmlInputType,string mappingName, string id = "",bool isRequired = true)
+        public static IHtmlContent GenerateInputField(string displayName, string value, HtmlInputType htmlInputType, string mappingName, string id = "", bool isRequired = true)
         {
             return htmlInputType.GenerateInputField(displayName, value, mappingName, id, isRequired);
         }
-        
-        public static IHtmlContent GenerateSingleSelectField(string displayName,string mappingName,Dictionary<int,string>options,int selectedValId = 0, bool includeEmpty = false)
+
+        public static IHtmlContent GenerateSingleSelectField(string displayName, string mappingName, Dictionary<int, string> options, int selectedValId = 0, bool includeEmpty = false)
         {
             var str = $"<div class='form-group form-float'> <label>{displayName}</label> <select class='form-control show-tick' name='{mappingName}'>" +
             (includeEmpty ? $" <option value ='0' selected>None</option>" : "");
             if (options != null)
             {
-                foreach(var keyvalues in options)
+                foreach (var keyvalues in options)
                 {
                     var selectedStr = keyvalues.Key == selectedValId ? "selected" : "";
                     str += $"<option value='{keyvalues.Key}' {selectedStr} > {keyvalues.Value}  </option>";
@@ -297,12 +292,16 @@ namespace Generics.WebHelper.Extensions
             => new HtmlString(string.Format(buttonTemplate, "Edit", link, "btn-sm btn-default", "zmdi-edit"));
         public static IHtmlContent DeleteSmall(string link)
             => new HtmlString(string.Format(buttonTemplate, "Delete", link, "btn-sm btn-danger", "zmdi-delete"));
+        public static IHtmlContent PlainDeleteSmall(string title, string link)
+            => new HtmlString(string.Format(buttonTemplate, title, link, "btn-sm btn-danger", ""));
+        public static IHtmlContent PlainSuccessSmall(string title, string link)
+            => new HtmlString(string.Format(buttonTemplate, title, link, "btn-sm btn-success", ""));
         public static IHtmlContent DetailSmall(string link)
             => new HtmlString(string.Format(buttonTemplate, "Detail", link, "btn-sm btn-info", "zmdi-info-outline"));
-        public static IHtmlContent CreateSmall(string link,string text)
+        public static IHtmlContent CreateSmall(string link, string text)
                    => new HtmlString(string.Format(buttonTemplate, text, link, "btn-sm btn-primary", "zmdi-plus"));
         public static IHtmlContent BackToListSmall(string link)
-                   => new HtmlString(string.Format(buttonTemplate,"Back to list", link, "btn-sm btn-info", ""));
+                   => new HtmlString(string.Format(buttonTemplate, "Back to list", link, "btn-sm btn-info", ""));
 
     }
 }

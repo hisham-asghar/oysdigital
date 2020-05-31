@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Generics.Common;
+﻿using Generics.Common;
 using Generics.DataModels.AdminModels;
-using Generics.DataModels.Constants;
-using Generics.WebHelper.Extensions;
 using LayerBao;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Admin.Controllers
 {
-   // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
+    // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class RolesController : Controller
     {
         private RoleManager<IdentityRole> _roleManager;
@@ -24,7 +19,7 @@ namespace Admin.Controllers
         }
         public IActionResult Index()
         {
-            return View(AspNetRolesBao.GetAll()??new List<AspNetRoles>());
+            return View(AspNetRolesBao.GetAll() ?? new List<AspNetRoles>());
         }
 
         [Route("/Roles/Create")]
@@ -38,7 +33,7 @@ namespace Admin.Controllers
                 return View(aspNetRoles);
             }
 
-            ViewBag.IsEdit = (id == null) ? false:true ;
+            ViewBag.IsEdit = (id == null) ? false : true;
             return View(aspNetRoles);
         }
         [Route("/Roles/Create")]
@@ -61,20 +56,17 @@ namespace Admin.Controllers
 
             if (id == null)
             {
-                
-                    var result=await _roleManager.CreateAsync(new IdentityRole(aspNetRoles.Name));
-               
+                await _roleManager.CreateAsync(new IdentityRole(aspNetRoles.Name));
             }
             else
             {
-               
-                    var role = await _roleManager.FindByIdAsync(id);
-                    if (role != null)
-                    {
-                        role.Name = aspNetRoles.Name;
-                        await _roleManager.UpdateAsync(role);
-                    }
-              
+                var role = await _roleManager.FindByIdAsync(id);
+                if (role != null)
+                {
+                    role.Name = aspNetRoles.Name;
+                    await _roleManager.UpdateAsync(role);
+                }
+
             }
 
             return RedirectToAction("Index");
@@ -84,7 +76,7 @@ namespace Admin.Controllers
         public IActionResult Delete(string id)
         {
             AspNetRoles aspNetRoles = AspNetRolesBao.GetById(id);
-            if (id !=null && aspNetRoles == null)
+            if (id != null && aspNetRoles == null)
             {
                 // Dont Exist
             }
@@ -106,7 +98,7 @@ namespace Admin.Controllers
         public IActionResult Detail(string id)
         {
             AspNetRoles aspNetRoles = AspNetRolesBao.GetById(id);
-            if (id !=null  && aspNetRoles == null)
+            if (id != null && aspNetRoles == null)
             {
                 // Dont Exist
             }

@@ -1,0 +1,71 @@
+﻿@using Generics.DataModels.Enums;
+@model StatsModel
+@{
+    var stats = Model;
+
+    var time = (Generics.DataModels.Enums.TaskTimeFilter)ViewBag.TimeFilter;
+    var status = (Generics.DataModels.Enums.TaskStatusFilter)ViewBag.StatusFilter;
+
+    var overall = new StatCardModel()
+    {
+        Total = stats.OverallTotal,
+        Done = stats.OverallDone,
+        DonePercent = stats.OverallDonePercent,
+        Pending = stats.OverallPending,
+        Title = "Over All",
+        IsActive = time == Generics.DataModels.Enums.TaskTimeFilter.Overall,
+        Link = time == Generics.DataModels.Enums.TaskTimeFilter.Overall ? "#" : $"/?time={(int)TaskTimeFilter.Overall}&status={(int)status}"
+    };
+    
+    var currentMonth = new StatCardModel()
+    {
+        Total = stats.CurrentMonthTotal,
+        Done = stats.CurrentMonthDone,
+        DonePercent = stats.CurrentMonthDonePercent,
+        Pending = stats.CurrentMonthPending,
+        Title = "Current Month",
+        IsActive = time == TaskTimeFilter.CurrentMonth,
+        Link = time == TaskTimeFilter.CurrentMonth ? "#" : $"/?time={(int)TaskTimeFilter.CurrentMonth}&status={(int)status}"
+    };
+
+    var currentWeek = new StatCardModel()
+    {
+        Total = stats.CurrentWeekTotal,
+        Done = stats.CurrentWeekDone,
+        DonePercent = stats.CurrentWeekDonePercent,
+        Pending = stats.CurrentWeekPending,
+        Title = "Current Week",
+        IsActive = time == TaskTimeFilter.CurrentWeek,
+        Link = time == TaskTimeFilter.CurrentWeek ? "#" : $"/?time={(int)TaskTimeFilter.CurrentWeek}&status={(int)status}"
+    };
+
+    var today = new StatCardModel()
+    {
+        Total = stats.TodayTotal,
+        Done = stats.TodayDone,
+        DonePercent = stats.TodayDonePercent,
+        Pending = stats.TodayPending,
+        Title = "Today",
+        IsActive = time == TaskTimeFilter.Today,
+        Link = time == TaskTimeFilter.Today ? "#" : $"/?time={(int)TaskTimeFilter.Today}&status={(int)status}"
+    };
+
+    var tomorrow = new StatCardModel()
+    {
+        Total = stats.TomorrowTotal,
+        Done = stats.TomorrowDone,
+        DonePercent = stats.TomorrowDonePercent,
+        Pending = stats.TomorrowPending,
+        Title = "Tomorrow",
+        IsActive = time == TaskTimeFilter.Tomorrow,
+        Link = time == TaskTimeFilter.Tomorrow ? "#" : $"/?time={(int)TaskTimeFilter.Tomorrow}&status={(int)status}"
+    };
+
+}
+<div class="row clearfix">
+    <partial name="_TaskStatsCard" model="overall" />
+    <partial name="_TaskStatsCard" model="currentMonth" />
+    <partial name="_TaskStatsCard" model="currentWeek" />
+    <partial name="_TaskStatsCard" model="today" />
+    <partial name="_TaskStatsCard" model="tomorrow" />
+</div>

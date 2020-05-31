@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Generics.Common;
 using Generics.DataModels.AdminModels;
 using LayerDao;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LayerBao
 {
@@ -10,10 +11,10 @@ namespace LayerBao
     {
         public static List<WorkTask> GetAll()
         {
-            var data= WorkTaskDao.GetAll();
+            var data = WorkTaskDao.GetAll();
             if (data != null)
             {
-                foreach(var item in data)
+                foreach (var item in data)
                 {
                     item.WorkTaskPlatforms = WorkTaskPlatformsDao.GetByWorkTaskId(item.Id);
                 }
@@ -38,6 +39,22 @@ namespace LayerBao
             }
             return data;
         }
+        public static List<WorkTask> GetByProjectIds(List<long> ids, string userId)
+        {
+            var data = WorkTaskDao.GetByProjectIds(ids);
+            if (data != null)
+            {
+                var platforms = (WorkTaskPlatformsDao.GetByProjectIds(ids) ?? new List<WorkTaskPlatforms>())
+                    .GroupBy(p => p.WorkTaskId).ToDictionary(p => p.Key, v => v.ToList());
+                var members = (WorkTaskMembersDao.GetWorkTaskMemberTypeByUserId(userId) ?? new List<WorkTaskMemberCompact>());
+                foreach (var item in data)
+                {
+                    item.WorkTaskPlatforms = platforms.Get(item.Id);
+                    item.MemberType = members.FirstOrDefault(m => m.WorkTaskId == item.Id)?.MemberType;
+                }
+            }
+            return data;
+        }
         public static long Insert(WorkTask worktask)
         {
             return WorkTaskDao.Insert(worktask);
@@ -57,8 +74,8 @@ namespace LayerBao
 
         public static WorkTask CheckSchedulingTaskExist(ProjectTaskScheduling scheduling, DateTime date)
         {
-           return WorkTaskDao.CheckSchedulingTaskExist(scheduling,date);
+            return WorkTaskDao.CheckSchedulingTaskExist(scheduling, date);
         }
-        
+
     }
 }

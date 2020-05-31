@@ -1,25 +1,20 @@
-﻿@model Generics.DataModels.AdminModels.ProjectMembers
+﻿@model Dictionary<string, string>
 @{
-    var isEdit = (bool)ViewBag.IsEdit;
-    var title = (isEdit ? "Edit " : "Create ") + " Project Members";
+    var title = "Add Project Members";
     ViewData["Title"] = title;
 }
 
 
 @CHtmlHelper.GenerateHeader(title, "/ProjectMembers", "Back to Mobiles List")
 @CHtmlHelper.GetCardHeader(12, title)
-    <form method="post" name="projectmembers">
-        @if (isEdit)
-        {
-            @CHtmlHelper.GenerateInputField("", Model.Id.ToString(), HtmlInputType.Hidden, "Id")
-        }
-        @CHtmlHelper.GenerateSingleSelectField("Member Type", "ProjectMemberTypeId", ViewBag.ProjectMemberTypeDictionary, (isEdit) ? (int)Model.ProjectMemberTypeId : 0)
-        @CHtmlHelper.GenerateSingleSelectField("Project Name", "ProjectId", ViewBag.ProjectDictionary, (isEdit) ? (int)Model.ProjectId : 0)
-        @CHtmlHelper.GenerateSingleSelectFieldString("Member Name", "AspNetUserId", ViewBag.AspNetUsersDictionary, (isEdit) ? Model.AspNetUserId : "")
-        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive","IsActive")
-        @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
-        @ButtonHelper.CreateSmall("/ProjectMembers/Index", "Back to List")
-    </form>
+<form method="post" name="projectmembers">
+    @CHtmlHelper.GenerateSingleSelectField("Member Type", "ProjectMemberTypeId", ViewBag.ProjectMemberTypes, 0)
+    @CHtmlHelper.GenerateSingleSelectField("Project Name", "ProjectId", ViewBag.Projects, 0)
+    @CHtmlHelper.GenerateSingleSelectFieldString("Member Name", "userId", Model, "")
+    @*@HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive","IsActive")*@
+    @CHtmlHelper.GenerateButton("Save", HtmlButtonType.SUBMIT)
+    @*@ButtonHelper.CreateSmall("/ProjectMembers/Index", "Back to List")*@
+</form>
 @CHtmlHelper.GetCardFooter()
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

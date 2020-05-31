@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Admin.Models;
+using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
+using Generics.DataModels.Enums;
+using Generics.WebHelper.Extensions;
+using LayerBao;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Admin.Models;
-using Microsoft.AspNetCore.Authorization;
-using LayerBao;
-using Generics.WebHelper.Extensions;
-using Generics.DataModels.AdminModels;
-using Generics.DataModels.Constants;
 
 namespace Admin.Controllers
 {
@@ -22,51 +22,50 @@ namespace Admin.Controllers
         {
         }
 
-        public IActionResult Index()
+        public IActionResult Index(TaskTimeFilter time = TaskTimeFilter.Today, TaskStatusFilter status = TaskStatusFilter.Pending)
         {
-            var roles = AspNetUserRolesBao.GetByUserId(User.GetUserId());
-            if (roles == null)
+            ViewBag.TimeFilter = time;
+            ViewBag.StatusFilter = status;
+
+            var myId = User.GetUserId();
+            var roles = AspNetUserRolesBao.GetByUserId(myId);
+            if (roles == null || roles.Roles == null || roles.Roles.Count == 0)
             {
                 return View("RoleRequestView");
             }
-            var usermember = ProjectMembersBao.GetByUserId(User.GetUserId());
-            var data = new List<WorkTaskMembers>();
-            if (usermember != null)
+
+            //var userProjectMember = ProjectMembersBao.GetByUserId(myId);
+
+            var statsModel = TaskHelper.GetUserStats(myId);
+
+            var user = ProjectMembersBao.GetByUserIdList(User.GetUserId());
+            var userProjectIds = user.Select(s => s.ProjectId).ToList();
+            if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
             {
-                data = TaskHelper.GetTaskCount(usermember.AspNetUserId, usermember.ProjectMemberTypeId);
+                userProjectIds = ProjectBao.GetAll().Select(p => p.Id).ToList();
             }
-            ViewBag.OverAll = data.Count();
-           // ViewBag.Pending = data.Select(s =>  == DateTime.Now.DayOfWeek).Count();
-            ViewBag.Week = data.Select(s => s.OnCreated.DayOfWeek == DateTime.Now.DayOfWeek).Count();
-            ViewBag.Month = data.Select(s => s.OnCreated.Month == DateTime.Now.Month).Count();
-            ViewBag.Today = data.Select(s => s.OnCreated.Date == DateTime.Now.Date).Count();
-            var user =ProjectMembersBao.GetByUserIdList(User.GetUserId());
-            var worktask= TaskHelper.GetWorkTask(user.Select(s => s.ProjectId).ToList());
-            var projecttask = TaskHelper.GetProjectTask(user.Select(s => s.ProjectId).ToList());
-            ViewBag.GenerateToday = !TaskHelper.WorkTaskStatus(projecttask, DateTime.Now.Date);
-            ViewBag.GenerateTomorrow = !TaskHelper.WorkTaskStatus(projecttask, DateTime.Now.AddDays(1).Date);
-            if (usermember != null)
+            var workTask = TaskHelper.GetWorkTask(userProjectIds, myId, time, status);
+
+
+            var projectTask = TaskHelper.GetProjectTask(userProjectIds);
+            ViewBag.GenerateToday = !TaskHelper.WorkTaskStatus(projectTask, DateTime.Now.Date);
+            ViewBag.GenerateTomorrow = !TaskHelper.WorkTaskStatus(projectTask, DateTime.Now.AddDays(1).Date);
+
+            var tuple = new Tuple<List<WorkTask>, StatsModel>(workTask, statsModel);
+            ViewBag.Member = user ?? null;
+            if (User.IsInRole(UserRoles.Designer))
             {
-                ViewBag.Member = user??null;
-                if (usermember.MemberType == UserRoles.Designer)
-                {
-                    return View("DesignerView", worktask);
-                }
-                if (usermember.MemberType == UserRoles.Scheduler)
-                {
-                    return View("SchedulerView", worktask);
-                }
-                else
-                {
-                    return View("AdminView", worktask);
-                }
+                return View("DesignerView", tuple);
             }
-            if(User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
+            if (User.IsInRole(UserRoles.Scheduler))
             {
-               var count = TaskHelper.GetAllTask();
-                return View("AdminView",WorkTaskBao.GetAll()??new List<WorkTask>());
+                return View("SchedulerView", tuple);
             }
-            return View(new List<WorkTask>());
+            else if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
+            {
+                return View("AdminView", tuple);
+            }
+            return View("RoleRequestView");
         }
         public IActionResult Privacy()
         {

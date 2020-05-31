@@ -1,19 +1,17 @@
-﻿using Generics.Data;
-using Generics.Configurations.Options;
+﻿using Generics.Configurations.Options;
+using Generics.Data;
+using Generics.DataModels.Enums;
+using Generics.WebHelper.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using System;
-using Microsoft.AspNetCore.Http;
-using Generics.DataModels.Enums;
-using Generics.WebHelper.Extensions;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 
 namespace Generics.Configurations.Installer
 {
@@ -34,6 +32,9 @@ namespace Generics.Configurations.Installer
                 .AddClaimsPrincipalFactory<MyUserClaimsPrincipalFactory>()
                 .AddRoles<IdentityRole>()
                 .AddDefaultTokenProviders();
+            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, MyUserClaimsPrincipalFactory>();
+
+
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
@@ -72,7 +73,7 @@ namespace Generics.Configurations.Installer
             //services.AddAuthorization(
             //    options=>options.AddPolicy("Admin", policy => { policy.RequireRole("Admin"); }));
             services.AddAuthorization();
-            if (jwtSettings == null || jwtSettings.Secret == null) return; 
+            if (jwtSettings == null || jwtSettings.Secret == null) return;
 
             services.AddSingleton(jwtSettings);
 
@@ -113,8 +114,8 @@ namespace Generics.Configurations.Installer
                     }
                 };
             });
-            
+
         }
-        
+
     }
 }

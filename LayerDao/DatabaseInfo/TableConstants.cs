@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LayerDao.DatabaseInfo
+﻿namespace LayerDao.DatabaseInfo
 {
     public class TableConstants
     {
@@ -28,7 +24,10 @@ namespace LayerDao.DatabaseInfo
     }
     public class ViewConstants
     {
-        public const string UserRoleView = "UserRoleView";
-        public const string UserTaskView = "UserTaskView";
+        public const string USER_ROLE_VIEW = "UserRoleView";
+        public const string USER_TASK_VIEW = "UserTaskView";
+        public const string WORK_TASK_VIEW = "WorkTaskView";
+        public const string WORK_TASK_PLATFORM_VIEW = "WorkTaskPlatformsView";
+        public const string WORK_TASK_MEMBER_VIEW = "WorkTaskMembersView";
     }
 }

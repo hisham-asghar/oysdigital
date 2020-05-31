@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Generics.DataModels.AdminModels;
+﻿using Generics.DataModels.AdminModels;
 using Generics.Services.DatabaseService.AdoNet;
 using LayerDao.DatabaseInfo;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LayerDao
 {
@@ -26,6 +26,18 @@ namespace LayerDao
             var query = $"select WorkTask.*,Project.Name as ProjectName from WorkTask join Project on Project.Id=WorkTask.ProjectId where WorkTask.ProjectId={id} AND WorkTask.OnCreated BETWEEN '{today}' AND '{tomorrow}' OR IsCompleted='false';";
             return QueryExecutor.List<WorkTask>(query);
         }
+
+
+        public static List<WorkTask> GetByProjectIds(List<long> ids)
+        {
+            if (ids == null || ids.Count == 0) return new List<WorkTask>();
+            string idStr;
+            if (ids.Count == 1)
+                idStr = ids.FirstOrDefault() + "";
+            else idStr = ids.Select(id => id + "").Aggregate((c, n) => $"{c},{n}");
+            return ViewConstants.WORK_TASK_VIEW.SelectList<WorkTask>($" ProjectId IN ({idStr}) ");
+        }
+
         public static long Insert(WorkTask worktask)
         {
             return worktask.Insert(TableConstants.WorkTask);
@@ -44,10 +56,10 @@ namespace LayerDao
             return QueryExecutor.List<WorkTask>(query);
         }
 
-        public static WorkTask CheckSchedulingTaskExist(ProjectTaskScheduling scheduling,DateTime date)
+        public static WorkTask CheckSchedulingTaskExist(ProjectTaskScheduling scheduling, DateTime date)
         {
             var query = $"Select WorkTask.*,Project.Name as ProjectName from WorkTask join Project on Project.Id=WorkTask.ProjectId where ProjectSchedulingTime='{scheduling.Time}' AND WorkTask.OnCreated='{date}';";
-             return QueryExecutor.FirstOrDefault<WorkTask>(query);
+            return QueryExecutor.FirstOrDefault<WorkTask>(query);
         }
     }
 }

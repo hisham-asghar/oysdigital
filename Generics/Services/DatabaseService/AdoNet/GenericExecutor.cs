@@ -1,8 +1,5 @@
 ﻿using Generics.DataModels;
-using Generics.Services.DatabaseService.AdoNet;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Generics.Services.DatabaseService.AdoNet
 {
@@ -12,20 +9,38 @@ namespace Generics.Services.DatabaseService.AdoNet
         public static int Insert<T>(this T model, string tableName, string schema = DefaultSchema)
         {
             if (model == null || string.IsNullOrWhiteSpace(tableName)) return 0;
-            var query = GenericQueries.Insert(model, tableName, schema);
+            var query = GenericQueries.Insert(model, tableName, new List<string>(), schema);
+            return QueryExecutor.FirstOrDefault<TemplateClass<int>>(query, query)?.Result ?? 0;
+        }
+        public static int InsertWithExtraIgnore<T>(this T model, string tableName, List<string> ignoreColumns, string schema = DefaultSchema)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(tableName)) return 0;
+            var query = GenericQueries.Insert(model, tableName, ignoreColumns, schema);
             return QueryExecutor.FirstOrDefault<TemplateClass<int>>(query, query)?.Result ?? 0;
         }
         public static int Update<T>(this T model, string tableName, int id, string schema = DefaultSchema)
         {
             if (model == null || string.IsNullOrWhiteSpace(tableName)) return 0;
-            var query = GenericQueries.Update(model, tableName, id, schema);
+            var query = GenericQueries.Update(model, tableName, id, new List<string>(), schema);
+            return QueryExecutor.FirstOrDefault<TemplateClass<int>>(query, query)?.Result ?? 0;
+        }
+        public static int UpdateWithExtraIgnore<T>(this T model, string tableName, int id, List<string> ignoreColumns, string schema = DefaultSchema)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(tableName)) return 0;
+            var query = GenericQueries.Update(model, tableName, id, ignoreColumns, schema);
             return QueryExecutor.FirstOrDefault<TemplateClass<int>>(query, query)?.Result ?? 0;
         }
         public static int Update<T>(this T model, string tableName, string id, string schema = DefaultSchema)
         {
             if (model == null || string.IsNullOrWhiteSpace(tableName)) return 0;
-            var query = GenericQueries.Update(model, tableName, id, schema);
+            var query = GenericQueries.Update(model, tableName, id, new List<string>(), schema);
             return QueryExecutor.FirstOrDefault<TemplateClass<int>>(query, query)?.Result ?? 0;
+        }
+        public static string UpdateWithExtraIgnore<T>(this T model, string tableName, string id, List<string> ignoreColumns, string schema = DefaultSchema)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(tableName)) return null;
+            var query = GenericQueries.Update(model, tableName, id, ignoreColumns, schema);
+            return QueryExecutor.FirstOrDefault<TemplateClass<string>>(query, query)?.Result;
         }
 
         public static bool Delete(this string tableName, int id, string schema = DefaultSchema)

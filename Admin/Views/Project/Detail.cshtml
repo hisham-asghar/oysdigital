@@ -176,23 +176,23 @@
                             </div>
                         </div>
                         <div class="responsive">
-                            <table class="table c_table inbox_table">
+                            <div class="row">
                                 @foreach (var item in Model.ProjectNotes)
                                 {
-                                    <tr>
-                                        <td style="vertical-align: top;text-align: left;">
-                                            <p>@item.Message bilal saleem</p>
-                                        </td>
-                                        <td class="time" style="width:auto">
-                                            <ul class="social-links list-unstyled">
-                                                <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
-                                                <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
-                                                <li><div class="press"><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></div></li>
-                                            </ul>
-                                        </td>
-                                    </tr>
+
+                                <div class="col-md-10 text-dark">
+                                    @item.Message
+                                </div>
+                                <div class="col-md-2">
+                                    <ul class="social-links list-unstyled">
+                                        <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
+                                        <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
+                                        <li><div class="press"><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></div></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-12"><hr></div>
                                 }
-                            </table>
+                            </div>
                         </div>
                     </div>
                     <div class="card shadow p-3 mb-5 bg-white rounded">
@@ -204,31 +204,30 @@
                                 <div class="col-md-6">
                                     @if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
                                     {
-                                        <div class="pull-right">
-                                            @ButtonHelper.Create($"/ProjectAlertMessage/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
-                                        </div>
+                                    <div class="pull-right">
+                                        @ButtonHelper.Create($"/ProjectAlertMessage/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                    </div>
                                     }
-                                 </div>
+                                </div>
                             </div>
                         </div>
                         <div class="responsive">
-                            <table class="table c_table inbox_table">
+                            <div class="row">
                                 @foreach (var item in Model.ProjectAlertMessages)
                                 {
-                                    <tr>
-                                        <td style="vertical-align: top;text-align: left;">
-                                            <p>@item.Message</p>
-                                        </td>
-                                        <td class="time" style="width:auto">
-                                            <ul class="social-links list-unstyled">
-                                                <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
-                                                <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
-                                                <li><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></li>
-                                            </ul>
-                                        </td>
-                                    </tr>
+
+                                <div class="col-md-10 text-dark">
+                                    @item.Message
+                                </div>
+                                <div class="col-md-2">
+                                    <ul class="social-links list-unstyled">
+                                        <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
+                                        <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
+                                        <li><div class="press"><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></div></li>
+                                    </ul>
+                                </div>
                                 }
-                            </table>
+                            </div>
                         </div>
                     </div>
                 </div>

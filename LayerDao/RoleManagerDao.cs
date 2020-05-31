@@ -16,7 +16,7 @@ namespace LayerDao
             {
                 return null;
             }
-            return ViewConstants.UserRoleView.SelectList<ApplicationUser>($"NormalizedRoleName = '{roleName.ToUpper()}'");
+            return ViewConstants.USER_ROLE_VIEW.SelectList<ApplicationUser>($"NormalizedRoleName = '{roleName.ToUpper()}'");
         }
 
         public static List<ApplicationUser> GetAll()

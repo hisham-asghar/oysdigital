@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Generics.Data;
-using Generics.DataModels;
-using Generics.DataModels.AdminModels;
+﻿using Generics.DataModels.AdminModels;
 using Generics.Services.DatabaseService.AdoNet;
 using LayerDao.DatabaseInfo;
-using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace LayerDao
 {
@@ -14,12 +9,14 @@ namespace LayerDao
     {
         public static List<AspNetUserRoles> GetAll()
         {
+            return ViewConstants.USER_ROLE_VIEW.SelectAll<AspNetUserRoles>();
             var query = $"SELECT distinct AspNetUserRoles.UserId, AspNetUsers.NormalizedEmail as Email, AspNetUsers.Name as UserName  FROM [dbo].[AspNetUserRoles] INNER JOIN AspNetUsers ON AspNetUsers.Id = AspNetUserRoles.UserId;";
             return QueryExecutor.List<AspNetUserRoles>(query);
         }
 
         public static List<AspNetUserRoles> GetByUserId(string id)
         {
+            return ViewConstants.USER_ROLE_VIEW.SelectList<AspNetUserRoles>($" Id = '{id}'");
             var query = $"SELECT AspNetUserRoles.RoleId,AspNetUserRoles.UserId, AspNetUsers.NormalizedEmail as Email, AspNetUsers.Name as UserName ,AspNetRoles.NormalizedName as RoleName FROM [dbo].[AspNetUserRoles] INNER JOIN AspNetRoles ON AspNetRoles.Id = AspNetUserRoles.RoleId INNER JOIN AspNetUsers ON AspNetUsers.Id = AspNetUserRoles.UserId WHERE AspNetUserRoles.UserId='{id}';";
             return QueryExecutor.List<AspNetUserRoles>(query);
         }
@@ -33,12 +30,12 @@ namespace LayerDao
         }
         public static bool Delete(string userId)
         {
-            var query = $"DELETE FROM AspNetUserRoles where UserId='{userId}';";
+            var query = $"DELETE FROM dbo.AspNetUserRoles where UserId='{userId}';";
             return QueryExecutor.FirstOrDefault<bool>(query);
         }
-        public static AspNetUserRoles IsExist(string userId,string roleId)
+        public static AspNetUserRoles IsExist(string userId, string roleId)
         {
-            var query = $"SELECT * FROM AspNetUserRoles where UserId='{userId}' AND RoleId='{roleId}';";
+            var query = $"SELECT * FROM dbo.AspNetUserRoles where UserId='{userId}' AND RoleId='{roleId}';";
             return QueryExecutor.FirstOrDefault<AspNetUserRoles>(query);
         }
     }

@@ -5,6 +5,13 @@
     <UserSecretsId>aspnet-Admin-7BD09B44-79F4-4A6F-A7BF-632FFA9178C3</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Views\ProjectMembers\Create.cshtml~RF1c68b412.TMP\**" />
+    <Content Remove="Views\ProjectMembers\Create.cshtml~RF1c68b412.TMP\**" />
+    <EmbeddedResource Remove="Views\ProjectMembers\Create.cshtml~RF1c68b412.TMP\**" />
+    <None Remove="Views\ProjectMembers\Create.cshtml~RF1c68b412.TMP\**" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Google.Apis.Gmail.v1" Version="1.44.1.1859" />

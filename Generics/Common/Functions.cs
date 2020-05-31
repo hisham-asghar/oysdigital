@@ -1,26 +1,25 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Generics.Common
 {
     public static class Functions
     {
 #pragma warning disable 0168
-        public static To ToMapViaJson<From,To>(this From obj)
+        public static To ToMapViaJson<From, To>(this From obj)
         {
             try
             {
@@ -55,9 +54,9 @@ namespace Generics.Common
         }
         public static Dictionary<string, object> CreateDictionaryFromModel<T>(T form)
         {
-           return form.GetType()
-            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .ToDictionary(prop => prop.Name.ToUpper().ToString(), prop => prop.GetValue(form, null));
+            return form.GetType()
+             .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+             .ToDictionary(prop => prop.Name.ToUpper().ToString(), prop => prop.GetValue(form, null));
         }
         public static Dictionary<int, string> CreateDictionaryFromModelList<T>(this List<T> items, string key = "Id", string value = "Name")
         {
@@ -76,7 +75,41 @@ namespace Generics.Common
             }
             return dictionary;
         }
+        public static Dictionary<string, string> CreateDictionaryWithKeyStringFromModelList<T>(this List<T> items, string key = "Id", string value = "Name")
+        {
+            var dictionary = new Dictionary<string, string>();
+            if (items != null && items.Count > 0)
+            {
+                var list = typeof(T)
+                    .GetProperties()
+                    .ToDictionary(c => c.Name, c => items.Select(x => c.GetValue(x)).ToList());
+                var Name = list.Keys.Contains(value) ? GetDictionaryByKey(list, value) : null;
+                var Id = list.Keys.Contains(key) ? GetDictionaryByKey(list, key) : null;
+                for (int i = 0; i < Name.Count; i++)
+                {
+                    dictionary.Add(Id[i], Name[i].ToString());
+                }
+            }
+            return dictionary;
+        }
+        public static bool DateInsideOneWeek(this DateTime date1, DateTime date2)
+        {
+            DayOfWeek firstDayOfWeek = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
+            DateTime startDateOfWeek = date1.Date;
+            while (startDateOfWeek.DayOfWeek != DayOfWeek.Monday)
+            { startDateOfWeek = startDateOfWeek.AddDays(-1d); }
+            DateTime endDateOfWeek = startDateOfWeek.AddDays(6d);
+            return date2.Date >= startDateOfWeek.Date && date2.Date <= endDateOfWeek.Date;
+        }
+        public static bool AreFallingInSameWeek(this DateTime date1, DateTime date2, DayOfWeek weekStartsOn)
+        {
+            return date1.AddDays(-GetOffsetedDayofWeek(date1.DayOfWeek, (int)weekStartsOn)) == date2.AddDays(-GetOffsetedDayofWeek(date2.DayOfWeek, (int)weekStartsOn));
+        }
 
+        public static int GetOffsetedDayofWeek(DayOfWeek dayOfWeek, int offsetBy)
+        {
+            return (((int)dayOfWeek - offsetBy + 7) % 7);
+        }
         private static Dictionary<int, string> GetDictionaryByKey(Dictionary<string, List<object>> ret, string Key)
         {
             Dictionary<int, string> dictionary = new Dictionary<int, string>();
@@ -87,7 +120,7 @@ namespace Generics.Common
                 {
                     foreach (var i in data.Value)
                     {
-                        dictionary.Add(x, i.ToString());
+                        dictionary.Add(x, i?.ToString());
                         x++;
                     }
                 }
@@ -103,17 +136,17 @@ namespace Generics.Common
             else if (phoneNumberRaw.Length < 10) return null;
             return "+92" + phoneNumberRaw;
         }
-        public static bool CompareDate(this DateTime d1 , DateTime d2)
+        public static bool CompareDate(this DateTime d1, DateTime d2)
         {
             return d1.Day == d2.Day && d1.Month == d2.Month && d1.Year == d2.Year;
         }
-        public static string ReplaceMultiplesWithSingle(this string data,string replaceStr = " ")
-        {       
-            if(data == null) return null;
-            
-            if(string.IsNullOrWhiteSpace(data)) return "";
-            while(data.Contains(replaceStr+replaceStr))
-                data = data.Replace(replaceStr+replaceStr,replaceStr);
+        public static string ReplaceMultiplesWithSingle(this string data, string replaceStr = " ")
+        {
+            if (data == null) return null;
+
+            if (string.IsNullOrWhiteSpace(data)) return "";
+            while (data.Contains(replaceStr + replaceStr))
+                data = data.Replace(replaceStr + replaceStr, replaceStr);
             return data;
         }
         public static int ToInt(this int? number)
@@ -161,9 +194,9 @@ namespace Generics.Common
             var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
-        
 
-        public static Dictionary<T1, T2> ToCustomDictionary<T1, T2>(this List<KeyValuePair<T1,T2>> list) 
+
+        public static Dictionary<T1, T2> ToCustomDictionary<T1, T2>(this List<KeyValuePair<T1, T2>> list)
         {
             var dictionary = new Dictionary<T1, T2>();
             foreach (var pair in list)
@@ -222,14 +255,14 @@ namespace Generics.Common
                 return 0;
             }
         }
-        public static string SubStr(this string str,int start,int length)
+        public static string SubStr(this string str, int start, int length)
         {
             if (string.IsNullOrWhiteSpace(str)) return "";
             if (str.Length > (length - start))
             {
                 return str.Substring(start, length);
             }
-            else if(str.Length < Math.Abs(start))
+            else if (str.Length < Math.Abs(start))
             {
                 return "";
             }
@@ -240,9 +273,10 @@ namespace Generics.Common
         }
         public static string ConvetObjectToJson<T>(T request)
         {
-            string requestJson = JsonConvert.SerializeObject(request, 
-                    Newtonsoft.Json.Formatting.None, 
-                    new JsonSerializerSettings { 
+            string requestJson = JsonConvert.SerializeObject(request,
+                    Newtonsoft.Json.Formatting.None,
+                    new JsonSerializerSettings
+                    {
                         NullValueHandling = NullValueHandling.Ignore
                     });
             return requestJson;
@@ -335,7 +369,7 @@ namespace Generics.Common
             {
                 var stringReader = new System.IO.StringReader(xml);
                 var serializer = new XmlSerializer(typeof(T));
-                return (T) serializer.Deserialize(stringReader);
+                return (T)serializer.Deserialize(stringReader);
             }
             catch (Exception ex)
             {
@@ -400,7 +434,7 @@ namespace Generics.Common
         {
             return !dictionary.ContainsKey(key) ? value : dictionary[key];
         }
-        public static T2 Get<T1,T2>(this Dictionary<T1, T2> dictionary, T1 key, T2 value = default(T2))
+        public static T2 Get<T1, T2>(this Dictionary<T1, T2> dictionary, T1 key, T2 value = default(T2))
         {
             return !dictionary.ContainsKey(key) ? value : dictionary[key];
         }
@@ -417,7 +451,7 @@ namespace Generics.Common
             var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
             // ReSharper disable ConditionIsAlwaysTrueOrFalse
             if (null != attributes && attributes.Length > 0)
-                // ReSharper restore ConditionIsAlwaysTrueOrFalse
+            // ReSharper restore ConditionIsAlwaysTrueOrFalse
             {
                 description = attributes[0].Description;
             }
@@ -426,7 +460,7 @@ namespace Generics.Common
         }
 
 
-        public static void RunParallel<T1>(List<T1> list,Func<T1,bool> func, int noOfParallelThreads)
+        public static void RunParallel<T1>(List<T1> list, Func<T1, bool> func, int noOfParallelThreads)
         {
             var pairList = ListDividier(list, noOfParallelThreads);
             var threads = list.Select(item => new Thread(() => { func(item); })).ToList();

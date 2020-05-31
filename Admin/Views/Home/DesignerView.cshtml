@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Generics.DataModels.AdminModels.WorkTask>
+﻿@using  Generics.DataModels.Enums;
+@model Tuple<List<WorkTask>, StatsModel>
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "_Layout";
@@ -9,120 +10,27 @@
     var overAll = ViewBag.OverAll;
     var week = ViewBag.Week;
     var month = ViewBag.Month;
-}
-<style>
-    .dot {
-        height: 30px;
-        width: 30px;
-        border-radius: 50%;
-        display: inline-block;
-    }
-</style>
-<div class="container-fluid">
-    <div class="row clearfix">
-        <div class="col-lg-3 col-md-6 col-sm-6">
-            <button class="btn btn-primary" onclick="FilterTable('@todayDate','@tomorrowDate','eb8cdcc8-5137-4397-bf1f-2d6be802c120')">Check Filter</button>
-            <div class="card state_w1">
-                <div class="body d-flex justify-content-between">
-                    <div class="col-md-12">
-                        <h5>Over All</h5>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h5>@overAll</h5>
-                                <span>Total</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card state_w1">
-                <div class="body d-flex justify-content-between">
-                    <div class="col-md-12">
-                        <h5>Current Month</h5>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h5>@month</h5>
-                                <span>Total</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card state_w1">
-                <div class="body d-flex justify-content-between">
-                    <div class="col-md-12">
-                        <h5>Current Week</h5>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h5>@week</h5>
-                                <span>Total</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card state_w1">
-                <div class="body d-flex justify-content-between" style="background-color:#04BE5B">
-                    <div class="col-md-12">
-                        <h5>Today</h5>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Total</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    var time = (Generics.DataModels.Enums.TaskTimeFilter)ViewBag.TimeFilter;
+    var status = (Generics.DataModels.Enums.TaskStatusFilter)ViewBag.StatusFilter;
+
+}
+<div class="container-fluid">
+    <partial name="_MemberStatsView" model="Model.Item2" />
     <div class="row clearfix">
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="card project_list">
-
-                <div class="pull-right">
-                        <button class="btn btn-success" disabled="@ViewBag.GenerateToday"  onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
-                        <button class="btn btn-success" disabled="@ViewBag.GenerateTomorrow" onclick="GenerateNextTask()">Generate tomorrow Task <i class="zmdi zdmi-plus"></i></button>
+                <div class="pull-right" style="float:right;">
+                    <button class="btn btn-success" disabled="@ViewBag.GenerateToday" onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
+                    <button class="btn btn-success" disabled="@ViewBag.GenerateTomorrow" onclick="GenerateNextTask()">Generate tomorrow Task <i class="zmdi zdmi-plus"></i></button>
                 </div>
+
+                <div class="pull-left">
+                    <a href="@(status == TaskStatusFilter.All ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.All}")" class="btn @(status == TaskStatusFilter.All ? "btn-info" : "")">All</a>
+                    <a href="@(status == TaskStatusFilter.Done ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.Done}")" class="btn @(status == TaskStatusFilter.Done ? "btn-info" : "")">Done</a>
+                    <a href="@(status == TaskStatusFilter.Pending ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.Pending}")" class="btn @(status == TaskStatusFilter.Pending ? "btn-info" : "")">Pending</a>
+                </div>
+
 
                 <div class="table-responsive">
                     <table class="table table-hover c_table">
@@ -136,60 +44,60 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var workTask in Model)
+                            @foreach (var workTask in Model.Item1)
                             {
-                                    if (workTask.WorkTaskPlatforms.All(s => s.IsDesigned == true))
-                                    {
-                                        IsCompleted = true;
-                                    }
-                                    else
-                                    {
-                                        IsCompleted = false;
-                                    }
-                               
-                            <tr style="@((IsCompleted)?"background-color:#04BE5B":"")">
+                                if (workTask.WorkTaskPlatforms.All(s => s.IsDesigned == true))
+                                {
+                                    IsCompleted = true;
+                                }
+                                else
+                                {
+                                    IsCompleted = false;
+                                }
+
+                                <tr style="@((IsCompleted)?"background-color:#04BE5B":"")">
 
 
-                                <td><strong>@workTask.ProjectName</strong></td>
-                                <td>
-                                    @foreach (var plat in workTask.WorkTaskPlatforms)
-                                    {
-
-                                        if (plat.IsDesigned)
+                                    <td><strong>@workTask.ProjectName</strong></td>
+                                    <td>
+                                        @foreach (var plat in workTask.WorkTaskPlatforms)
                                         {
-                                            <span class="dot" style="background-color: #04BE5B;">
-                                                <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
-                                            </span>
+
+                                            if (plat.IsDesigned)
+                                            {
+                                                <span class="dot" style="background-color: #04BE5B;">
+                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="dot" style="background-color:gainsboro ;">
+                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                </span>
+                                            }
+                                        }
+                                    </td>
+
+                                    <td>@workTask.OnCreated.ToString(MMMM_dd_yyyy) @workTask.ProjectSchedulingTime.ToString(hh_mm_tt)</td>
+                                    <td>
+                                        @if (IsCompleted)
+                                        {
+                                            <span class="badge badge-default">Design Done</span>
+
                                         }
                                         else
                                         {
-                                            <span class="dot" style="background-color:gainsboro ;">
-                                                <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
-                                            </span>
+                                            <span class="badge badge-warning">To Do</span>
                                         }
-                                    }
-                                </td>
-
-                                <td>@workTask.OnCreated.ToString(MMMM_dd_yyyy) @workTask.ProjectSchedulingTime.ToString(hh_mm_tt)</td>
-                                <td>
-                                    @if (IsCompleted)
-                                    {
-                                        <span class="badge badge-success">Design Done</span>
-
-                                    }
-                                    else
-                                    {
-                                        <span class="badge badge-warning">To Do</span>
-                                    }
-                                </td>
-                                <td>
-                                    @if (!IsCompleted)
-                                    {
-                                        <span><i class="zmdi zmdi-plus btn-sm btn btn-success" data-toggle="modal" data-target="#smallModal" onclick="GeneratePlatforms(@workTask.Id)"></i></span>
-                                    }
-                                    <div class="my-component" id="@workTask.Id" data-options="@JsonConvert.SerializeObject(workTask.WorkTaskPlatforms)"></div>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td>
+                                        @if (!IsCompleted)
+                                        {
+                                            <span><i class="zmdi zmdi-plus btn-sm btn btn-success" data-toggle="modal" data-target="#smallModal" onclick="GeneratePlatforms(@workTask.Id)"></i></span>
+                                        }
+                                        <div class="my-component" id="@workTask.Id" data-options="@JsonConvert.SerializeObject(workTask.WorkTaskPlatforms)"></div>
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -212,7 +120,7 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>

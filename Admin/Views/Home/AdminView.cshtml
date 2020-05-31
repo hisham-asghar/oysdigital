@@ -1,115 +1,28 @@
-﻿@model IEnumerable<Generics.DataModels.AdminModels.WorkTask>
+﻿@using  Generics.DataModels.Enums;
+@model Tuple<List<WorkTask>, StatsModel>
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "_Layout";
+
+    var time = (Generics.DataModels.Enums.TaskTimeFilter)ViewBag.TimeFilter;
+    var status = (Generics.DataModels.Enums.TaskStatusFilter)ViewBag.StatusFilter;
 }
-<style>
-    .dot {
-        height: 30px;
-        width: 30px;
-        border-radius: 50%;
-        display: inline-block;
-    }
-</style>
 <div class="container-fluid">
-    <div class="row clearfix">
-        <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card state_w1">
-                <div class="body d-flex justify-content-between">
-                    <div class="col-md-12">
-                        <h5>Over All</h5>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Total</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card state_w1">
-                <div class="body d-flex justify-content-between">
-                    <div class="col-md-12">
-                        <h5>Current Week</h5>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Total</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card state_w1">
-                <div class="body d-flex justify-content-between">
-                    <div class="col-md-12">
-                        <h5>Current Month</h5>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Total</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card state_w1">
-                <div class="body d-flex justify-content-between" style="background-color:#04BE5B">
-                    <div class="col-md-12">
-                        <h5>Total</h5>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Total</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>45</h5>
-                                <span>Done</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <partial name="_MemberStatsView" model="Model.Item2" />
     <div class="row clearfix">
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="card project_list">
 
+                <div class="pull-right" style="float:right;">
+                    <button class="btn btn-success" disabled="@ViewBag.GenerateToday" onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
+                    <button class="btn btn-success" disabled="@ViewBag.GenerateTomorrow" onclick="GenerateNextTask()">Generate tomorrow Task <i class="zmdi zdmi-plus"></i></button>
+                </div>
+
+                <div class="pull-left">
+                    <a href="@(status == TaskStatusFilter.All ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.All}")" class="btn @(status == TaskStatusFilter.All ? "btn-info" : "")">All</a>
+                    <a href="@(status == TaskStatusFilter.Done ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.Done}")" class="btn @(status == TaskStatusFilter.Done ? "btn-info" : "")">Done</a>
+                    <a href="@(status == TaskStatusFilter.Pending ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.Pending}")" class="btn @(status == TaskStatusFilter.Pending ? "btn-info" : "")">Pending</a>
+                </div>
 
                 <div class="table-responsive">
                     <table class="table table-hover c_table">
@@ -122,9 +35,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @foreach (var item in Model.Item1)
                             {
-                                
+
                                 <tr style="@((item.IsCompleted)?"background-color:#04BE5B":"")">
 
 
@@ -133,19 +46,19 @@
                                         @foreach (var plat in item.WorkTaskPlatforms)
                                         {
 
-                                                if (plat.IsCompleted)
-                                                {
-                                                    <span class="dot" style="background-color: #04BE5B;">
-                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id"></i>
-                                                    </span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="dot" style="background-color:gainsboro ;">
-                                                        <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id"></i>
-                                                    </span>
-                                                }
-                                            
+                                            if (plat.IsCompleted)
+                                            {
+                                                <span class="dot" style="background-color: #04BE5B;">
+                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id"></i>
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="dot" style="background-color:gainsboro ;">
+                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id"></i>
+                                                </span>
+                                            }
+
                                         }
                                     </td>
 
