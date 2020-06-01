@@ -34,7 +34,13 @@ namespace Admin.Controllers
         {
             var userId = User.GetUserId();
             var users = ProjectMembersBao.GetByUserIdList(User.GetUserId());
-            var projecttasks = TaskHelper.GetProjectTask(users.Select(s => s.ProjectId).ToList());
+            var projectIds = users.Select(s => s.ProjectId).ToList();
+            if (User.IsAdminOrHr())
+            {
+                projectIds = ProjectBao.GetAll().Select(p => p.Id).ToList();
+            }
+            var projecttasks = TaskHelper.GetProjectTask(projectIds);
+            
             return Json(TaskHelper.WorkTaskToGenerate(projecttasks, DateTime.Now.Date, userId));
 
         }

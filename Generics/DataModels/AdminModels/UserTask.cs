@@ -12,7 +12,7 @@ namespace Generics.DataModels.AdminModels
         public int ProjectMemberTypeId { get; set; }
         public string MemberType { get; set; }
         public string AspNetUserId { get; set; }
-        public DateTime OnCreated { get; set; }
+        public DateTime ProjectSchedulingTime { get; set; }
         [Ignore]
         public bool IsDone()
         {

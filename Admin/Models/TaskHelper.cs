@@ -29,26 +29,26 @@ namespace Admin.Models
             statsModel.OverallPending = statsModel.OverallTotal - statsModel.OverallDone;
 
 
-            var currentMonthData = data.Where(d => d.OnCreated.Month == today.Month && d.OnCreated.Year == today.Year);
+            var currentMonthData = data.Where(d => d.ProjectSchedulingTime.Month == today.Month && d.ProjectSchedulingTime.Year == today.Year);
             statsModel.CurrentMonthTotal = currentMonthData.Count();
             statsModel.CurrentMonthDone = currentMonthData.Count(d => d.IsDone());
             statsModel.CurrentMonthDonePercent = statsModel.CurrentMonthTotal == 0 ? 0 : ((int)((statsModel.CurrentMonthDone * 100 * 100) / statsModel.CurrentMonthTotal)) / 100.0;
             statsModel.CurrentMonthPending = statsModel.CurrentMonthTotal - statsModel.CurrentMonthDone;
 
-            var currentWeekData = data.Where(d => d.OnCreated.DateInsideOneWeek(today));
+            var currentWeekData = data.Where(d => d.ProjectSchedulingTime.DateInsideOneWeek(today));
             statsModel.CurrentWeekTotal = currentWeekData.Count();
             statsModel.CurrentWeekDone = currentWeekData.Count(d => d.IsDone());
             statsModel.CurrentWeekDonePercent = statsModel.CurrentWeekTotal == 0 ? 0 : ((int)((statsModel.CurrentWeekDone * 100 * 100) / statsModel.CurrentWeekTotal)) / 100.0;
             statsModel.CurrentWeekPending = statsModel.CurrentWeekTotal - statsModel.CurrentWeekDone;
 
-            var todayData = data.Where(d => d.OnCreated.Date == today.Date);
+            var todayData = data.Where(d => d.ProjectSchedulingTime.Date == today.Date);
             statsModel.TodayTotal = todayData.Count();
             statsModel.TodayDone = todayData.Count(d => d.IsDone());
             statsModel.TodayDonePercent = statsModel.TodayTotal == 0 ? 0 : ((int)((statsModel.TodayDone * 100 * 100) / statsModel.TodayTotal)) / 100.0;
             statsModel.TodayPending = statsModel.TodayTotal - statsModel.TodayDone;
 
 
-            var tomorrowData = data.Where(d => d.OnCreated.Date == today.Date.AddDays(1));
+            var tomorrowData = data.Where(d => d.ProjectSchedulingTime.Date == today.Date.AddDays(1));
             statsModel.TomorrowTotal = tomorrowData.Count();
             statsModel.TomorrowDone = tomorrowData.Count(d => d.IsDone());
             statsModel.TomorrowDonePercent = statsModel.TomorrowTotal == 0 ? 0 : ((int)((statsModel.TomorrowDone * 100 * 100) / statsModel.TomorrowTotal)) / 100.0;
@@ -136,24 +136,24 @@ namespace Admin.Models
             {
                 case TaskTimeFilter.Today:
                     {
-                        workTasks = workTasks.Where(w => w.OnCreated.Date == today.Date).ToList();
+                        workTasks = workTasks.Where(w => w.ProjectSchedulingTime.Date == today.Date).ToList();
                         break;
                     }
 
                 case TaskTimeFilter.Tomorrow:
                     {
-                        workTasks = workTasks.Where(w => w.OnCreated.Date == today.Date.AddDays(1)).ToList();
+                        workTasks = workTasks.Where(w => w.ProjectSchedulingTime.Date == today.Date.AddDays(1)).ToList();
                         break;
                     }
 
                 case TaskTimeFilter.CurrentWeek:
                     {
-                        workTasks = workTasks.Where(w => w.OnCreated.DateInsideOneWeek(today)).ToList();
+                        workTasks = workTasks.Where(w => w.ProjectSchedulingTime.DateInsideOneWeek(today)).ToList();
                         break;
                     }
                 case TaskTimeFilter.CurrentMonth:
                     {
-                        workTasks = workTasks.Where(w => w.OnCreated.Month == today.Month && w.OnCreated.Year == today.Year).ToList();
+                        workTasks = workTasks.Where(w => w.ProjectSchedulingTime.Month == today.Month && w.OnCreated.Year == today.Year).ToList();
                         break;
                     }
             }
