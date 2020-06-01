@@ -20,6 +20,13 @@ namespace Admin.Controllers
             var list = ProjectPlatformsBao.GetByProjectId(id);
             return Json(list);
         }
+        [Route("/Json/AllPlatforms")]
+        [HttpGet]
+        public JsonResult AllPlatforms()
+        {
+            var list = PlatformBao.GetAll();
+            return Json(list);
+        }
         [Route("/Json/GetMobileSpaces/{id}")]
         [HttpGet]
         public JsonResult GetMobileSpaces(long id)
@@ -72,52 +79,52 @@ namespace Admin.Controllers
 
         [Route("/Json/SinglePlatform")]
         [HttpPost]
-        public JsonResult SinglePlatform(long id, bool status)
+        public JsonResult SinglePlatform(long workTaskId, long platformId, bool status)
         {
 
-            var workTaskPlatforms = WorkTaskPlatformsBao.GetById(id);
+            var workTaskPlatforms = WorkTaskPlatformsBao.GetByBoth(workTaskId,platformId);
             if (workTaskPlatforms != null)
             {
 
                 var user = ProjectMembersBao.GetByUserId(User.GetUserId());
-                if (user != null)
-                {
-                    if (user.MemberType == UserRoles.Designer)
-                    {
-                        workTaskPlatforms.IsDesigned = status;
-                        WorkTaskPlatformsBao.Update(workTaskPlatforms);
-                        if (showstatus(workTaskPlatforms.WorkTaskId, user.MemberType))
-                        {
-                            var worktask = WorkTaskBao.GetById(workTaskPlatforms.WorkTaskId);
-                            worktask.IsDesigned = true;
-                            WorkTaskBao.Update(worktask);
-                        }
-                    }
-                    if (user.MemberType == UserRoles.Scheduler)
-                    {
-                        if (status == false)
-                        {
-                            workTaskPlatforms.IsCompleted = status;
-                        }
-                        workTaskPlatforms.IsScheduled = status;
-                        WorkTaskPlatformsBao.Update(workTaskPlatforms);
-                        if (showstatus(workTaskPlatforms.WorkTaskId, user.MemberType))
-                        {
-                            workTaskPlatforms.IsCompleted = true;
-                            WorkTaskPlatformsBao.Update(workTaskPlatforms);
-                            var worktask = WorkTaskBao.GetById(workTaskPlatforms.WorkTaskId);
-                            worktask.IsScheduled = true;
-                            worktask.IsCompleted = true;
-                            WorkTaskBao.Update(worktask);
-                        }
-                    }
+                //if (user != null)
+                //{
+                //    if (user.MemberType == UserRoles.Designer)
+                //    {
+                //        workTaskPlatforms.IsDesigned = status;
+                //        WorkTaskPlatformsBao.Update(workTaskPlatforms);
+                //        if (showstatus(workTaskPlatforms.WorkTaskId, user.MemberType))
+                //        {
+                //            var worktask = WorkTaskBao.GetById(workTaskPlatforms.WorkTaskId);
+                //            worktask.IsDesigned = true;
+                //            WorkTaskBao.Update(worktask);
+                //        }
+                //    }
+                //    if (user.MemberType == UserRoles.Scheduler)
+                //    {
+                //        if (status == false)
+                //        {
+                //            workTaskPlatforms.IsCompleted = status;
+                //        }
+                //        workTaskPlatforms.IsScheduled = status;
+                //        WorkTaskPlatformsBao.Update(workTaskPlatforms);
+                //        if (showstatus(workTaskPlatforms.WorkTaskId, user.MemberType))
+                //        {
+                //            workTaskPlatforms.IsCompleted = true;
+                //            WorkTaskPlatformsBao.Update(workTaskPlatforms);
+                //            var worktask = WorkTaskBao.GetById(workTaskPlatforms.WorkTaskId);
+                //            worktask.IsScheduled = true;
+                //            worktask.IsCompleted = true;
+                //            WorkTaskBao.Update(worktask);
+                //        }
+                //    }
 
 
-                    return Json(true);
+                //    return Json(true);
 
 
-                }
-                return Json(null);
+                //}
+                //return Json(null);
             }
             return Json(null);
         }
@@ -269,7 +276,7 @@ namespace Admin.Controllers
                 {
                     return Json(false);
                 }
-                return Json(true);
+                return Json(ProjectTaskBao.GetById(projectTaskId));
             }
             return Json(null);
         }
@@ -315,6 +322,115 @@ namespace Admin.Controllers
                 // return worktask.Where(s => ).;
             }
             return Json(false);
+        }
+        [Route("/Json/DeletePlatform/{id}")]
+        [HttpGet]
+        public JsonResult DeletePlatform(long id)
+        {
+            if (id != 0)
+            {
+               return Json(ProjectPlatformsBao.Delete(id));
+            }
+            return Json(false);
+        }
+        [Route("/Json/PlatformCreate")]
+        [HttpPost]
+        public JsonResult PlatformCreate(ProjectPlatforms projectPlatform)
+        {
+            if (projectPlatform != null)
+            {
+                var userId = User.GetUserId();
+                projectPlatform.SetOnCreate(userId);
+                var result = ProjectPlatformsBao.Insert(projectPlatform);
+                if (result > 0)
+                {
+                   return Json(ProjectPlatformsBao.GetById(result));
+                }
+            }
+            return Json(null);
+        }
+        [Route("/Json/DeleteNotes/{id}")]
+        [HttpGet]
+        public JsonResult DeleteNotes(long id)
+        {
+            if (id != 0)
+            {
+                return Json(ProjectNotesBao.Delete(id));
+            }
+            return Json(false);
+        }
+        [Route("/Json/CreateNotes")]
+        [HttpPost]
+        public JsonResult CreateNotes(ProjectNotes projectNotes)
+        {
+            if (projectNotes != null)
+            {
+                var userId = User.GetUserId();
+                projectNotes.SetOnCreate(userId);
+                var result = ProjectNotesBao.Insert(projectNotes);
+                if (result > 0)
+                {
+                    return Json(ProjectNotesBao.GetById(result));
+                }
+            }
+            return Json(null);
+        }
+        [Route("/Json/AllLabels")]
+        [HttpGet]
+        public JsonResult AllLabels()
+        {
+            return Json(LabelTypeBao.GetAll()??null);
+        }
+        [Route("/Json/AllUsers/{memberType}")]
+        [HttpGet]
+        public JsonResult AllUsers(string memberType)
+        {
+            return Json(RoleManagerBao.GetUsersByRoleName(memberType) ?? null);
+        }
+        [Route("/Json/DeleteAlertMessages/{id}")]
+        [HttpGet]
+        public JsonResult DeleteAlertMessages(long id)
+        {
+            if (id != 0)
+            {
+                return Json(ProjectAlertMessageBao.Delete(id));
+            }
+            return Json(false);
+        }
+        [Route("/Json/CreateAlertMessages")]
+        [HttpPost]
+        public JsonResult CreateAlertMessages(ProjectAlertMessage projectAlertMessage)
+        {
+            if (projectAlertMessage != null)
+            {
+                var userId = User.GetUserId();
+                projectAlertMessage.SetOnCreate(userId);
+                var result = ProjectAlertMessageBao.Insert(projectAlertMessage);
+                if (result > 0)
+                {
+                    return Json(ProjectAlertMessageBao.GetById(result));
+                }
+            }
+            return Json(null);
+        }
+        
+        [Route("/Json/CreateMember")]
+        [HttpPost]
+        public JsonResult CreateMember(ProjectMembers projectMembers)
+        {
+            if (projectMembers != null)
+            {
+                var data= ProjectMemberTypeBao.GetByName(projectMembers.MemberType);
+                projectMembers.ProjectMemberTypeId = data.Id;
+                var userId = User.GetUserId();
+                projectMembers.SetOnCreate(userId);
+                var result = ProjectMembersBao.Insert(projectMembers);
+                if (result > 0)
+                {
+                    return Json(ProjectMembersBao.GetById(result));
+                }
+            }
+            return Json(null);
         }
     }
 }

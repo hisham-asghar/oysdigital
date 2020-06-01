@@ -13,7 +13,9 @@
 
     var time = (Generics.DataModels.Enums.TaskTimeFilter)ViewBag.TimeFilter;
     var status = (Generics.DataModels.Enums.TaskStatusFilter)ViewBag.StatusFilter;
-
+    long data = 0;
+    var count = 0;
+    var tasks= new List<long>();
 }
 <div class="container-fluid">
     <partial name="_MemberStatsView" model="Model.Item2" />
@@ -54,31 +56,45 @@
                                 {
                                     IsCompleted = false;
                                 }
-
-                                <tr style="@((IsCompleted)?"background-color:#04BE5B":"")">
+                                if (count == 0)
+                                {
+                                    count=1;
+                                    data = workTask.ProjectId;
+                                }
+                                if (data == workTask.ProjectId && count==1)
+                                {
+                                    count++;
+                                <tr style="@((IsCompleted) ? "background-color:#04BE5B" : "")">
 
 
                                     <td><strong>@workTask.ProjectName</strong></td>
                                     <td>
                                         @foreach (var plat in workTask.WorkTaskPlatforms)
                                         {
-
+                                            tasks.Add(plat.WorkTaskId);
                                             if (plat.IsDesigned)
                                             {
                                                 <span class="dot" style="background-color: #04BE5B;">
-                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@tasks,@plat.PlatformId)"></i>
                                                 </span>
                                             }
                                             else
                                             {
-                                                <span class="dot" style="background-color:gainsboro ;">
-                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.Id)"></i>
+                                                <span class="dot" style="background-color:gainsboro;">
+                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.WorkTaskId,@plat.PlatformId)"></i>
                                                 </span>
                                             }
                                         }
                                     </td>
 
-                                    <td>@workTask.OnCreated.ToString(MMMM_dd_yyyy) @workTask.ProjectSchedulingTime.ToString(hh_mm_tt)</td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            @foreach (var sche in Model.Item1.Where(s => s.ProjectId == data))
+                                            {
+                                            <li><span class="btn btn-primary"> @sche.OnCreated.ToString(MMMM_dd_yyyy) @sche.ProjectSchedulingTime.ToString(hh_mm_tt)</span></li>
+                                            }
+                                        </ul>
+                                    </td>
                                     <td>
                                         @if (IsCompleted)
                                         {
@@ -93,11 +109,20 @@
                                     <td>
                                         @if (!IsCompleted)
                                         {
-                                            <span><i class="zmdi zmdi-plus btn-sm btn btn-success" data-toggle="modal" data-target="#smallModal" onclick="GeneratePlatforms(@workTask.Id)"></i></span>
+                                            <span><i class="btn-sm btn btn-success" data-toggle="modal" data-target="#smallModal" onclick="GeneratePlatforms(@workTask.Id)">MarkAsDone</i></span>
                                         }
                                         <div class="my-component" id="@workTask.Id" data-options="@JsonConvert.SerializeObject(workTask.WorkTaskPlatforms)"></div>
                                     </td>
                                 </tr>
+                                }
+                                else
+                                {
+                                    if (data != workTask.ProjectId)
+                                    {
+                                        count = 0;
+                                    }
+                                }
+
                             }
                         </tbody>
                     </table>

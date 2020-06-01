@@ -34,11 +34,11 @@
                             <div class="pull-right">
                                 @if (Model.ProjectMembers.Where(s => s.MemberType == UserRoles.Designer).Count() == 0)
                                 {
-                                    <a href="/ProjectMembers/Create?projectId=@Model.Id&type=Designer&returnUrl=/Project/Detail/@Model.Id" class="btn btn-success">Add Designer</a>
+                                <button class="btn btn-success" onclick="CreateMember(@Model.Id,'Designer')"><i class="zmdi zmdi-plus"></i> Create</button>
                                 }
                                 @if (Model.ProjectMembers.Where(s => s.MemberType == UserRoles.Scheduler).Count() == 0)
                                 {
-                                    <a href="/ProjectMembers/Create?projectId=@Model.Id&type=Scheduler&returnUrl=/Project/Detail/@Model.Id" class="btn btn-success">Add Scheduler</a>
+                                 <button class="btn btn-success" onclick="CreateMember(@Model.Id,'Scheduler')"><i class="zmdi zmdi-plus"></i> Create</button>
                                 }
                                     @*@ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
                                      @ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")*@
@@ -49,10 +49,10 @@
                 </div>
                 <div class="responsive">
                     <table class="table table-hover c_table">
-                        <tbody>
+                        <tbody id="myMembers">
                             @foreach (var item in Model.ProjectMembers)
                             {
-                                <tr>
+                                <tr id="@item.Id">
                                     <td>
                                         <div style="width:50px;height:auto" class="rounded-circle">
                                             <img src="/images/profile_av.jpg" class="img-fluid" alt="">
@@ -67,7 +67,7 @@
                                     <td>
                                         @if (Model.ProjectMembers.Where(s => s.MemberType == UserRoles.Designer).Count() > 0)
                                         {
-                                            <a onclick="DeleteMember(@item.Id)" role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
+                                            <a onclick="DeleteMember(@item.Id,'@item.MemberName')" role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
                                         }
                                     </td>
                                 </tr>
@@ -91,7 +91,8 @@
                                     @if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
                                     {
                                         <div class="pull-right">
-                                            @ButtonHelper.Create($"/ProjectPlatform/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                            @*@ButtonHelper.Create($"/ProjectPlatform/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")*@
+                                            <button class="btn btn-success" onclick="CreatePlatform(@Model.Id)"><i class="zmdi zmdi-plus"></i> Create</button>
                                         </div>
                                     }
                                 </div>
@@ -103,13 +104,13 @@
 
                                     <tr>
 
-                                        <td>
-                                            @foreach (var item in Model.ProjectPlatforms)
+                                        <td id="myPlat">
+                                           @foreach (var item in Model.ProjectPlatforms)
                                             {
-                                                <a href="@item.Link" target="_blank" class="btn"><i class="@item.PlatformIcon"></i> @item.PlatformName </a>
+                                            <span id="@item.Id"><a href="@item.Link" target="_blank" class="btn"><i class="@item.PlatformIcon"></i></a> @item.PlatformName  <span class="ti-close text-danger font-bold" onclick="DeletePaltforms(@item.Id, '@item.PlatformName')"></span></span>
                                             }
                                         </td>
-
+                                          
                                     </tr>
 
                                 </tbody>
@@ -134,21 +135,21 @@
                         </div>
                         <div class="responsive">
                             <table class="table table-hover c_table">
-                                <tbody>
+                                <tbody id="myTask">
                                     @foreach (var item in Model.projectTasks)
                                     {
-                                        <tr>
+                                        <tr id="@item.Id">
                                             <td>
                                                 @TaskType.CheckTaskType(item.TaskTypeId)-@FrequencyType.CheckFrequencyType(item.FrequencyTypeId)
                                             </td>
                                             <td>
-                                                
-                                                    
-                                                    @foreach (var sched in item.ProjectTaskScheduling)
-                                                    {
-                                                        <span class="btn btn-primary">@sched.Time.ToString("hh:mm:ss tt")</span>
-                                                    }
-                                               
+
+
+                                                @foreach (var sched in item.ProjectTaskScheduling)
+                                                {
+                                                    <span class="btn btn-primary">@sched.Time.ToString("hh:mm:ss tt")</span>
+                                                }
+
                                             </td>
                                             <td>
                                                 <a role="button" onclick="DeletePlatformTask(@item.Id)" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
@@ -169,30 +170,31 @@
                                     @if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
                                     {
                                         <div class="pull-right">
-                                            @ButtonHelper.Create($"/ProjectNotes/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                            <button class="btn btn-success" onclick="CreateNotes(@Model.Id)"><i class="zdmi zdmi-plus"></i> Create</button>
                                         </div>
                                     }
                                 </div>
+
                             </div>
                         </div>
-                        <div class="responsive">
-                            <div class="row">
-                                @foreach (var item in Model.ProjectNotes)
-                                {
-
-                                <div class="col-md-10 text-dark">
-                                    @item.Message
+                        <div class="responsive" id="myNotes">
+                            @foreach (var item in Model.ProjectNotes)
+                            {
+                                <div class="row" id="@item.Id">
+                                    <div class="col-md-10 text-dark">
+                                        @item.Message
+                                    </div>
+                                    <div class="col-md-2">
+                                        <ul class="social-links list-unstyled">
+                                            <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
+                                            <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
+                                            <li><div class="press"><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></div></li>
+                                            <li><a role="button" onclick="DeleteNotes(@item.Id)" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <ul class="social-links list-unstyled">
-                                        <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
-                                        <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
-                                        <li><div class="press"><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></div></li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-12"><hr></div>
-                                }
-                            </div>
+                                <hr />
+                            }
                         </div>
                     </div>
                     <div class="card shadow p-3 mb-5 bg-white rounded">
@@ -205,30 +207,30 @@
                                     @if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
                                     {
                                     <div class="pull-right">
-                                        @ButtonHelper.Create($"/ProjectAlertMessage/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+                                        <button class="btn btn-success" onclick="CreateAlertMessages(@Model.Id)"><i class="zdmi zdmi-plus"></i> Create</button>
                                     </div>
                                     }
                                 </div>
                             </div>
                         </div>
-                        <div class="responsive">
-                            <div class="row">
-                                @foreach (var item in Model.ProjectAlertMessages)
-                                {
-
-                                <div class="col-md-10 text-dark">
-                                    @item.Message
+                        <div class="responsive" id="myAlertMessages">
+                            @foreach (var item in Model.ProjectAlertMessages)
+                            {
+                                <div class="row" id="@item.Id">
+                                    <div class="col-md-10 text-dark">
+                                        @item.Message
+                                    </div>
+                                    <div class="col-md-2">
+                                        <ul class="social-links list-unstyled">
+                                            <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
+                                            <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
+                                            <li><div class="press"><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></div></li>
+                                            <li><a role="button" onclick="DeleteAlertMessages(@item.Id)" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <ul class="social-links list-unstyled">
-                                        <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
-                                        <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
-                                        <li><div class="press"><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></div></li>
-                                    </ul>
-                                </div>
-                                }
+                            }
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -236,3 +238,6 @@
 
     </div>
 </div>
+<script>
+
+</script>

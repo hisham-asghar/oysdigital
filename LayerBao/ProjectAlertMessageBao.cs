@@ -16,7 +16,7 @@ namespace LayerBao
         {
             return ProjectAlertMessageDao.GetById(id);
         }
-        public static bool Insert(ProjectAlertMessage projectalertmessage)
+        public static long Insert(ProjectAlertMessage projectalertmessage)
         {
             return ProjectAlertMessageDao.Insert(projectalertmessage);
         }

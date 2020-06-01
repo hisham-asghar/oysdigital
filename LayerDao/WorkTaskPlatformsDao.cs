@@ -34,6 +34,12 @@ namespace LayerDao
             return ViewConstants.WORK_TASK_PLATFORM_VIEW.SelectList<WorkTaskPlatforms>($" WorkTaskId IN (SELECT Id FROM dbo.WorkTask WHERE ProjectId IN ({idStr})) ");
         }
 
+        public static List<WorkTaskPlatforms> GetByBoth(long workTaskId, long platformId)
+        {
+            var query = $"select WorkTaskPlatforms.*,Platform.Name as PlatformName,Platform.IconClass as PlatformIcon from WorkTaskPlatforms join Platform on Platform.Id=WorkTaskPlatforms.PlatformId where WorkTaskPlatforms.WorkTaskId={workTaskId} AND PlatformId={platformId};";
+            return QueryExecutor.List<WorkTaskPlatforms>(query);
+        }
+
         public static bool CheckWorkTaskPlatformExist(long workTaskId, long platformId)
         {
             var query = $"select WorkTaskPlatforms.*,Platform.Name as PlatformName,Platform.IconClass as PlatformIcon from WorkTaskPlatforms join Platform on Platform.Id=WorkTaskPlatforms.PlatformId where WorkTaskPlatforms.WorkTaskId={workTaskId} AND PlatformId={platformId};";

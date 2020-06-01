@@ -27,17 +27,16 @@ namespace Admin.Controllers
                     var data = ProjectBao.GetByMemberTypeId(usermember.ProjectMemberTypeId) ?? new List<Project>();
                     return View(data);
                 }
-                return View(projects);
             }
             if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
             {
                 projects = ProjectBao.GetAll();
-                return View(projects);
             }
             else
             {
                 return View(projects);
             }
+            return View(projects);
         }
         [Route("/Project/Create")]
         [Route("/Project/Edit/{id}")]

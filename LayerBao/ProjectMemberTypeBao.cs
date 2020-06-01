@@ -16,6 +16,10 @@ namespace LayerBao
         {
             return ProjectMemberTypeDao.GetById(id);
         }
+        public static ProjectMemberTypes GetByName(string name)
+        {
+            return ProjectMemberTypeDao.GetByName(name);
+        }
         public static bool Insert(ProjectMemberTypes projectmembertypes)
         {
             return ProjectMemberTypeDao.Insert(projectmembertypes);

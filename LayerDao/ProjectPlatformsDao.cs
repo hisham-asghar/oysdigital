@@ -25,9 +25,9 @@ namespace LayerDao
             var query = $"SELECT  ProjectPlatforms.*, Platform.Name as PlatformName,Platform.IconClass as PlatformIcon,Project.Name as ProjectName FROM [dbo].[ProjectPlatforms] Join dbo.Platform on ProjectPlatforms.PlatformId=Platform.Id Join dbo.Project on ProjectPlatforms.ProjectId=Project.Id where ProjectId={id};";
               return QueryExecutor.List<ProjectPlatforms>(query);
         }
-        public static bool Insert(ProjectPlatforms projectplatforms)
+        public static long Insert(ProjectPlatforms projectplatforms)
         {
-            return projectplatforms.Insert(TableConstants.ProjectPlatforms) > 0;
+            return projectplatforms.Insert(TableConstants.ProjectPlatforms);
         }
         public static bool Update(ProjectPlatforms projectplatforms)
         {

@@ -126,7 +126,8 @@ function DeleteMember(id) {
                     }
                 });
     }
-        function SwalOpen(id) {
+function SwalOpen(workTaskId, platformId) {
+    debugger;
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
                 confirmButton: 'btn btn-success',
@@ -146,17 +147,17 @@ function DeleteMember(id) {
             reverseButtons: true
         }).then((result) => {
             if (result.value) {
-                SinglePlatform(id, result.value);
+                SinglePlatform(workTaskId, platformId, result.value);
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                SinglePlatform(id, result.value);
+                SinglePlatform(workTaskId, platformId, result.value);
             }
         })
     }
-    function SinglePlatform(id, status) {
+function SinglePlatform(workTaskId, platformId, status) {
                  $.ajax({
                      url: host + "/Json/SinglePlatform" ,
                     type: 'POST',
-                    data: ({ id: id, status:status }),
+                     data: ({ workTaskId: workTaskId, platformId: platformId, status:status }),
                     dataType: 'json',
                     success: function (data)
                     {

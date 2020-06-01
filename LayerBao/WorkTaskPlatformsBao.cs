@@ -37,5 +37,10 @@ namespace LayerBao
         {
             return WorkTaskPlatformsDao.CheckWorkTaskPlatformExist(workTaskId,platformId);
         }
+
+        public static List<WorkTaskPlatforms> GetByBoth(long workTaskId, long platformId)
+        {
+            return WorkTaskPlatformsDao.GetByBoth(workTaskId, platformId);
+        }
     }
 }

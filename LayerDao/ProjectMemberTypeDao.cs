@@ -18,7 +18,13 @@ namespace LayerDao
         {
             return TableConstants.ProjectMemberTypes.Select<ProjectMemberTypes>((int)id);
         }
-        
+
+        public static ProjectMemberTypes GetByName(string name)
+        {
+            var query = $"Select * From dbo.ProjectMemberTypes where Name='{name}'";
+            return QueryExecutor.FirstOrDefault<ProjectMemberTypes>(query);
+        }
+
         public static List<ProjectMemberTypes> GetByProjectId(long id)
         {
             var where = $"ProjectId={id}";

@@ -35,9 +35,9 @@ namespace LayerDao
             var query = $"SELECT  ProjectMembers.*,ProjectMemberTypes.Name as MemberType,AspNetUsers.Name as MemberName  FROM [dbo].[ProjectMembers] Join dbo.ProjectMemberTypes on ProjectMemberTypes.Id=ProjectMembers.ProjectMemberTypeId Join dbo.AspNetUsers on AspNetUsers.Id=ProjectMembers.AspNetUserId where ProjectId={id};";
             return QueryExecutor.List<ProjectMembers>(query);
         }
-        public static bool Insert(ProjectMembers projectmembers)
+        public static long Insert(ProjectMembers projectmembers)
         {
-            return projectmembers.Insert(TableConstants.ProjectMembers) > 0;
+            return projectmembers.Insert(TableConstants.ProjectMembers);
         }
         public static bool Update(ProjectMembers projectmembers)
         {

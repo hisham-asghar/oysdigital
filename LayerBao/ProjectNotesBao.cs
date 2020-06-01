@@ -16,7 +16,7 @@ namespace LayerBao
         {
             return ProjectNotesDao.GetById(id);
         }
-        public static bool Insert(ProjectNotes projectnotes)
+        public static long Insert(ProjectNotes projectnotes)
         {
             return ProjectNotesDao.Insert(projectnotes);
         }

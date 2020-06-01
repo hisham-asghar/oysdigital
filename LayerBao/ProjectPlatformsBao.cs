@@ -20,7 +20,7 @@ namespace LayerBao
         {
             return ProjectPlatformsDao.GetByProjectId(id);
         }
-        public static bool Insert(ProjectPlatforms projectplatforms)
+        public static long Insert(ProjectPlatforms projectplatforms)
         {
             return ProjectPlatformsDao.Insert(projectplatforms);
         }

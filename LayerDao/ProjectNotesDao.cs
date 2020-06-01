@@ -25,9 +25,9 @@ namespace LayerDao
             var query = $"SELECT ProjectNotes.*, LabelType.Name as LabelName,LabelType.ColorCode as LabelColor FROM [dbo].ProjectNotes Join dbo.LabelType on ProjectNotes.LabelTypeId=LabelType.Id where ProjectId={id};";
             return QueryExecutor.List<ProjectNotes>(query);
         }
-        public static bool Insert(ProjectNotes projectnotes)
+        public static long Insert(ProjectNotes projectnotes)
         {
-            return projectnotes.Insert(TableConstants.ProjectNotes) > 0;
+            return projectnotes.Insert(TableConstants.ProjectNotes);
         }
         public static bool Update(ProjectNotes projectnotes)
         {
