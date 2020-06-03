@@ -71,7 +71,7 @@ function DeleteMember(id) {
                     }
                 });
     }
-    function GeneratePlatforms(id) {
+    function GeneratePlatforms(id,projectId,projectPlatformList) {
         var platforms = [];
         var platformHtml = "";
         $('#'+id).each(function () {
@@ -80,13 +80,14 @@ function DeleteMember(id) {
             console.log(platforms);
         });
         for (var i = 0; i < platforms.length; i++) {
-            platformHtml += "<div class='form-group'><input type='checkbox'  value='"  + platforms[i].Id + "' name='PlatformCheckbox'/>  " + platforms[i].PlatformName + "</div>"
-        }
+            platformHtml += "<div class='form-group'><input type='checkbox'  value='" + projectPlatformList[i] + "' name='PlatformCheckbox'/>  " + platforms[i].PlatformName + "</div>"
+         }
         $('#myPlatforms').html(platformHtml);
+        $('#projectId').val(projectId);
         }
-    function SwalPlatformsOpen() {
+function SwalPlatformsOpen() {
+    var projectId = $('#projectId').val();
         var TaskPlatforms = new Array();
-
         var inputElements = document.getElementsByName('PlatformCheckbox');
         for (var i = 0; inputElements[i]; ++i) {
             if (inputElements[i].checked) {
@@ -96,7 +97,7 @@ function DeleteMember(id) {
          $.ajax({
              url: host + "/Json/MultiPlatform" ,
                      type: 'POST',
-                     data: { id: TaskPlatforms },
+             data: { id: TaskPlatforms, projectId: projectId},
                      traditional: true,
                      dataType: 'json',
                     success: function (data)
@@ -126,8 +127,8 @@ function DeleteMember(id) {
                     }
                 });
     }
-function SwalOpen(workTaskId, platformId) {
-    debugger;
+function SwalOpen(projectPlatformList) {
+    
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
                 confirmButton: 'btn btn-success',
@@ -147,17 +148,17 @@ function SwalOpen(workTaskId, platformId) {
             reverseButtons: true
         }).then((result) => {
             if (result.value) {
-                SinglePlatform(workTaskId, platformId, result.value);
+                SinglePlatform(projectPlatformList, result.value);
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                SinglePlatform(workTaskId, platformId, result.value);
+                SinglePlatform(projectPlatformList, result.value);
             }
         })
     }
-function SinglePlatform(workTaskId, platformId, status) {
+function SinglePlatform(projectPlatformList, status) {
                  $.ajax({
                      url: host + "/Json/SinglePlatform" ,
                     type: 'POST',
-                     data: ({ workTaskId: workTaskId, platformId: platformId, status:status }),
+                     data: ({ projectPlatformList: projectPlatformList, status:status }),
                     dataType: 'json',
                     success: function (data)
                     {
@@ -217,10 +218,13 @@ function SinglePlatform(workTaskId, platformId, status) {
         });
 }
 function selectAll() {
-    var inputElements = document.getElementsByName('PlatformCheckbox');
-    for (var i = 0; inputElements[i]; ++i) {
-        inputElements[i].checked = source.checked;
-    }
+    var inputs = document.getElementsByTagName("input");
+    for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].type == "checkbox") {
+            inputs[i].checked = true;
+            // This way it won't flip flop them and will set them all to the same value which is passed into the function
+        }
+    }  
 }
 function FilterTable(startDate,endDate,userId) {
     $.ajax({

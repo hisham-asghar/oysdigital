@@ -8,6 +8,11 @@ namespace Generics.DataModels.AdminModels
     public class ProjectTask:BaseEntity
     {
         public int TaskTypeId { get; set; }
+        [Ignore]
+        public string TaskType { get; set; }
+        [Ignore]
+        public string FrequencyType { get; set; }
+        
         public int Frequency { get; set; }
         public int FrequencyTypeId { get; set; }
         public long ProjectId { get; set; }

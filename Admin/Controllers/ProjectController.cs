@@ -132,20 +132,27 @@ namespace Admin.Controllers
         [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
         public IActionResult Detail(long id)
         {
-            Project project = ProjectBao.GetById(id);
-
-            if (id > 0 && project == null)
+            if (id > 0)
             {
-                return RedirectToAction("Error", "Home");
+                Project project = ProjectBao.GetById(id);
+
+                if (id > 0 && project == null)
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+                else
+                {
+                    //   ViewBag.PlatformDictionary = Functions.CreateDictionaryFromModelList(PlatformBao.GetAll());
+                    //  ViewBag.ProjectDictionary = Functions.CreateDictionaryFromModel(project);
+                }
+                project.ProjectNotes = (project.ProjectNotes ?? new List<ProjectNotes>()).OrderByDescending(u => u.OnCreated).ToList();
+                project.ProjectAlertMessages = (project.ProjectAlertMessages ?? new List<ProjectAlertMessage>()).OrderByDescending(u => u.OnCreated).ToList();
+                return View(project);
             }
             else
             {
-                //   ViewBag.PlatformDictionary = Functions.CreateDictionaryFromModelList(PlatformBao.GetAll());
-                //  ViewBag.ProjectDictionary = Functions.CreateDictionaryFromModel(project);
+                return View(new Project());
             }
-            project.ProjectNotes = (project.ProjectNotes ?? new List<ProjectNotes>()).OrderByDescending(u => u.OnCreated).ToList();
-            project.ProjectAlertMessages = (project.ProjectAlertMessages ?? new List<ProjectAlertMessage>()).OrderByDescending(u => u.OnCreated).ToList();
-            return View(project);
         }
     }
 }

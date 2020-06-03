@@ -114,9 +114,9 @@ async function Rangerswal() {
                 {
                     var schedulingtime = "";
                     for (var i = 0; i < data.projectTaskScheduling.length; i++) {
-                        schedulingtime += "<span class='btn btn-primary'>" + data.projectTaskScheduling[0].time+ "</span>";
+                        schedulingtime += "<span class='btn btn-primary'>" + data.projectTaskScheduling[0].time + "</span>";
                     }
-                    var projecttask = "<tr id = '"+data.id+"'><td></td><td>"+ schedulingtime +"</td><td><a role='button' onclick='DeletePlatformTask('"+data.id+")' class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></td></tr>";
+                    var projecttask = "<tr id = " + data.id + "><td>"+data.taskType+"-"+data.frequencyType+"</td><td>" + schedulingtime + "</td><td><a role='button' onclick=DeletePlatformTask(" + data.id + ") class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></td></tr>";
                     $('#myTask').append(projecttask);
                     ShowResult(data);
                 }
@@ -334,7 +334,7 @@ async function CreateNotes(id) {
             data: projectNotes,
             success: function (data) {
                 if (data != null) {
-                    var notes = "<div class='row' id='"+data.id+"'><div class='col-md-10 text-dark'>"+data.message+"</div><div class='col-md-2'><ul class='social-links list-unstyled'><li><span>"+data.onCreated+"</span></li><li><span class='text-muted'>"+data.onCreated+"</span></li><li><div class='press'><span class='badge text-white' style='background-color:"+data.labelColor+"'>"+data.labelName+"</span></div></li><li><a role='button' onclick='DeleteNotes("+data.id+")' class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></li></ul></div></div>";
+                    var notes = "<div class='row' id='" + data.id + "'><div class='col-md-10 text-dark'>" + data.message + "</div><div class='col-md-2'><ul class='social-links list-unstyled'><li><span>" + data.onCreated + "</span></li><li><span class='text-muted'>" + data.onCreated+"</span></li><li><div class='press'><span class='badge text-white' style='background-color:"+data.labelColor+"'>"+data.labelName+"</span></div></li><li><a role='button' onclick='DeleteNotes("+data.id+")' class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></li></ul></div></div>";
                     $('#myNotes').append(notes);
                     Swal.fire(
                         'Added',
@@ -427,7 +427,7 @@ async function CreateAlertMessages(id) {
     });
 }
 
-function DeleteMember(id,name) {
+function DeleteMember(id,name,memberType) {
     Swal.fire({
         title: 'Are you sure to delete '+name+' ?',
         text: "You won't be able to revert this!",
@@ -444,12 +444,29 @@ function DeleteMember(id,name) {
                 dataType: 'json',
                 success: function (data) {
                     DeleteResult(data, id);
+                    Show(memberType);
                 }
             });
 
         }
     })
 
+}
+function Hide(memberType) {
+    if (memberType == "Designer") {
+        $("#btndesigner").hide();
+    }
+    if (memberType == "Scheduler") {
+        $("#btnscheduler").hide();
+    }
+}
+function Show(memberType) {
+    if (memberType == "Designer") {
+        $("#btndesigner").show();
+    }
+    if (memberType == "Scheduler") {
+        $("#btnscheduler").show();
+    }
 }
 async function CreateMember(id,memberType) {
     projectMembers = {
@@ -491,13 +508,14 @@ async function CreateMember(id,memberType) {
             data: projectMembers,
             success: function (data) {
                 if (data != null) {
-                    var members = "<tr id='"+data.id+"'><td><div style='width:50px;height:auto' class='rounded-circle'><img src='/images/profile_av.jpg' class='img-fluid' alt=''></div></td><td><ul class='social-links list-unstyled'><li><span>"+data.memberName+"</span></li><li><span class='text-muted'>"+data.memberType+"</span></li></ul></td><td><a onclick='DeleteMember('"+data.id+",'"+data.memberName+"')' role='button' class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></td></tr>";
+                    var members = "<tr id='" + data.id + "'><td><div style='width:50px;height:auto' class='rounded-circle'><img src='/images/profile_av.jpg' class='img-fluid' alt=''></div></td><td><ul class='social-links list-unstyled'><li><span>" + data.memberName + "</span></li><li><span class='text-muted'>" + data.memberType + "</span></li></ul></td><td><a onclick=DeleteMember("+data.id+",'"+data.memberName+"','" + data.memberType +"') role='button' class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></td></tr>";
                     $('#myMembers').append(members);
                     Swal.fire(
                         'Added',
                         'Your Members has been Added.',
                         'success'
                     )
+                    Hide(memberType);
                 }
             }
 

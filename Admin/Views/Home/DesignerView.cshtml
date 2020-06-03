@@ -10,12 +10,15 @@
     var overAll = ViewBag.OverAll;
     var week = ViewBag.Week;
     var month = ViewBag.Month;
-
+    var list = new List<WorkTask>();
+    var distinctProject = Model.Item1.Select(s=>new { s.ProjectId,s.IsDesigned,s.OnCreated }).Distinct();
+    foreach (var item in distinctProject)
+    {
+        list.Add(Model.Item1.Where(s => s.IsDesigned==item.IsDesigned && s.ProjectId==item.ProjectId && s.OnCreated==item.OnCreated).FirstOrDefault());
+    }
     var time = (Generics.DataModels.Enums.TaskTimeFilter)ViewBag.TimeFilter;
     var status = (Generics.DataModels.Enums.TaskStatusFilter)ViewBag.StatusFilter;
-    long data = 0;
-    var count = 0;
-    var tasks= new List<long>();
+
 }
 <div class="container-fluid">
     <partial name="_MemberStatsView" model="Model.Item2" />
@@ -46,7 +49,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var workTask in Model.Item1)
+                            @foreach (var workTask in list)
                             {
                                 if (workTask.WorkTaskPlatforms.All(s => s.IsDesigned == true))
                                 {
@@ -56,14 +59,6 @@
                                 {
                                     IsCompleted = false;
                                 }
-                                if (count == 0)
-                                {
-                                    count=1;
-                                    data = workTask.ProjectId;
-                                }
-                                if (data == workTask.ProjectId && count==1)
-                                {
-                                    count++;
                                 <tr style="@((IsCompleted) ? "background-color:#04BE5B" : "")">
 
 
@@ -71,27 +66,35 @@
                                     <td>
                                         @foreach (var plat in workTask.WorkTaskPlatforms)
                                         {
-                                            tasks.Add(plat.WorkTaskId);
+                                            var list1 = new List<long>();
+                                            foreach (var i in Model.Item1)
+                                            {
+                                                foreach(var pl in i.WorkTaskPlatforms.Where(s=>s.PlatformId==plat.PlatformId))
+                                                {
+                                                    list1.Add(pl.Id);
+                                                }
+                                            }
+
                                             if (plat.IsDesigned)
                                             {
                                                 <span class="dot" style="background-color: #04BE5B;">
-                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@tasks,@plat.PlatformId)"></i>
+                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@JsonConvert.SerializeObject(list1))"></i>
                                                 </span>
                                             }
                                             else
                                             {
                                                 <span class="dot" style="background-color:gainsboro;">
-                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@plat.WorkTaskId,@plat.PlatformId)"></i>
+                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@JsonConvert.SerializeObject(list1))"></i>
                                                 </span>
                                             }
-                                        }
+                                         }
                                     </td>
 
                                     <td>
                                         <ul class="list-unstyled">
-                                            @foreach (var sche in Model.Item1.Where(s => s.ProjectId == data))
+                                            @foreach (var sche in Model.Item1.Where(s=>s.ProjectId==workTask.ProjectId).Select(s=>new { s.ProjectSchedulingTime}).Distinct())
                                             {
-                                            <li><span class="btn btn-primary"> @sche.OnCreated.ToString(MMMM_dd_yyyy) @sche.ProjectSchedulingTime.ToString(hh_mm_tt)</span></li>
+                                            <li><span class="btn btn-primary"> @workTask.OnCreated.ToString(MMMM_dd_yyyy) @sche.ProjectSchedulingTime.ToString(hh_mm_tt)</span></li>
                                             }
                                         </ul>
                                     </td>
@@ -109,20 +112,26 @@
                                     <td>
                                         @if (!IsCompleted)
                                         {
-                                            <span><i class="btn-sm btn btn-success" data-toggle="modal" data-target="#smallModal" onclick="GeneratePlatforms(@workTask.Id)">MarkAsDone</i></span>
+                                            var data = new List<long>();
+                                            var ff = Model.Item1.Where(s => s.ProjectId == workTask.ProjectId && s.OnCreated.Date == workTask.OnCreated.Date).ToList();
+                                            @foreach (var plat in ff)
+                                            {
+                                                var list1 = new List<long>();
+                                                foreach (var i in plat.WorkTaskPlatforms)
+                                                {
+                                                    if (!list1.Contains(i.WorkTaskId))
+                                                    {
+                                                        list1.Add(i.WorkTaskId);
+                                                    }
+                                                }
+                                                data.AddRange(list1);
+                                            }
+                                            <span><i class="btn-sm btn btn-success" data-toggle="modal" data-target="#smallModal" onclick="GeneratePlatforms(@workTask.Id,@workTask.ProjectId,@JsonConvert.SerializeObject(data))">MarkAsDone</i></span>
+                                            <div class="my-component" id="@workTask.Id" data-options="@JsonConvert.SerializeObject(workTask.WorkTaskPlatforms)"></div>
                                         }
-                                        <div class="my-component" id="@workTask.Id" data-options="@JsonConvert.SerializeObject(workTask.WorkTaskPlatforms)"></div>
+
                                     </td>
                                 </tr>
-                                }
-                                else
-                                {
-                                    if (data != workTask.ProjectId)
-                                    {
-                                        count = 0;
-                                    }
-                                }
-
                             }
                         </tbody>
                     </table>
@@ -132,12 +141,14 @@
                                 <div class="modal-header">
                                     <h4 class="title" id="smallModalLabel">Paltforms</h4>
                                 </div>
+                                <input type="hidden" id="projectId" />
                                 <div class="modal-body" id="myPlatforms">
                                     <!--data will be append-->
 
                                 </div>
-                                <button type="button" onclick="selectAll()">Select All</button>
+                                <button type="button" class="btn btn-primary" onclick="selectAll()">Select All</button>
                                 <div class="modal-footer">
+
                                     <button type="button" onclick="SwalPlatformsOpen()" class="btn btn-info btn-round waves-effect">Updates</button>
                                     <button type="button" class="btn btn-default btn-round waves-effect" data-dismiss="modal">Cancel</button>
                                 </div>

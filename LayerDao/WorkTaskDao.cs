@@ -26,6 +26,12 @@ namespace LayerDao
             var query = $"select WorkTask.*,Project.Name as ProjectName from WorkTask join Project on Project.Id=WorkTask.ProjectId where WorkTask.ProjectId={id} AND WorkTask.OnCreated BETWEEN '{today}' AND '{tomorrow}' OR IsCompleted='false';";
             return QueryExecutor.List<WorkTask>(query);
         }
+        public static List<WorkTask> GetByProjectIdAll(long id)
+        {
+            var today = DateTime.Now.Date;
+            var query = $"select WorkTask.*,Project.Name as ProjectName from WorkTask join Project on Project.Id=WorkTask.ProjectId where WorkTask.ProjectId={id} AND WorkTask.OnCreated='{today}';";
+            return QueryExecutor.List<WorkTask>(query);
+        }
 
 
         public static List<WorkTask> GetByProjectIds(List<long> ids)

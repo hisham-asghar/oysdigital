@@ -19,7 +19,7 @@
                     <a href="profile.html"><img src="/images/profile_av.jpg" class="rounded-circle" alt="profile-image"></a>
                     <h4 class="m-t-10">@Model.Name</h4>
                     <h5 class="m-t-10">Created: @Model.OnModified.ToString(MMMM_dd_yyyy)</h5>
-                    <span>Mobile Sapce: @Model.MobileSpaceName <a role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a></span>
+                    <span>Mobile Sapce: @Model.MobileSpaceName</span>
                 </div>
             </div>
             <div class="card shadow p-3 mb-5 bg-white rounded">
@@ -32,17 +32,19 @@
                             @if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
                             {
                             <div class="pull-right">
+                                <button class="btn btn-success" style="display:none" id="btndesigner" onclick="CreateMember(@Model.Id,'Designer')"><i class="zmdi zmdi-plus"> Designer</i></button>
+                                <button class="btn btn-success" style="display:none" id="btnscheduler" onclick="CreateMember(@Model.Id,'Scheduler')"><i class="zmdi zmdi-plus"> Scheduler</i></button>
                                 @if (Model.ProjectMembers.Where(s => s.MemberType == UserRoles.Designer).Count() == 0)
                                 {
-                                <button class="btn btn-success" onclick="CreateMember(@Model.Id,'Designer')"><i class="zmdi zmdi-plus"></i> Create</button>
+                                    <button class="btn btn-success" id="btndesigner" onclick="CreateMember(@Model.Id,'Designer')"><i class="zmdi zmdi-plus"> Designer</i></button>
                                 }
                                 @if (Model.ProjectMembers.Where(s => s.MemberType == UserRoles.Scheduler).Count() == 0)
                                 {
-                                 <button class="btn btn-success" onclick="CreateMember(@Model.Id,'Scheduler')"><i class="zmdi zmdi-plus"></i> Create</button>
+                                    <button class="btn btn-success" id="btnscheduler" onclick="CreateMember(@Model.Id,'Scheduler')"><i class="zmdi zmdi-plus"> Scheduler</i></button>
                                 }
-                                    @*@ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
-                                     @ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")*@
-                           </div>
+                                @*@ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")
+        @ButtonHelper.Create($"/ProjectMembers/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")*@
+                            </div>
                             }
                         </div>
                     </div>
@@ -65,9 +67,14 @@
                                         </ul>
                                     </td>
                                     <td>
-                                        @if (Model.ProjectMembers.Where(s => s.MemberType == UserRoles.Designer).Count() > 0)
+
+                                        @if (item.MemberType==UserRoles.Scheduler)
                                         {
-                                            <a onclick="DeleteMember(@item.Id,'@item.MemberName')" role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
+                                            <a onclick="DeleteMember(@item.Id,'@item.MemberName','@item.MemberType')" role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
+                                        }
+                                        else
+                                        {
+                                            <a onclick="DeleteMember(@item.Id,'@item.MemberName','@item.MemberType')" role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
                                         }
                                     </td>
                                 </tr>
@@ -107,7 +114,7 @@
                                         <td id="myPlat">
                                            @foreach (var item in Model.ProjectPlatforms)
                                             {
-                                            <span id="@item.Id"><a href="@item.Link" target="_blank" class="btn"><i class="@item.PlatformIcon"></i></a> @item.PlatformName  <span class="ti-close text-danger font-bold" onclick="DeletePaltforms(@item.Id, '@item.PlatformName')"></span></span>
+                                            <span id="@item.Id" class="btn"><a href="@item.Link" target="_blank" class="btn" > <i class="@item.PlatformIcon"></i> @item.PlatformName </a> <span class="ti-close text-danger font-bold" onclick="DeletePaltforms(@item.Id, '@item.PlatformName')"></span></span>
                                             }
                                         </td>
                                           
@@ -193,7 +200,6 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <hr />
                             }
                         </div>
                     </div>

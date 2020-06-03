@@ -5,6 +5,7 @@ using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Eac;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,53 +80,49 @@ namespace Admin.Controllers
 
         [Route("/Json/SinglePlatform")]
         [HttpPost]
-        public JsonResult SinglePlatform(long workTaskId, long platformId, bool status)
+        public JsonResult SinglePlatform(List<long> projectPlatformList, bool status)
         {
-
-            var workTaskPlatforms = WorkTaskPlatformsBao.GetByBoth(workTaskId,platformId);
-            if (workTaskPlatforms != null)
+            if (projectPlatformList != null)
             {
+                foreach (var item in projectPlatformList)
+                {
+                    var workTaskPlatforms = WorkTaskPlatformsBao.GetById(item);
+                    var user = ProjectMembersBao.GetByUserId(User.GetUserId());
+                    if (user != null)
+                    {
+                        if (user.MemberType == UserRoles.Designer)
+                        {
+                            workTaskPlatforms.IsDesigned = status;
+                            WorkTaskPlatformsBao.Update(workTaskPlatforms);
+                            if (showstatus(workTaskPlatforms.WorkTaskId, user.MemberType))
+                            {
+                                var worktask = WorkTaskBao.GetById(workTaskPlatforms.WorkTaskId);
+                                worktask.IsDesigned = true;
+                                WorkTaskBao.Update(worktask);
+                            }
+                        }
+                        if (user.MemberType == UserRoles.Scheduler)
+                        {
+                            workTaskPlatforms.IsScheduled = status;
+                            workTaskPlatforms.IsCompleted = status;
+                            WorkTaskPlatformsBao.Update(workTaskPlatforms);
+                            if (showstatus(workTaskPlatforms.WorkTaskId, user.MemberType))
+                            {
+                                workTaskPlatforms.IsCompleted = true;
+                                WorkTaskPlatformsBao.Update(workTaskPlatforms);
+                                var worktask = WorkTaskBao.GetById(workTaskPlatforms.WorkTaskId);
+                                worktask.IsScheduled = true;
+                                worktask.IsCompleted = true;
+                                WorkTaskBao.Update(worktask);
+                            }
+                        }
 
-                var user = ProjectMembersBao.GetByUserId(User.GetUserId());
-                //if (user != null)
-                //{
-                //    if (user.MemberType == UserRoles.Designer)
-                //    {
-                //        workTaskPlatforms.IsDesigned = status;
-                //        WorkTaskPlatformsBao.Update(workTaskPlatforms);
-                //        if (showstatus(workTaskPlatforms.WorkTaskId, user.MemberType))
-                //        {
-                //            var worktask = WorkTaskBao.GetById(workTaskPlatforms.WorkTaskId);
-                //            worktask.IsDesigned = true;
-                //            WorkTaskBao.Update(worktask);
-                //        }
-                //    }
-                //    if (user.MemberType == UserRoles.Scheduler)
-                //    {
-                //        if (status == false)
-                //        {
-                //            workTaskPlatforms.IsCompleted = status;
-                //        }
-                //        workTaskPlatforms.IsScheduled = status;
-                //        WorkTaskPlatformsBao.Update(workTaskPlatforms);
-                //        if (showstatus(workTaskPlatforms.WorkTaskId, user.MemberType))
-                //        {
-                //            workTaskPlatforms.IsCompleted = true;
-                //            WorkTaskPlatformsBao.Update(workTaskPlatforms);
-                //            var worktask = WorkTaskBao.GetById(workTaskPlatforms.WorkTaskId);
-                //            worktask.IsScheduled = true;
-                //            worktask.IsCompleted = true;
-                //            WorkTaskBao.Update(worktask);
-                //        }
-                //    }
+                    }
 
-
-                //    return Json(true);
-
-
-                //}
-                //return Json(null);
+                }
+                return Json(true);
             }
+
             return Json(null);
         }
         public bool showstatus(long worktaskId, string role)
@@ -165,57 +162,61 @@ namespace Admin.Controllers
         {
             if (id.Length > 0)
             {
-                var user = ProjectMembersBao.GetByUserId(User.GetUserId());
-                foreach (var item in id)
-                {
-                    var workTask = WorkTaskPlatformsBao.GetById(item.ToLong());
-                    if (workTask != null)
+                    var user = ProjectMembersBao.GetByUserId(User.GetUserId());
+                    foreach (var item in id)
                     {
-                        if (user.MemberType == UserRoles.Designer)
+                     var data = WorkTaskPlatformsBao.GetByWorkTaskId(item.ToLong());
+                    foreach (var workTask in data)
+                    {
+                        if (workTask != null)
                         {
-                            if (workTask.IsDesigned != true)
+                            if (user.MemberType == UserRoles.Designer)
                             {
-                                workTask.IsDesigned = true;
-                                WorkTaskPlatformsBao.Update(workTask);
-                                if (showstatus(workTask.WorkTaskId, user.MemberType))
+                                if (workTask.IsDesigned != true)
                                 {
-                                    var worktask = WorkTaskBao.GetById(workTask.WorkTaskId);
-                                    worktask.IsDesigned = true;
-                                    WorkTaskBao.Update(worktask);
+                                    workTask.IsDesigned = true;
+                                    WorkTaskPlatformsBao.Update(workTask);
+                                    if (showstatus(workTask.WorkTaskId, user.MemberType))
+                                    {
+                                        var worktask = WorkTaskBao.GetById(workTask.WorkTaskId);
+                                        worktask.IsDesigned = true;
+                                        WorkTaskBao.Update(worktask);
+                                    }
                                 }
                             }
-
-                        }
-                        if (user.MemberType == UserRoles.Scheduler)
-                        {
-                            if (workTask.IsScheduled != true)
+                            if (user.MemberType == UserRoles.Scheduler)
                             {
-                                workTask.IsScheduled = true;
-                                WorkTaskPlatformsBao.Update(workTask);
-                                if (showstatus(workTask.WorkTaskId, user.MemberType))
+                                if (workTask.IsScheduled != true)
+                                {
+                                    workTask.IsScheduled = true;
+                                    workTask.IsCompleted = true;
+                                    WorkTaskPlatformsBao.Update(workTask);
+                                    if (showstatus(workTask.WorkTaskId, user.MemberType))
+                                    {
+                                        workTask.IsCompleted = true;
+                                        workTask.IsScheduled = true;
+                                        WorkTaskPlatformsBao.Update(workTask);
+                                        var worktask = WorkTaskBao.GetById(workTask.WorkTaskId);
+                                        worktask.IsScheduled = true;
+                                        worktask.IsCompleted = true;
+                                        WorkTaskBao.Update(worktask);
+                                    }
+                                }
+                            }
+                            if (user.MemberType == UserRoles.Admin)
+                            {
+                                if (workTask.IsCompleted != true)
                                 {
                                     workTask.IsCompleted = true;
                                     WorkTaskPlatformsBao.Update(workTask);
-                                    var worktask = WorkTaskBao.GetById(workTask.WorkTaskId);
-                                    worktask.IsScheduled = true;
-                                    worktask.IsCompleted = true;
-                                    WorkTaskBao.Update(worktask);
                                 }
-                            }
-                        }
-                        if (user.MemberType == UserRoles.Admin)
-                        {
-                            if (workTask.IsCompleted != true)
-                            {
-                                workTask.IsCompleted = true;
-                                WorkTaskPlatformsBao.Update(workTask);
+
                             }
 
                         }
-
                     }
-
-                }
+                    }
+                               
                 return Json(true);
             }
             return Json(null);
@@ -276,7 +277,10 @@ namespace Admin.Controllers
                 {
                     return Json(false);
                 }
-                return Json(ProjectTaskBao.GetById(projectTaskId));
+                var data = ProjectTaskBao.GetById(projectTaskId);
+                data.TaskType= TaskType.CheckTaskType(data.TaskTypeId);
+                data.FrequencyType=FrequencyType.CheckFrequencyType(data.FrequencyTypeId);
+                return Json(data);
             }
             return Json(null);
         }

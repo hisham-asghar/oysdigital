@@ -3,7 +3,12 @@
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "_Layout";
-
+    var list = new List<WorkTask>();
+    var distinctProject = Model.Item1.Select(s => new { s.ProjectId, s.IsDesigned, s.OnCreated }).Distinct();
+    foreach (var item in distinctProject)
+    {
+        list.Add(Model.Item1.Where(s => s.IsDesigned == item.IsDesigned && s.ProjectId == item.ProjectId && s.OnCreated == item.OnCreated).FirstOrDefault());
+    }
     var time = (Generics.DataModels.Enums.TaskTimeFilter)ViewBag.TimeFilter;
     var status = (Generics.DataModels.Enums.TaskStatusFilter)ViewBag.StatusFilter;
 }
@@ -35,7 +40,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.Item1)
+                            @foreach (var item in list)
                             {
 
                                 <tr style="@((item.IsCompleted)?"background-color:#04BE5B":"")">

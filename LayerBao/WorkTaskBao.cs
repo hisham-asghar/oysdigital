@@ -39,6 +39,11 @@ namespace LayerBao
             }
             return data;
         }
+        public static List<WorkTask> GetByProjectIdAll(long id)
+        {
+            var data = WorkTaskDao.GetByProjectIdAll(id);
+            return data;
+        }
         public static List<WorkTask> GetByProjectIds(List<long> ids, string userId)
         {
             var data = WorkTaskDao.GetByProjectIds(ids);
