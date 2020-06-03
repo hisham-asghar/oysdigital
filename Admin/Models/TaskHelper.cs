@@ -130,52 +130,51 @@ namespace Admin.Models
 
         public static List<WorkTask> GetWorkTask(List<long> item, string userId, TaskTimeFilter time, TaskStatusFilter status)
         {
-           // var workTasks = GetWorkTasksByProjectIds(item, userId);
-            return GetWorkTasksByProjectIds(item, userId);
-            //var today = DateTime.Now;
-            //switch (time)
-            //{
-            //    case TaskTimeFilter.Today:
-            //        {
-            //            workTasks = workTasks.Where(w => w.ProjectSchedulingTime.Date == today.Date).ToList();
-            //            break;
-            //        }
+            var workTasks = GetWorkTasksByProjectIds(item, userId);
+            var today = DateTime.Now;
+            switch (time)
+            {
+                case TaskTimeFilter.Today:
+                    {
+                        workTasks = workTasks.Where(w => w.ProjectSchedulingTime.Date == today.Date).ToList();
+                        break;
+                    }
 
-            //    case TaskTimeFilter.Tomorrow:
-            //        {
-            //            workTasks = workTasks.Where(w => w.ProjectSchedulingTime.Date == today.Date.AddDays(1)).ToList();
-            //            break;
-            //        }
+                case TaskTimeFilter.Tomorrow:
+                    {
+                        workTasks = workTasks.Where(w => w.ProjectSchedulingTime.Date == today.Date.AddDays(1)).ToList();
+                        break;
+                    }
 
-            //    case TaskTimeFilter.CurrentWeek:
-            //        {
-            //            workTasks = workTasks.Where(w => w.ProjectSchedulingTime.DateInsideOneWeek(today)).ToList();
-            //            break;
-            //        }
-            //    case TaskTimeFilter.CurrentMonth:
-            //        {
-            //            workTasks = workTasks.Where(w => w.ProjectSchedulingTime.Month == today.Month && w.OnCreated.Year == today.Year).ToList();
-            //            break;
-            //        }
-            //}
+                case TaskTimeFilter.CurrentWeek:
+                    {
+                        workTasks = workTasks.Where(w => w.ProjectSchedulingTime.DateInsideOneWeek(today)).ToList();
+                        break;
+                    }
+                case TaskTimeFilter.CurrentMonth:
+                    {
+                        workTasks = workTasks.Where(w => w.ProjectSchedulingTime.Month == today.Month && w.OnCreated.Year == today.Year).ToList();
+                        break;
+                    }
+            }
 
-            //switch (status)
-            //{
-            //    case TaskStatusFilter.Done:
-            //        {
-            //            workTasks = workTasks.Where(w => w.IsDone()).ToList();
-            //            break;
-            //        }
+            switch (status)
+            {
+                case TaskStatusFilter.Done:
+                    {
+                        workTasks = workTasks.Where(w => w.IsDone()).ToList();
+                        break;
+                    }
 
-            //    case TaskStatusFilter.Pending:
-            //        {
-            //            workTasks = workTasks.Where(w => w.IsPending()).ToList();
-            //            break;
-            //        }
-            //}
+                case TaskStatusFilter.Pending:
+                    {
+                        workTasks = workTasks.Where(w => w.IsPending()).ToList();
+                        break;
+                    }
+            }
 
 
-            //return workTasks;
+            return workTasks;
         }
         public static bool WorkTaskStatus(List<ProjectTask> projectTask, DateTime date)
         {
