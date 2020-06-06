@@ -28,27 +28,28 @@ namespace Admin.Controllers
             ViewBag.StatusFilter = status;
 
             var myId = User.GetUserId();
-            var roles = AspNetUserRolesBao.GetByUserId(myId);
+            //var roles = AspNetUserRolesBao.GetByUserId(myId);
 
             if (!User.HaveAnyRole()) return View("RoleRequestView");
 
             var statsModel = TaskHelper.GetUserStats(myId);
 
-            var user = ProjectMembersBao.GetByUserIdList(User.GetUserId());
-            var userProjectIds = user.Select(s => s.ProjectId).ToList();
-            if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
+            var workTask = TaskHelper.GetWorkTask(myId, time, status);
+
+            var counts = WorkTaskBao.GetGenerateTasksCount(myId);
+
+            var today = DateTime.UtcNow.AddHours(5);
+            ViewBag.GenerateTomorrow = ViewBag.GenerateToday = false;
+            foreach(var c in counts)
             {
-                userProjectIds = ProjectBao.GetAll().Select(p => p.Id).ToList();
+                var todayStr = today.ToString("MM-dd-yyyy");
+                var tomStr = today.AddDays(1).ToString("MM-dd-yyyy");
+                if (c.Date == todayStr)
+                    ViewBag.GenerateToday = c.TaskCount > 0;
+                if (c.Date == tomStr)
+                    ViewBag.GenerateTomorrow = c.TaskCount > 0;
             }
-            var workTask = TaskHelper.GetWorkTask(userProjectIds, myId, time, status);
-
-
-            var projectTask = TaskHelper.GetProjectTask(userProjectIds);
-            ViewBag.GenerateToday = !TaskHelper.WorkTaskStatus(projectTask, DateTime.Now.Date);
-            ViewBag.GenerateTomorrow = !TaskHelper.WorkTaskStatus(projectTask, DateTime.Now.AddDays(1).Date);
-
             var tuple = new Tuple<List<WorkTask>, StatsModel>(workTask, statsModel);
-            ViewBag.Member = user ?? null;
 
             if (User.IsDesigner())
                 return View("DesignerView", tuple);

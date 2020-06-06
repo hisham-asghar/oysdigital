@@ -44,6 +44,13 @@ namespace LayerDao
             return ViewConstants.WORK_TASK_VIEW.SelectList<WorkTask>($" ProjectId IN ({idStr}) ");
         }
 
+        public static List<WorkTask> GetByUserId(string userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId)) return new List<WorkTask>();
+            var where = $" Id IN (SELECT WorkTaskId FROM dbo.WorkTaskMembersView WHERE UserId = '{userId}') ";
+            return ViewConstants.WORK_TASK_VIEW.SelectList<WorkTask>(where);
+        }
+
         public static long Insert(WorkTask worktask)
         {
             return worktask.Insert(TableConstants.WorkTask);
@@ -82,10 +89,18 @@ namespace LayerDao
             return QueryExecutor.FirstOrDefault<WorkTask>(query);
         }
 
+        public static List<GenertableTaskCount> GetGenerateTasksCount(string userId)
+        {
+            var today = DateTime.UtcNow.AddHours(5);
+            var str = $"{today.ToString("MM-dd-yyyy")},{today.AddDays(1).ToString("MM-dd-yyyy")}";
+            var query = $"EXEC dbo.GetGenerateableTasksCount '{str}', '{userId}'";
+            var counts = QueryExecutor.List<GenertableTaskCount>(query) ?? new List<GenertableTaskCount>();
+            return counts;
+        }
 
         public static bool GenerateTasks(DateTime date, string userId)
         {
-            var query = $"EXEC dbo.GetGenerateableTasks '{(date.ToString("MM-dd-yyyy"))}'";
+            var query = $"EXEC dbo.GetGenerateableTasks '{(date.ToString("MM-dd-yyyy"))}', '{userId}'";
             var projectTasks = QueryExecutor.List<WorkTask>(query) ?? new List<WorkTask>();
             projectTasks.ForEach(w =>
             {

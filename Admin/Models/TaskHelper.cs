@@ -21,36 +21,43 @@ namespace Admin.Models
             var data = GetUserTasks(userId);
             if (data == null) return null;
 
-            var today = DateTime.Now;
+            var groupedData = data.GroupBy(d => new
+            {
+                d.ProjectId,
+                d.ProjectSchedulingTime.Date,
+            }).ToDictionary(k => k.Key, v => v.ToList());
+
+
+            var today = DateTime.UtcNow.AddHours(5);
             var statsModel = new StatsModel();
-            statsModel.OverallTotal = data.Count();
-            statsModel.OverallDone = data.Count(d => d.IsDone());
+            statsModel.OverallTotal = groupedData.Count();
+            statsModel.OverallDone = groupedData.Count(d => d.Value.All(t => t.IsDone()));
             statsModel.OverallDonePercent = statsModel.OverallTotal == 0 ? 0 : ((int)((statsModel.OverallDone * 100 * 100) / statsModel.OverallTotal)) / 100.0;
             statsModel.OverallPending = statsModel.OverallTotal - statsModel.OverallDone;
 
 
-            var currentMonthData = data.Where(d => d.ProjectSchedulingTime.Month == today.Month && d.ProjectSchedulingTime.Year == today.Year);
+            var currentMonthData = groupedData.Where(g => g.Key.Date.ToString("yyyyMM") == today.ToString("yyyyMM"));
             statsModel.CurrentMonthTotal = currentMonthData.Count();
-            statsModel.CurrentMonthDone = currentMonthData.Count(d => d.IsDone());
+            statsModel.CurrentMonthDone = currentMonthData.Count(d => d.Value.All(t => t.IsDone()));
             statsModel.CurrentMonthDonePercent = statsModel.CurrentMonthTotal == 0 ? 0 : ((int)((statsModel.CurrentMonthDone * 100 * 100) / statsModel.CurrentMonthTotal)) / 100.0;
             statsModel.CurrentMonthPending = statsModel.CurrentMonthTotal - statsModel.CurrentMonthDone;
 
-            var currentWeekData = data.Where(d => d.ProjectSchedulingTime.DateInsideOneWeek(today));
+            var currentWeekData = groupedData.Where(d => d.Key.Date.DateInsideOneWeek(today));
             statsModel.CurrentWeekTotal = currentWeekData.Count();
-            statsModel.CurrentWeekDone = currentWeekData.Count(d => d.IsDone());
+            statsModel.CurrentWeekDone = currentWeekData.Count(d => d.Value.All(t => t.IsDone()));
             statsModel.CurrentWeekDonePercent = statsModel.CurrentWeekTotal == 0 ? 0 : ((int)((statsModel.CurrentWeekDone * 100 * 100) / statsModel.CurrentWeekTotal)) / 100.0;
             statsModel.CurrentWeekPending = statsModel.CurrentWeekTotal - statsModel.CurrentWeekDone;
 
-            var todayData = data.Where(d => d.ProjectSchedulingTime.Date == today.Date);
+            var todayData = groupedData.Where(d => d.Key.Date == today.Date);
             statsModel.TodayTotal = todayData.Count();
-            statsModel.TodayDone = todayData.Count(d => d.IsDone());
+            statsModel.TodayDone = todayData.Count(d => d.Value.All(t => t.IsDone()));
             statsModel.TodayDonePercent = statsModel.TodayTotal == 0 ? 0 : ((int)((statsModel.TodayDone * 100 * 100) / statsModel.TodayTotal)) / 100.0;
             statsModel.TodayPending = statsModel.TodayTotal - statsModel.TodayDone;
 
 
-            var tomorrowData = data.Where(d => d.ProjectSchedulingTime.Date == today.Date.AddDays(1));
+            var tomorrowData = groupedData.Where(d => d.Key.Date == today.Date.AddDays(1));
             statsModel.TomorrowTotal = tomorrowData.Count();
-            statsModel.TomorrowDone = tomorrowData.Count(d => d.IsDone());
+            statsModel.TomorrowDone = tomorrowData.Count(d => d.Value.All(t => t.IsDone()));
             statsModel.TomorrowDonePercent = statsModel.TomorrowTotal == 0 ? 0 : ((int)((statsModel.TomorrowDone * 100 * 100) / statsModel.TomorrowTotal)) / 100.0;
             statsModel.TomorrowPending = statsModel.TomorrowTotal - statsModel.TomorrowDone;
 
@@ -126,6 +133,62 @@ namespace Admin.Models
                 return new List<WorkTask>();
 
             return WorkTaskBao.GetByProjectIds(item, userId);
+        }
+
+        public static List<WorkTask> GetWorkTasksByUserId(string userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                return new List<WorkTask>();
+
+            return WorkTaskBao.GetByUserId(userId);
+        }
+        public static List<WorkTask> GetWorkTask(string userId, TaskTimeFilter time, TaskStatusFilter status)
+        {
+            var workTasks = GetWorkTasksByUserId(userId);
+            var today = DateTime.Now;
+            switch (time)
+            {
+                case TaskTimeFilter.Today:
+                    {
+                        workTasks = workTasks.Where(w => w.ProjectSchedulingTime.Date == today.Date).ToList();
+                        break;
+                    }
+
+                case TaskTimeFilter.Tomorrow:
+                    {
+                        workTasks = workTasks.Where(w => w.ProjectSchedulingTime.Date == today.Date.AddDays(1)).ToList();
+                        break;
+                    }
+
+                case TaskTimeFilter.CurrentWeek:
+                    {
+                        workTasks = workTasks.Where(w => w.ProjectSchedulingTime.DateInsideOneWeek(today)).ToList();
+                        break;
+                    }
+                case TaskTimeFilter.CurrentMonth:
+                    {
+                        workTasks = workTasks.Where(w => w.ProjectSchedulingTime.Month == today.Month && w.OnCreated.Year == today.Year).ToList();
+                        break;
+                    }
+            }
+
+            switch (status)
+            {
+                case TaskStatusFilter.Done:
+                    {
+                        workTasks = workTasks.Where(w => w.IsDone()).ToList();
+                        break;
+                    }
+
+                case TaskStatusFilter.Pending:
+                    {
+                        workTasks = workTasks.Where(w => w.IsPending()).ToList();
+                        break;
+                    }
+            }
+
+
+            return workTasks;
         }
 
         public static List<WorkTask> GetWorkTask(List<long> item, string userId, TaskTimeFilter time, TaskStatusFilter status)

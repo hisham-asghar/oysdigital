@@ -33,8 +33,8 @@
             <div class="card project_list">
 
                 <div class="pull-right" style="float:right;">
-                    <button class="btn btn-success" disabled="@ViewBag.GenerateToday" onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
-                    <button class="btn btn-success" disabled="@ViewBag.GenerateTomorrow" onclick="GenerateNextTask()">Generate tomorrow Task <i class="zmdi zdmi-plus"></i></button>
+                    <button class="btn btn-success" @(ViewBag.GenerateToday == true ? "" : "disabled=''") onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
+                    <button class="btn btn-success" @(ViewBag.GenerateTomorrow == true ? "" : "disabled=''") onclick="GenerateNextTask()">Generate tomorrow Task <i class="zmdi zdmi-plus"></i></button>
                 </div>
 
                 <div class="pull-left">

@@ -28,4 +28,10 @@ namespace Generics.DataModels.AdminModels
         [Ignore]
         public bool IsPending() => !IsDone();
     }
+
+    public class GenertableTaskCount
+    {
+        public string Date { get; set; }
+        public int TaskCount { get; set; }
+    }
 }

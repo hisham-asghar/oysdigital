@@ -5,6 +5,7 @@ namespace Generics.DataModels.AdminModels
 {
     public class UserTask
     {
+        public int ProjectId { get; set; }
         public int WorkTaskId { get; set; }
         public bool IsCompleted { get; set; }
         public bool IsDesigned { get; set; }

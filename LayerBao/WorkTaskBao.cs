@@ -61,9 +61,31 @@ namespace LayerBao
             return data;
         }
 
+        public static List<WorkTask> GetByUserId(string userId)
+        {
+            var data = WorkTaskDao.GetByUserId(userId);
+            if (data != null)
+            {
+                var ids = data.Select(d => d.ProjectId).ToList();
+                var platforms = (WorkTaskPlatformsDao.GetByProjectIds(ids) ?? new List<WorkTaskPlatforms>())
+                    .GroupBy(p => p.WorkTaskId).ToDictionary(p => p.Key, v => v.ToList());
+                var members = (WorkTaskMembersDao.GetWorkTaskMemberTypeByUserId(userId) ?? new List<WorkTaskMemberCompact>());
+                foreach (var item in data)
+                {
+                    item.WorkTaskPlatforms = platforms.Get(item.Id);
+                    item.MemberType = members.FirstOrDefault(m => m.WorkTaskId == item.Id)?.MemberType;
+                }
+            }
+            return data;
+        }
+
         public static bool GenerateTasks(string userId, DateTime date)
         {
             return WorkTaskDao.GenerateTasks(date, userId);
+        }
+        public static List<GenertableTaskCount> GetGenerateTasksCount(string userId)
+        {
+            return WorkTaskDao.GetGenerateTasksCount(userId);
         }
 
 
