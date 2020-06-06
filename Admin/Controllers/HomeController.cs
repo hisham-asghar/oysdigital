@@ -1,6 +1,5 @@
 ﻿using Admin.Models;
 using Generics.DataModels.AdminModels;
-using Generics.DataModels.Constants;
 using Generics.DataModels.Enums;
 using Generics.WebHelper.Extensions;
 using LayerBao;
@@ -10,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Admin.Controllers
 {
@@ -40,7 +38,7 @@ namespace Admin.Controllers
 
             var today = DateTime.UtcNow.AddHours(5);
             ViewBag.GenerateTomorrow = ViewBag.GenerateToday = false;
-            foreach(var c in counts)
+            foreach (var c in counts)
             {
                 var todayStr = today.ToString("MM-dd-yyyy");
                 var tomStr = today.AddDays(1).ToString("MM-dd-yyyy");
@@ -49,6 +47,7 @@ namespace Admin.Controllers
                 if (c.Date == tomStr)
                     ViewBag.GenerateTomorrow = c.TaskCount > 0;
             }
+
             var tuple = new Tuple<List<WorkTask>, StatsModel>(workTask, statsModel);
 
             if (User.IsDesigner())

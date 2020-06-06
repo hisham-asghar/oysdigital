@@ -13,6 +13,12 @@ namespace Generics.Services.DatabaseService.AdoNet
             var query = GenericQueries.Insert(model, tableName, new List<string>(), schema);
             return QueryExecutor.FirstOrDefault<TemplateClass<int>>(query, query)?.Result ?? 0;
         }
+        public static string InsertWithStringId<T>(this T model, string tableName, string schema = DefaultSchema)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(tableName)) return null;
+            var query = GenericQueries.Insert(model, tableName, new List<string>(), schema);
+            return QueryExecutor.FirstOrDefault<TemplateClass<string>>(query, query)?.Result ?? null;
+        }
         public static List<int> Insert<T>(this List<T> list, string tableName, string schema = DefaultSchema)
         {
             if (list == null || list.Count <= 0 || string.IsNullOrWhiteSpace(tableName)) return new List<int>();
