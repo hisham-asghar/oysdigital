@@ -1,0 +1,170 @@
+﻿@model Generics.DataModels.AdminModels.Project
+@{
+    ViewData["Title"] = "Project Detail";
+    Layout = "_Layout";
+    var host = Context.Request.Scheme + "://" + Context.Request.Host;
+}
+<style>
+    .table td, .table th{
+        padding: 1px;
+    }
+</style>
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-7 col-md-6 col-sm-12">
+            <h2>Project Detail</h2>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row clearfix">
+        <div class="col-xl-5 col-lg-5 col-md-12">
+            <div class="card mcard_3 shadow p-3 mb-2 bg-white rounded">
+                <div class="body">
+                    <a href="#"><img src="/images/profile_av.jpg" class="rounded-circle" alt="profile-image"></a>
+                    <h4 class="m-t-10">@Model.Name</h4>
+                    <h5 class="m-t-10">Created: @Model.OnModified.ToString(MMMM_dd_yyyy)</h5>
+                    <span>Mobile Sapce: @Model.MobileSpaceName</span>
+                </div>
+            </div>
+            <div class="card shadow p-3 mb-1 bg-white rounded">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2><strong>Members</strong></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="body p-0">
+                    <table class="table table-hover c_table">
+                        <tbody id="myMembers">
+                            @foreach (var item in Model.ProjectMembers)
+                            {
+                                <tr id="@item.Id">
+                                    <td>
+                                        <div style="width:50px;height:auto" class="rounded-circle">
+                                            <img src="/images/profile_av.jpg" class="img-fluid" alt="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <ul class="social-links list-unstyled">
+                                            <li><span>@item.MemberName</span></li>
+                                            <li><span class="text-muted">@item.MemberType</span></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card shadow p-3 mb-1 bg-white rounded">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2><strong>Platforms</strong></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="body">
+                    @foreach (var item in Model.ProjectPlatforms)
+                    {
+                        <span class="badge badge-info">
+                            <i class="@item.PlatformIcon"></i>
+                            @item.PlatformName
+                        </span>
+                    }
+                </div>
+            </div>
+
+
+            <div class="card shadow p-3 mb-5 bg-white rounded">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2><strong>Project Task</strong></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="body">
+
+                    @foreach (var item in Model.projectTasks)
+                    {
+                    <div>
+                        <strong>@TaskType.CheckTaskType(item.TaskTypeId)-@FrequencyType.CheckFrequencyType(item.FrequencyTypeId)</strong>
+                        &nbsp;&nbsp;
+                        @foreach (var sched in item.ProjectTaskScheduling)
+                        {
+                            <span class="badge badge-info">@sched.Time.ToString("hh:mm:ss tt")</span><span>&nbsp;</span>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xl-7 col-lg-7 col-md-12">
+            <div class="row clearfix">
+                <div class="col-md-12 col-sm-12">
+                    @if (Model?.ProjectNotes != null && Model.ProjectNotes.Count > 0)
+                    {
+
+                        <div class="card shadow p-3 mb-5 bg-white rounded">
+                            <div class="header">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h2><strong>Notes</strong></h2>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="body">
+                                @foreach (var item in Model.ProjectNotes.Where(p => p.AccessLevelTypeId == (int)Generics.DataModels.Enums.NoteType.Member))
+                                {
+                                    <div>
+                                        <p>@item.Message</p>
+                                        <span class="badge badge-primary">@item.OnCreated.ToString("MMMM dd,yyyy - hh:mm")</span>
+                                        <span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span>
+                                    </div>
+                                    <hr />
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model?.ProjectAlertMessages != null && Model.ProjectAlertMessages.Count > 0)
+                    {
+
+                        <div class="card shadow p-3 mb-5 bg-white rounded">
+                            <div class="header">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h2><strong>Alerts</strong></h2>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="body">
+                                @foreach (var item in Model.ProjectAlertMessages)
+                                {
+                                    <div>
+                                        <p>@item.Message</p>
+                                        <span class="badge badge-primary">@item.OnCreated.ToString("MMMM dd,yyyy - hh:mm")</span>
+                                        <span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span>
+                                    </div>
+                                    <hr />
+                                }
+                            </div>
+                        </div>
+                    }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+
+</script>

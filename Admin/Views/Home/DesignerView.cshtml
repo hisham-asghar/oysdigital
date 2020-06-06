@@ -2,162 +2,91 @@
 @model Tuple<List<WorkTask>, StatsModel>
 @{
     ViewData["Title"] = "Dashboard";
-    Layout = "_Layout";
-    var host = Context.Request.Scheme + "://" + Context.Request.Host;
-    var todayDate = DateTime.Now.Date;
-    var tomorrowDate = DateTime.Now.AddDays(1).Date;
-    var IsCompleted = false;
-    var overAll = ViewBag.OverAll;
-    var week = ViewBag.Week;
-    var month = ViewBag.Month;
-    var list = new List<WorkTask>();
-    var distinctProject = Model.Item1.Select(s=>new { s.ProjectId,s.IsDesigned,s.OnCreated }).Distinct();
-    foreach (var item in distinctProject)
-    {
-        list.Add(Model.Item1.Where(s => s.IsDesigned==item.IsDesigned && s.ProjectId==item.ProjectId && s.OnCreated==item.OnCreated).FirstOrDefault());
-    }
-    var time = (Generics.DataModels.Enums.TaskTimeFilter)ViewBag.TimeFilter;
-    var status = (Generics.DataModels.Enums.TaskStatusFilter)ViewBag.StatusFilter;
+    Layout = "~/Views/Home/_DashboardView.cshtml";
+    ViewBag.StatsModel = Model.Item2;
+
+    var projects = Model.Item1.OrderBy(o => o.ProjectSchedulingTime).GroupBy(t => new { ProjectId = t.ProjectId, Date = t.ProjectSchedulingTime.Date.ToString("MMMM dd, yyyy") }).ToDictionary(k => k.Key, v => new Tuple<WorkTask, List<WorkTask>>(v.FirstOrDefault(), v.Skip(1).ToList()));
+
 
 }
-<div class="container-fluid">
-    <partial name="_MemberStatsView" model="Model.Item2" />
-    <div class="row clearfix">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="card project_list">
-                <div class="pull-right" style="float:right;">
-                    <button class="btn btn-success" disabled="@ViewBag.GenerateToday" onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
-                    <button class="btn btn-success" disabled="@ViewBag.GenerateTomorrow" onclick="GenerateNextTask()">Generate tomorrow Task <i class="zmdi zdmi-plus"></i></button>
-                </div>
-
-                <div class="pull-left">
-                    <a href="@(status == TaskStatusFilter.All ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.All}")" class="btn @(status == TaskStatusFilter.All ? "btn-info" : "")">All</a>
-                    <a href="@(status == TaskStatusFilter.Done ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.Done}")" class="btn @(status == TaskStatusFilter.Done ? "btn-info" : "")">Done</a>
-                    <a href="@(status == TaskStatusFilter.Pending ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.Pending}")" class="btn @(status == TaskStatusFilter.Pending ? "btn-info" : "")">Pending</a>
-                </div>
 
 
-                <div class="table-responsive">
-                    <table class="table table-hover c_table">
-                        <thead>
-                            <tr>
-                                <th>Project</th>
-                                <th>Platforms</th>
-                                <th>Scheduling Time</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var workTask in list)
-                            {
-                                if (workTask.WorkTaskPlatforms.All(s => s.IsDesigned == true))
-                                {
-                                    IsCompleted = true;
-                                }
-                                else
-                                {
-                                    IsCompleted = false;
-                                }
-                                <tr style="@((IsCompleted) ? "background-color:#04BE5B" : "")">
+<table class="table table-hover c_table">
+    <thead>
+        <tr>
+            <th>Project</th>
+            <th>Platforms</th>
+            <th>Scheduling Time</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in projects)
+        {
+            var task = item.Value.Item1;
+            var isCompleted = item.Value.Item1.IsCompleted && item.Value.Item2.All(a => a.IsCompleted);
+            var isDesigned = item.Value.Item1.IsDesigned && item.Value.Item2.All(a => a.IsDesigned);
+
+            <tr class="@(task.IsDesigned ? "bg-success" : "")" title="@task.ProjectName" project-id="@task.ProjectId" date="@Model.Item1.FirstOrDefault().ProjectSchedulingTime.ToString("MM-dd-yyyy")">
+                <td><a href="/Project/Detail/@task.ProjectId"><strong>@task.ProjectName</strong></a></td>
+                <td>
+                    @foreach (var platform in task.WorkTaskPlatforms)
+                    {
+                        if (platform.IsDesigned)
+                        {
+                            <span class="badge badge-success"><i class="@(platform.PlatformIcon)"></i></span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-default"><i class="@(platform.PlatformIcon)"></i></span>
+                        }
+
+                    }
+                </td>
+
+                <td>
+                    <span class="btn btn-primary">@task.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
+                    @foreach (var schedlingTime in item.Value.Item2)
+                    {
+                        <span class="btn btn-primary">@schedlingTime.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
+                    }
+                    <span>(</span>
+                    @if (item.Key.Date == DateTime.UtcNow.AddHours(5).ToString("MMMM dd, yyyy"))
+                    {
+                        <span class="btn btn-primary bg-pink">Today</span>
+
+                    }
+                    else if (item.Key.Date == DateTime.UtcNow.AddDays(1).AddHours(5).ToString("MMMM dd, yyyy"))
+                    {
+                        <span class="btn btn-primary bg-pink">Tomorrow</span>
+
+                    }
+                    else if (item.Key.Date == DateTime.UtcNow.AddDays(-1).AddHours(5).ToString("MMMM dd, yyyy"))
+                    {
+                        <span class="btn btn-primary bg-pink">Yesterday</span>
+                    }
+                    else
+                    {
+                        <span class="btn btn-primary bg-pink">@item.Key.Date</span>
+                    }
+                    <span>)</span>
+                </td>
+                <td>
+                    <span class="badge @(isCompleted || isDesigned ?  "badge-default" : "badge-info")">
+                        @(isCompleted || isDesigned ? "Completed" : "To Do")
+                    </span>
+                </td>
+                <td>
+                    @if (!isDesigned && task.ProjectSchedulingTime.Date >= DateTime.UtcNow.AddHours(5).Date)
+                    {
+                        <button type="button" class="btn btn-success btn-mark-design-done">Mark Done</button>
+                    }
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
 
 
-                                    <td><strong>@workTask.ProjectName</strong></td>
-                                    <td>
-                                        @foreach (var plat in workTask.WorkTaskPlatforms)
-                                        {
-                                            var list1 = new List<long>();
-                                            foreach (var i in Model.Item1)
-                                            {
-                                                foreach(var pl in i.WorkTaskPlatforms.Where(s=>s.PlatformId==plat.PlatformId))
-                                                {
-                                                    list1.Add(pl.Id);
-                                                }
-                                            }
-
-                                            if (plat.IsDesigned)
-                                            {
-                                                <span class="dot" style="background-color: #04BE5B;">
-                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@JsonConvert.SerializeObject(list1))"></i>
-                                                </span>
-                                            }
-                                            else
-                                            {
-                                                <span class="dot" style="background-color:gainsboro;">
-                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id" onclick="SwalOpen(@JsonConvert.SerializeObject(list1))"></i>
-                                                </span>
-                                            }
-                                         }
-                                    </td>
-
-                                    <td>
-                                        <ul class="list-unstyled">
-                                            @foreach (var sche in Model.Item1.Where(s=>s.ProjectId==workTask.ProjectId).Select(s=>new { s.ProjectSchedulingTime}).Distinct())
-                                            {
-                                            <li><span class="btn btn-primary"> @workTask.OnCreated.ToString(MMMM_dd_yyyy) @sche.ProjectSchedulingTime.ToString(hh_mm_tt)</span></li>
-                                            }
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        @if (IsCompleted)
-                                        {
-                                            <span class="badge badge-default">Design Done</span>
-
-                                        }
-                                        else
-                                        {
-                                            <span class="badge badge-warning">To Do</span>
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (!IsCompleted)
-                                        {
-                                            var data = new List<long>();
-                                            var ff = Model.Item1.Where(s => s.ProjectId == workTask.ProjectId && s.OnCreated.Date == workTask.OnCreated.Date).ToList();
-                                            @foreach (var plat in ff)
-                                            {
-                                                var list1 = new List<long>();
-                                                foreach (var i in plat.WorkTaskPlatforms)
-                                                {
-                                                    if (!list1.Contains(i.WorkTaskId))
-                                                    {
-                                                        list1.Add(i.WorkTaskId);
-                                                    }
-                                                }
-                                                data.AddRange(list1);
-                                            }
-                                            <span><i class="btn-sm btn btn-success" data-toggle="modal" data-target="#smallModal" onclick="GeneratePlatforms(@workTask.Id,@workTask.ProjectId,@JsonConvert.SerializeObject(data))">MarkAsDone</i></span>
-                                            <div class="my-component" id="@workTask.Id" data-options="@JsonConvert.SerializeObject(workTask.WorkTaskPlatforms)"></div>
-                                        }
-
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                    <div class="modal fade" id="smallModal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog modal-sm" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="title" id="smallModalLabel">Paltforms</h4>
-                                </div>
-                                <input type="hidden" id="projectId" />
-                                <div class="modal-body" id="myPlatforms">
-                                    <!--data will be append-->
-
-                                </div>
-                                <button type="button" class="btn btn-primary" onclick="selectAll()">Select All</button>
-                                <div class="modal-footer">
-
-                                    <button type="button" onclick="SwalPlatformsOpen()" class="btn btn-info btn-round waves-effect">Updates</button>
-                                    <button type="button" class="btn btn-default btn-round waves-effect" data-dismiss="modal">Cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>

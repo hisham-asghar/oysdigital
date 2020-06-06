@@ -14,8 +14,6 @@ namespace Admin.Controllers
     [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class ProjectController : Controller
     {
-        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr + "," + UserRoles.Designer + "," + UserRoles.Scheduler)]
-
         public IActionResult Index()
         {
             var projects = new List<Project>();
@@ -67,7 +65,7 @@ namespace Admin.Controllers
             ViewBag.IsEdit = id > 0;
             return View(project);
         }
-        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
+
         [Route("/Project/Create")]
         [Route("/Project/Edit/{id}")]
         [HttpPost]
@@ -106,7 +104,7 @@ namespace Admin.Controllers
                 return RedirectPermanent(returnUrl);
 
         }
-        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
+
         public IActionResult Delete(long id)
         {
             Project project = ProjectBao.GetById(id);
@@ -120,7 +118,7 @@ namespace Admin.Controllers
             }
             return View(project);
         }
-        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
+
         public IActionResult ConfirmDelete(long id)
         {
             if (id != 0)
@@ -129,9 +127,13 @@ namespace Admin.Controllers
             }
             return RedirectToAction("Index");
         }
-        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
+
+        //[Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr + "," + UserRoles.Designer + "," + UserRoles.Scheduler)]
+        [AllowAnonymous]
         public IActionResult Detail(long id)
         {
+            if (User.HaveAnyRole() == false) return RedirectToAction("Error", "Home");
+
             if (id > 0)
             {
                 Project project = ProjectBao.GetById(id);
@@ -147,6 +149,12 @@ namespace Admin.Controllers
                 }
                 project.ProjectNotes = (project.ProjectNotes ?? new List<ProjectNotes>()).OrderByDescending(u => u.OnCreated).ToList();
                 project.ProjectAlertMessages = (project.ProjectAlertMessages ?? new List<ProjectAlertMessage>()).OrderByDescending(u => u.OnCreated).ToList();
+
+                if (User.IsDesigner() || User.IsScheduler())
+                {
+                    return View("Detail-Readonly", project);
+                }
+
                 return View(project);
             }
             else

@@ -5,7 +5,6 @@ using Generics.DataModels.Constants;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Asn1.Eac;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,15 +40,18 @@ namespace Admin.Controllers
         public JsonResult GenerateTask()
         {
             var userId = User.GetUserId();
-            var users = ProjectMembersBao.GetByUserIdList(User.GetUserId());
-            var projectIds = users.Select(s => s.ProjectId).ToList();
-            if (User.IsAdminOrHr())
-            {
-                projectIds = ProjectBao.GetAll().Select(p => p.Id).ToList();
-            }
-            var projecttasks = TaskHelper.GetProjectTask(projectIds);
-            
-            return Json(TaskHelper.WorkTaskToGenerate(projecttasks, DateTime.Now.Date, userId));
+            var date = DateTime.UtcNow.AddHours(5);
+            WorkTaskBao.GenerateTasks(userId, date);
+
+            //var users = ProjectMembersBao.GetByUserIdList(User.GetUserId());
+            //var projectIds = users.Select(s => s.ProjectId).ToList();
+            //if (User.IsAdminOrHr())
+            //{
+            //    projectIds = ProjectBao.GetAll().Select(p => p.Id).ToList();
+            //}
+            //var projecttasks = TaskHelper.GetProjectTask(projectIds);
+
+            return Json(true);
 
         }
         public List<ProjectTask> GetProjectTask(long id)
@@ -71,12 +73,39 @@ namespace Admin.Controllers
         [HttpGet]
         public JsonResult GenerateTomorrowTask()
         {
+
             var userId = User.GetUserId();
-            var users = ProjectMembersBao.GetByUserIdList(User.GetUserId());
-            var projecttasks = TaskHelper.GetProjectTask(users.Select(s => s.ProjectId).ToList());
-            return Json(TaskHelper.WorkTaskToGenerate(projecttasks, DateTime.Now.AddDays(1).Date, userId));
+            var date = DateTime.UtcNow.AddDays(1).AddHours(5);
+            WorkTaskBao.GenerateTasks(userId, date);
+            return Json(true);
+            //var users = ProjectMembersBao.GetByUserIdList(User.GetUserId());
+            //var projecttasks = TaskHelper.GetProjectTask(users.Select(s => s.ProjectId).ToList());
+            //return Json(TaskHelper.WorkTaskToGenerate(projecttasks, DateTime.Now.AddDays(1).Date, userId));
 
         }
+
+        [Route("/Json/ProjectDesignDone/{id}")]
+        [HttpPost]
+        public JsonResult ProjectDesignDone(int id, string date)
+        {
+            var parsedDate = DateTime.Parse(date);
+            var userId = User.GetUserId();
+            var status = WorkTaskBao.MarkDesignDone(id, userId, parsedDate);
+
+            return Json(status);
+        }
+
+        [Route("/Json/PlatformScheduleDone")]
+        [HttpPost]
+        public JsonResult PlatformScheduleDone(int projectId, string platformIds, string date)
+        {
+            var parsedDate = DateTime.Parse(date);
+            var userId = User.GetUserId();
+            var status = WorkTaskBao.MarkPlatformScheduleDone(projectId, userId, parsedDate, platformIds);
+
+            return Json(status);
+        }
+
 
         [Route("/Json/SinglePlatform")]
         [HttpPost]
@@ -162,10 +191,10 @@ namespace Admin.Controllers
         {
             if (id.Length > 0)
             {
-                    var user = ProjectMembersBao.GetByUserId(User.GetUserId());
-                    foreach (var item in id)
-                    {
-                     var data = WorkTaskPlatformsBao.GetByWorkTaskId(item.ToLong());
+                var user = ProjectMembersBao.GetByUserId(User.GetUserId());
+                foreach (var item in id)
+                {
+                    var data = WorkTaskPlatformsBao.GetByWorkTaskId(item.ToLong());
                     foreach (var workTask in data)
                     {
                         if (workTask != null)
@@ -215,8 +244,8 @@ namespace Admin.Controllers
 
                         }
                     }
-                    }
-                               
+                }
+
                 return Json(true);
             }
             return Json(null);
@@ -278,8 +307,8 @@ namespace Admin.Controllers
                     return Json(false);
                 }
                 var data = ProjectTaskBao.GetById(projectTaskId);
-                data.TaskType= TaskType.CheckTaskType(data.TaskTypeId);
-                data.FrequencyType=FrequencyType.CheckFrequencyType(data.FrequencyTypeId);
+                data.TaskType = TaskType.CheckTaskType(data.TaskTypeId);
+                data.FrequencyType = FrequencyType.CheckFrequencyType(data.FrequencyTypeId);
                 return Json(data);
             }
             return Json(null);
@@ -333,7 +362,7 @@ namespace Admin.Controllers
         {
             if (id != 0)
             {
-               return Json(ProjectPlatformsBao.Delete(id));
+                return Json(ProjectPlatformsBao.Delete(id));
             }
             return Json(false);
         }
@@ -348,7 +377,7 @@ namespace Admin.Controllers
                 var result = ProjectPlatformsBao.Insert(projectPlatform);
                 if (result > 0)
                 {
-                   return Json(ProjectPlatformsBao.GetById(result));
+                    return Json(ProjectPlatformsBao.GetById(result));
                 }
             }
             return Json(null);
@@ -383,7 +412,7 @@ namespace Admin.Controllers
         [HttpGet]
         public JsonResult AllLabels()
         {
-            return Json(LabelTypeBao.GetAll()??null);
+            return Json(LabelTypeBao.GetAll() ?? null);
         }
         [Route("/Json/AllUsers/{memberType}")]
         [HttpGet]
@@ -417,14 +446,14 @@ namespace Admin.Controllers
             }
             return Json(null);
         }
-        
+
         [Route("/Json/CreateMember")]
         [HttpPost]
         public JsonResult CreateMember(ProjectMembers projectMembers)
         {
             if (projectMembers != null)
             {
-                var data= ProjectMemberTypeBao.GetByName(projectMembers.MemberType);
+                var data = ProjectMemberTypeBao.GetByName(projectMembers.MemberType);
                 projectMembers.ProjectMemberTypeId = data.Id;
                 var userId = User.GetUserId();
                 projectMembers.SetOnCreate(userId);

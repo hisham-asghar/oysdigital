@@ -241,7 +241,7 @@ namespace Admin.Models
                             workTask.OnCreated = date;
                             workTask.OnModified = date;
                             workTask.ProjectId = item.ProjectId;
-                            workTask.ProjectSchedulingTime = scheduling.Time;
+                            workTask.ProjectSchedulingTime = new DateTime(date.Year, date.Month, date.Day, scheduling.Time.Hour, scheduling.Time.Minute, scheduling.Time.Second);
                             var worktaskId = WorkTaskBao.Insert(workTask);
                             workTask.Id = worktaskId;
                             WorkTaskMembersCreate(workTask, userId);

@@ -1,4 +1,111 @@
-var host =""
+var host = ""
+$(document).ready(function () {
+    $(".btn-mark-design-done").each(function () {
+        $(this).click(function () {
+            var parentRow = $(this).closest("tr");
+            var title = parentRow.attr("title");
+            var projectId = parentRow.attr("project-id");
+            var date = parentRow.attr("date");
+            MarkProjectDesignDone(title, projectId, date);
+        });
+    });
+    $(".btn-mark-schedule-done-popup").each(function () {
+        $(this).click(function () {
+            debugger;
+            var parentRow = $(this).closest("tr");
+            //var title = parentRow.attr("title");
+            var projectId = parentRow.attr("project-id");
+            var date = parentRow.attr("date");
+            var list = [];
+            parentRow.find("[platform-ids]").each(function () {
+                var ids = $(this).attr("platform-ids");
+                var name = $(this).attr("platform-name");
+
+                if ($(this).hasClass("badge-with-extra")) {
+                    name += $(this).find(".badge").text();
+                }
+                var status = $(this).hasClass("badge-success");
+                console.log(ids + " => " + name);
+                var obj = { "ids": ids, "name": name, "status": status };
+                list.push(obj);
+            });
+            var platformHtml = "";
+            for (var i = 0; i < list.length; i++) {
+                platformHtml += "<div class='form-group'><input type='checkbox'  value='" + list[i].ids + "' " + (list[i].status ? "checked=''" : "") + " name='PlatformCheckbox'/>  " + list[i].name + "</div>"
+            }
+
+            $('#myPlatforms').html(platformHtml);
+            $('#myPlatforms').attr("project-id", projectId);
+            $('#myPlatforms').attr("date", date);
+            $("#smallModal").modal('show')
+        });
+    });
+});
+async function MarkProjectDesignDone(title, projectId, date) {
+    Swal.fire({
+        title: 'Are you sure you want to mark ' + title + ' project design as done ?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: "/Json/ProjectDesignDone/" + projectId + "?date=" + date,
+                dataType: 'json',
+                success: function (data) {
+                    location.reload();
+                    if (data == true) {
+                        $("tr[project-id=" + projectId + "]").addClass("bg-success");
+                    }
+                }
+            });
+
+        }
+    })
+}
+function SwalPlatformsOpen() {
+
+    var projectId = $('#myPlatforms').attr("project-id");
+    var date = $('#myPlatforms').attr("date");
+    projectId = parseInt(projectId);
+    var TaskPlatforms = new Array();
+    var inputElements = document.getElementsByName('PlatformCheckbox');
+    for (var i = 0; inputElements[i]; ++i) {
+        if (inputElements[i].checked) {
+            TaskPlatforms.push(inputElements[i].value);
+        }
+    }
+    var plaformIds = TaskPlatforms.join(",");
+    $.ajax({
+        url: host + "/Json/PlatformScheduleDone",
+        type: 'POST',
+        data: { platformIds: plaformIds, projectId: projectId, date: date },
+        traditional: true,
+        dataType: 'json',
+        success: function (data) {
+            location.reload();
+        }
+    });
+}
+
+function ShowModalPopUpForScheduleDone() {
+    var platforms = [];
+    var platformHtml = "";
+    $('#' + id).each(function () {
+        var component = $(this);
+        platforms = component.data('options');
+        console.log(platforms);
+    });
+    for (var i = 0; i < platforms.length; i++) {
+        platformHtml += "<div class='form-group'><input type='checkbox'  value='" + projectPlatformList[i] + "' name='PlatformCheckbox'/>  " + platforms[i].PlatformName + "</div>"
+    }
+    $('#myPlatforms').html(platformHtml);
+    $('#projectId').val(projectId);
+}
 function GenerateNextTask() {
     $.ajax({
         url: host + "/Json/GenerateTomorrowTask",
@@ -70,7 +177,8 @@ function DeleteMember(id) {
                         }
                     }
                 });
-    }
+}
+
     function GeneratePlatforms(id,projectId,projectPlatformList) {
         var platforms = [];
         var platformHtml = "";
@@ -85,7 +193,7 @@ function DeleteMember(id) {
         $('#myPlatforms').html(platformHtml);
         $('#projectId').val(projectId);
         }
-function SwalPlatformsOpen() {
+function SwalPlatformsOpenOld() {
     var projectId = $('#projectId').val();
         var TaskPlatforms = new Array();
         var inputElements = document.getElementsByName('PlatformCheckbox');

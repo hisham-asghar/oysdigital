@@ -44,7 +44,7 @@
     </style>
 </head>
 
-<body class="theme-blush @(ViewData["BodyClass"])">
+<body class="theme-blush @(ViewData["BodyClass"]) @(User.IsAdminOrHr() ? "" : "ls-toggle-menu")">
     @RenderBody()
 
     <!-- Jquery Core Js -->
@@ -61,7 +61,7 @@
 
     <!-- SweetAlert Plugin Js -->
     @*<script src="/plugins/sweetalert/sweetalert.min.js"></script>*@
-    <script src="/plugins/momentjs/moment.js"></script> 
+    <script src="/plugins/momentjs/moment.js"></script>
 
     <script src="/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
     @*<script src="~/js/jquery-3.5.1.min.js"></script>*@
@@ -75,7 +75,7 @@
     <script src="~/js/IndexCustom.js"></script>
     <script src="~/js/CustomeSweetAlert.js"></script>
     <script>
-        $('.colorpicker').colorpicker();   
+        $('.colorpicker').colorpicker();
     </script>
 
     <script src="~/plugins/jquery-validation/jquery.validate.js"></script>

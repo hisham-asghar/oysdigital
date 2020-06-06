@@ -60,10 +60,24 @@ namespace LayerBao
             }
             return data;
         }
-        public static long Insert(WorkTask worktask)
+
+        public static bool GenerateTasks(string userId, DateTime date)
         {
-            return WorkTaskDao.Insert(worktask);
+            return WorkTaskDao.GenerateTasks(date, userId);
         }
+
+
+        public static bool MarkDesignDone(int projectId, string userId, DateTime date)
+        {
+            return WorkTaskDao.MarkDesignDone(projectId, userId, date);
+        }
+
+        public static bool MarkPlatformScheduleDone(int projectId, string userId, DateTime date, string platformIds)
+        {
+            return WorkTaskDao.MarkPlatformScheduleDone(projectId, userId, date, platformIds);
+        }
+        public static long Insert(WorkTask worktask) => WorkTaskDao.Insert(worktask);
+
         public static bool Update(WorkTask worktask)
         {
             return WorkTaskDao.Update(worktask);

@@ -1,91 +1,116 @@
 ﻿@using  Generics.DataModels.Enums;
 @model Tuple<List<WorkTask>, StatsModel>
+
 @{
     ViewData["Title"] = "Dashboard";
-    Layout = "_Layout";
-    var list = new List<WorkTask>();
-    var distinctProject = Model.Item1.Select(s => new { s.ProjectId, s.IsDesigned, s.OnCreated }).Distinct();
-    foreach (var item in distinctProject)
-    {
-        list.Add(Model.Item1.Where(s => s.IsDesigned == item.IsDesigned && s.ProjectId == item.ProjectId && s.OnCreated == item.OnCreated).FirstOrDefault());
-    }
-    var time = (Generics.DataModels.Enums.TaskTimeFilter)ViewBag.TimeFilter;
-    var status = (Generics.DataModels.Enums.TaskStatusFilter)ViewBag.StatusFilter;
+    Layout = "~/Views/Home/_DashboardView.cshtml";
+    ViewBag.StatsModel = Model.Item2;
+    var projects = Model.Item1.OrderBy(o => o.ProjectSchedulingTime).GroupBy(t => new { ProjectId = t.ProjectId, Date = t.ProjectSchedulingTime.Date.ToString("MMMM dd, yyyy") }).ToDictionary(k => k.Key, v => new Tuple<WorkTask, List<WorkTask>>(v.FirstOrDefault(), v.Skip(1).ToList()));
+
 }
-<div class="container-fluid">
-    <partial name="_MemberStatsView" model="Model.Item2" />
-    <div class="row clearfix">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="card project_list">
 
-                <div class="pull-right" style="float:right;">
-                    <button class="btn btn-success" disabled="@ViewBag.GenerateToday" onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
-                    <button class="btn btn-success" disabled="@ViewBag.GenerateTomorrow" onclick="GenerateNextTask()">Generate tomorrow Task <i class="zmdi zdmi-plus"></i></button>
-                </div>
+<table class="table table-hover c_table">
+    <thead>
+        <tr>
+            <th>Project</th>
+            <th>Platforms</th>
+            <th>Scheduling Time</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in projects)
+        {
+            var task = item.Value.Item1;
+            var isCompleted = item.Value.Item1.IsCompleted && item.Value.Item2.All(a => a.IsCompleted);
+            var isDesigned = item.Value.Item1.IsDesigned && item.Value.Item2.All(a => a.IsDesigned);
 
-                <div class="pull-left">
-                    <a href="@(status == TaskStatusFilter.All ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.All}")" class="btn @(status == TaskStatusFilter.All ? "btn-info" : "")">All</a>
-                    <a href="@(status == TaskStatusFilter.Done ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.Done}")" class="btn @(status == TaskStatusFilter.Done ? "btn-info" : "")">Done</a>
-                    <a href="@(status == TaskStatusFilter.Pending ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.Pending}")" class="btn @(status == TaskStatusFilter.Pending ? "btn-info" : "")">Pending</a>
-                </div>
+            <tr class="@(task.IsCompleted ? "bg-success" : "")" title="@task.ProjectName" project-id="@task.ProjectId" date="@Model.Item1.FirstOrDefault().ProjectSchedulingTime.ToString("MM-dd-yyyy")">
+                <td><a href="/Project/Detail/@task.ProjectId"><strong>@task.ProjectName</strong></a></td>
+                <td>
+                    @foreach (var platform in task.WorkTaskPlatforms.Where(p => !p.PlatformName.ToLower().Contains("instagram")))
+                    {
+                        var platformIds = $"{platform.Id}";
+                        var otherSamePlatforms = item.Value.Item2
+                            .Select(pwt => pwt.WorkTaskPlatforms
+                                .FirstOrDefault(pwtp => pwtp.PlatformId == platform.PlatformId))
+                            .Where(p => p != null).ToList();
+                        @foreach (var otherP in otherSamePlatforms)
+                        {
+                            platformIds += $",{otherP.Id}";
+                        }
+                        <span platform-ids="@platformIds" platform-name="@platform.PlatformName" class="badge @(platform.IsScheduled ? "badge-success" : "badge-default")">
+                            <i class="@(platform.PlatformIcon)"></i>
+                        </span>
+                    }
+                    @{var instagram = task.WorkTaskPlatforms.FirstOrDefault(p => p.PlatformName.ToLower().Contains("instagram"));}
+                    @if (instagram != null)
+                    {
+                        <span platform-ids="@instagram.Id" platform-name="@instagram.PlatformName" class="badge-with-extra badge @(instagram.IsScheduled ? "badge-success" : "badge-default")">
+                            <i class="@(instagram.PlatformIcon)"></i>
+                            <span class="badge badge-danger">1</span>
+                        </span>
+                        var otherInstaPlatforms = item.Value.Item2
+                            .Select(p => p.WorkTaskPlatforms
+                                .FirstOrDefault(p => p.PlatformName.ToLower()
+                                .Contains("instagram")))
+                            .Where(p => p != null).ToList();
+                        @foreach (var instaP in otherInstaPlatforms.Select((p, idx) => new { p, idx }))
+                        {
 
-                <div class="table-responsive">
-                    <table class="table table-hover c_table">
-                        <thead>
-                            <tr>
-                                <th>Project</th>
-                                <th>Platforms</th>
-                                <th>Scheduling Time</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in list)
-                            {
+                            <span platform-ids="@instaP.p.Id" platform-name="@instaP.p.PlatformName" class="badge-with-extra badge @(instaP.p.IsScheduled ? "badge-success" : "badge-default")">
+                                <i class="@(instaP.p.PlatformIcon)"></i>
+                                <span class="badge badge-danger">
+                                    @(instaP.idx + 2)
+                                </span>
+                            </span>
+                        }
+                    }
+                </td>
 
-                                <tr style="@((item.IsCompleted)?"background-color:#04BE5B":"")">
+                <td>
+                    <span class="btn btn-primary">@task.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
+                    @foreach (var schedlingTime in item.Value.Item2)
+                    {
+                        <span class="btn btn-primary">@schedlingTime.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
+                    }
+                    <span>(</span>
+                    @if (item.Key.Date == DateTime.UtcNow.AddHours(5).ToString("MMMM dd, yyyy"))
+                    {
+                        <span class="btn btn-primary bg-pink">Today</span>
 
+                    }
+                    else if (item.Key.Date == DateTime.UtcNow.AddDays(1).AddHours(5).ToString("MMMM dd, yyyy"))
+                    {
+                        <span class="btn btn-primary bg-pink">Tomorrow</span>
 
-                                    <td><strong>@item.ProjectName</strong></td>
-                                    <td>
-                                        @foreach (var plat in item.WorkTaskPlatforms)
-                                        {
-
-                                            if (plat.IsCompleted)
-                                            {
-                                                <span class="dot" style="background-color: #04BE5B;">
-                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id"></i>
-                                                </span>
-                                            }
-                                            else
-                                            {
-                                                <span class="dot" style="background-color:gainsboro ;">
-                                                    <i style="vertical-align: -webkit-baseline-middle;padding: 7px;" class="zmdi zmdi-@plat.PlatformIcon PlatformIcon" name="@plat.PlatformName@plat.WorkTaskId" value="@plat.Id"></i>
-                                                </span>
-                                            }
-
-                                        }
-                                    </td>
-
-                                    <td>@item.OnCreated.ToString(MMMM_dd_yyyy)</td>
-
-                                    <td>
-                                        @if (item.IsCompleted)
-                                        {
-                                            <span class="badge" style="background-color:white">Completed</span>
-
-                                        }
-                                        else
-                                        {
-                                            <span class="badge badge-warning">To Do</span>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                    }
+                    else if (item.Key.Date == DateTime.UtcNow.AddDays(-1).AddHours(5).ToString("MMMM dd, yyyy"))
+                    {
+                        <span class="btn btn-primary bg-pink">Yesterday</span>
+                    }
+                    else
+                    {
+                        <span class="btn btn-primary bg-pink">@item.Key.Date</span>
+                    }
+                    <span>)</span>
+                </td>
+                <td>
+                    @if (isCompleted)
+                    {
+                        <span class="badge badge-default">Completed</span>
+                    }
+                    else if (isDesigned)
+                    {
+                        <span class="badge badge-success">Design Done</span>
+                        <span class="badge badge-warning">Schedule Not Done</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-info">To Do</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

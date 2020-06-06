@@ -1,0 +1,52 @@
+﻿@using  Generics.DataModels.Enums;
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_Layout";
+
+    var stats = (StatsModel)ViewBag.StatsModel;
+    var time = (Generics.DataModels.Enums.TaskTimeFilter)ViewBag.TimeFilter;
+    var status = (Generics.DataModels.Enums.TaskStatusFilter)ViewBag.StatusFilter;
+}
+<style>
+    .table.c_table tr td, .table.c_table tr th,
+    .table.c_table tr td, .table.c_table tr td {
+        white-space: normal;
+    }
+    .badge-with-extra {
+        position: relative;
+        margin-right: 8px;
+        margin-bottom: 8px;
+    }
+
+        .badge-with-extra .badge {
+            position: absolute;
+            bottom: -8px;
+            right: -6px;
+            border-radius: 50px;
+            padding: 3px 5px;
+        }
+</style>
+<div class="container-fluid">
+    <partial name="_MemberStatsView" model="stats" />
+    <div class="row clearfix">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="card project_list">
+
+                <div class="pull-right" style="float:right;">
+                    <button class="btn btn-success" disabled="@ViewBag.GenerateToday" onclick="GenerateTask()">Generate Task <i class="zmdi zdmi-plus"></i></button>
+                    <button class="btn btn-success" disabled="@ViewBag.GenerateTomorrow" onclick="GenerateNextTask()">Generate tomorrow Task <i class="zmdi zdmi-plus"></i></button>
+                </div>
+
+                <div class="pull-left">
+                    <a href="@(status == TaskStatusFilter.All ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.All}")" class="btn @(status == TaskStatusFilter.All ? "btn-info" : "")">All</a>
+                    <a href="@(status == TaskStatusFilter.Done ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.Done}")" class="btn @(status == TaskStatusFilter.Done ? "btn-info" : "")">Done</a>
+                    <a href="@(status == TaskStatusFilter.Pending ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.Pending}")" class="btn @(status == TaskStatusFilter.Pending ? "btn-info" : "")">Pending</a>
+                </div>
+
+                <div class="table-responsive">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

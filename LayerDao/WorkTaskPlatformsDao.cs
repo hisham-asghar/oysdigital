@@ -1,7 +1,6 @@
 ﻿using Generics.DataModels.AdminModels;
 using Generics.Services.DatabaseService.AdoNet;
 using LayerDao.DatabaseInfo;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -46,18 +45,6 @@ namespace LayerDao
             return QueryExecutor.FirstOrDefault<WorkTaskPlatforms>(query) == null ? false : true;
         }
 
-        public static bool GenerateTasks(DateTime date, string userId)
-        {
-            var query = $"EXEC GetGenerateableTasks '{(date.ToString("mm-dd-yyyy"))}'";
-            var projectTasks = QueryExecutor.List<WorkTask>(query) ?? new List<WorkTask>();
-            projectTasks.ForEach(w =>
-            {
-                w.SetOnCreate(userId);
-            });
-
-
-            return QueryExecutor.FirstOrDefault<WorkTaskPlatforms>(query) == null ? false : true;
-        }
 
         public static bool Insert(WorkTaskPlatforms worktaskplatfroms)
         {
