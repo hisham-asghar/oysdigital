@@ -54,6 +54,19 @@ namespace Generics.WebHelper.Extensions
 
             return principal.IsInRole(UserRoles.Admin) || principal.IsInRole(UserRoles.Hr);
         }
+        public static string GetRole(this ClaimsPrincipal principal)
+        {
+            if (principal == null) return null;
+
+            return principal.IsInRole(UserRoles.Admin)
+                ? "Admin"
+                : principal.IsInRole(UserRoles.Hr)
+                ? "Hr"
+                : principal.IsInRole(UserRoles.Designer)
+                ? "Designer"
+                : principal.IsInRole(UserRoles.Scheduler)
+                ? "Scheduler" : "No Role";
+        }
     }
 
 }

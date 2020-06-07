@@ -1,7 +1,6 @@
-﻿using Generics.Common.Attributes;
+﻿using Generics.Common;
+using Generics.Common.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Generics.DataModels.AdminModels
 {
@@ -18,13 +17,13 @@ namespace Generics.DataModels.AdminModels
         {
             CreatedBy = userId;
             ModifiedBy = userId;
-            OnCreated = DateTime.Now;
-            OnModified = DateTime.Now;
+            OnCreated = DataConstants.LocalNow;
+            OnModified = DataConstants.LocalNow;
         }
         public void SetOnUpdate(string userId)
         {
             ModifiedBy = userId;
-            OnModified = DateTime.Now;
+            OnModified = DataConstants.LocalNow;
         }
     }
 }

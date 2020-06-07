@@ -48,5 +48,10 @@ namespace LayerBao
         {
             return WorkTaskMembersDao.Delete(id);
         }
+
+        public static bool UpdateExistingWorkTaskMembers(ProjectMembers member, string userId)
+        {
+            return WorkTaskMembersDao.UpdateExistingWorkTaskMembers(member, userId);
+        }
     }
 }

@@ -1,10 +1,5 @@
 ﻿using Admin.Models.ThemeViewModels.LeftSidebar;
-using Generics.DataModels.Constants;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Admin.Models.ThemeViewModels
 {
@@ -15,6 +10,12 @@ namespace Admin.Models.ThemeViewModels
         {
 
             return LeftSidebarData.GetData(userId);
+
+        }
+        public static List<LeftSidebarDto> GetLeftSidebarDtos(bool isAdminOrHr)
+        {
+
+            return LeftSidebarData.GetData(isAdminOrHr);
 
         }
     }

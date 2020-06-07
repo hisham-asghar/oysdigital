@@ -40,7 +40,7 @@ namespace Admin.Controllers
         public JsonResult GenerateTask()
         {
             var userId = User.GetUserId();
-            var date = DateTime.UtcNow.AddHours(5);
+            var date = DataConstants.LocalNow;
             WorkTaskBao.GenerateTasks(userId, date);
 
             //var users = ProjectMembersBao.GetByUserIdList(User.GetUserId());
@@ -338,12 +338,19 @@ namespace Admin.Controllers
         {
             if (id != 0)
             {
-                ProjectMembersBao.Delete(id);
-                return Json(true);
+                var member = ProjectMembersBao.GetById(id);
+                var userId = User.GetUserId();
+                var status = ProjectMembersBao.Delete(id);
+                if (status)
+                {
+                    WorkTaskMembersBao.UpdateExistingWorkTaskMembers(member, userId);
+                    return Json(true);
+                }
             }
             return Json(false);
 
         }
+
         [Route("/Json/DashBoardFilter")]
         [HttpGet]
         public JsonResult DashBoardFilter(string startDate, string endDate, string userId)
@@ -460,6 +467,9 @@ namespace Admin.Controllers
                 var result = ProjectMembersBao.Insert(projectMembers);
                 if (result > 0)
                 {
+                    bool status = WorkTaskMembersBao.UpdateExistingWorkTaskMembers(projectMembers, userId);
+                    WorkTaskBao.GenerateTasks(userId, DataConstants.LocalNow);
+                    WorkTaskBao.GenerateTasks(userId, DataConstants.LocalNow.AddDays(1));
                     return Json(ProjectMembersBao.GetById(result));
                 }
             }

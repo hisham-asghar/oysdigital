@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Project Members Type";
     Layout = "_TableLayout";
-    ViewBag.AddNewLink = "/ProjectMemberType/Create";
+    ViewBag.AddNewLink = "/ProjectMemberTypes/Create";
 }
 
 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
@@ -16,9 +16,9 @@
                 <td>@item.OnCreated.ToString("MMM dd, yyyy")</td>
                 <td>@item.IsActive.CheckTag()</td>
                 <td>
-                    @ButtonHelper.EditSmall("/ProjectMemberType/Edit/" + item.Id)
-                    @ButtonHelper.DeleteSmall("/ProjectMemberType/Delete/" + item.Id)
-                    @ButtonHelper.DetailSmall("/ProjectMemberType/Detail/" + item.Id)
+                    @ButtonHelper.EditSmall("/ProjectMemberTypes/Edit/" + item.Id)
+                    @ButtonHelper.DeleteSmall("/ProjectMemberTypes/Delete/" + item.Id)
+                    @ButtonHelper.DetailSmall("/ProjectMemberTypes/Detail/" + item.Id)
                 </td>
             </tr>
         }

@@ -21,6 +21,37 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
             return data;
         }
 
+        public static List<LeftSidebarDto> GetData(bool isAdminOrHr = false)
+        {
+            var data = new List<LeftSidebarDto>();
+            if (isAdminOrHr)
+            {
+                data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
+                data.Add(new LeftSidebarDto("Customers", "/Customer", "accounts"));
+                data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
+                data.Add(new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"));
+                data.Add(new LeftSidebarDto("Platforms", "/Platform", "delicious"));
+                data.Add(new LeftSidebarDto("Labels", "/LabelType", "label"));
+                data.Add(new LeftSidebarDto("Users", "/Users", "accounts"));
+
+            }
+            else
+            {
+                data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
+                //    data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
+            }
+
+
+            var list = new List<LeftSidebarDto>();
+            foreach (var item in data)
+            {
+                if (!list.Contains(item))
+                {
+                    list.Add(item);
+                }
+            }
+            return list;
+        }
         public static List<LeftSidebarDto> GetData(string userId)
         {
             var user = AspNetUserRolesBao.GetByUserId(userId);
@@ -41,7 +72,7 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
                 else if (user.NormalizedRoles.Contains(UserRoles.Designer.ToUpper()) || user.NormalizedRoles.Contains(UserRoles.Scheduler.ToUpper()))
                 {
                     data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
-                    data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
+                    //    data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
                 }
 
             }

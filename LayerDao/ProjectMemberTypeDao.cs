@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Generics.DataModels;
-using Generics.DataModels.AdminModels;
+﻿using Generics.DataModels.AdminModels;
 using Generics.Services.DatabaseService.AdoNet;
 using LayerDao.DatabaseInfo;
+using System.Collections.Generic;
 
 namespace LayerDao
 {

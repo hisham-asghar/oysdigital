@@ -21,8 +21,8 @@ namespace Admin.Controllers
         {
             return View(ProjectMemberTypeBao.GetAll());
         }
-        [Route("/ProjectMemberType/Create")]
-        [Route("/ProjectMemberType/Edit/{id}")]
+        [Route("/ProjectMemberTypes/Create")]
+        [Route("/ProjectMemberTypes/Edit/{id}")]
         [HttpGet]
         public IActionResult Create(long id = 0)
         {
@@ -34,8 +34,8 @@ namespace Admin.Controllers
             ViewBag.IsEdit = id > 0;
             return View(projectmembertypes);
         }
-        [Route("/ProjectMemberType/Create")]
-        [Route("/ProjectMemberType/Edit/{id}")]
+        [Route("/ProjectMemberTypes/Create")]
+        [Route("/ProjectMemberTypes/Edit/{id}")]
         [HttpPost]
         public IActionResult Create(ProjectMemberTypes projectmembertypes, int id = 0)
         {

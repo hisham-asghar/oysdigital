@@ -1,7 +1,5 @@
-﻿@{ 
-    var list = Admin.Models.ThemeViewModels.ThemeData.GetLeftSidebarDtos(User.GetUserId());
-    var data = User.GetUserId();
-    var roles = LayerBao.AspNetUserRolesBao.GetByUserId(data);
+﻿@{
+    var list = Admin.Models.ThemeViewModels.ThemeData.GetLeftSidebarDtos(User.IsAdminOrHr());
 }
 
 <!-- Left Sidebar -->
@@ -19,17 +17,11 @@
                     </a>
                     <div class="detail text-left">
                         <strong class="d-block" style="position: relative;top: 6px;">@(User.GetName() ?? "Guest")</strong>
-                        @if (roles != null)
-                        {
                         <ul class="social-links list-unstyled">
-                            @foreach (var item in roles.Roles)
-                            {
-                                <li>
-                                    <small>@item</small>
-                                </li>
-                            }
+                            <li>
+                                <small>@User.GetRole()</small>
+                            </li>
                         </ul>
-                        }
                         <small>
                             <a href="#" class="p-0 text-primary">Edit Profile</a>
                         </small>

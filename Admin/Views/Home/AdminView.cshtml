@@ -16,6 +16,8 @@
             <th>Platforms</th>
             <th>Scheduling Time</th>
             <th>Status</th>
+            <th>Designer</th>
+            <th>Scheduler</th>
         </tr>
     </thead>
     <tbody>
@@ -24,8 +26,9 @@
             var task = item.Value.Item1;
             var isCompleted = item.Value.Item1.IsCompleted && item.Value.Item2.All(a => a.IsCompleted);
             var isDesigned = item.Value.Item1.IsDesigned && item.Value.Item2.All(a => a.IsDesigned);
+            var isMemberMissing = string.IsNullOrWhiteSpace(task.DesignerName) || string.IsNullOrWhiteSpace(task.SchedulerName);
 
-            <tr class="@(task.IsCompleted ? "bg-success" : "")" title="@task.ProjectName" project-id="@task.ProjectId" date="@Model.Item1.FirstOrDefault().ProjectSchedulingTime.ToString("MM-dd-yyyy")">
+            <tr class="@(task.IsCompleted ? "bg-success" : (isMemberMissing ? "bg-danger" : "") )" title="@task.ProjectName" project-id="@task.ProjectId" date="@Model.Item1.FirstOrDefault().ProjectSchedulingTime.ToString("MM-dd-yyyy")">
                 <td><a href="/Project/Detail/@task.ProjectId"><strong>@task.ProjectName</strong></a></td>
                 <td>
                     @foreach (var platform in task.WorkTaskPlatforms.Where(p => !p.PlatformName.ToLower().Contains("instagram")))
@@ -110,6 +113,8 @@
                         <span class="badge badge-info">To Do</span>
                     }
                 </td>
+                <td>@task.DesignerName</td>
+                <td>@task.SchedulerName</td>
             </tr>
         }
     </tbody>

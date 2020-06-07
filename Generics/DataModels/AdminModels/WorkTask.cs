@@ -17,6 +17,13 @@ namespace Generics.DataModels.AdminModels
         public bool IsReported { get; set; }
         public string ReportedBy { get; set; }
         public List<WorkTaskPlatforms> WorkTaskPlatforms { get; set; }
+
+        [Ignore]
+        public string DesignerName { get; set; }
+        [Ignore]
+        public string SchedulerName { get; set; }
+
+
         [Ignore]
         public string MemberType { get; set; }
 
