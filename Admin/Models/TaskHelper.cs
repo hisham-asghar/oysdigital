@@ -28,7 +28,7 @@ namespace Admin.Models
             }).ToDictionary(k => k.Key, v => v.ToList());
 
 
-            var today = DateTime.UtcNow.AddHours(5);
+            var today = DataConstants.LocalNow;
             var statsModel = new StatsModel();
             statsModel.OverallTotal = groupedData.Count();
             statsModel.OverallDone = groupedData.Count(d => d.Value.All(t => t.IsDone()));
@@ -145,7 +145,7 @@ namespace Admin.Models
         public static List<WorkTask> GetWorkTask(string userId, TaskTimeFilter time, TaskStatusFilter status)
         {
             var workTasks = GetWorkTasksByUserId(userId);
-            var today = DateTime.Now;
+            var today = DataConstants.LocalNow;
             switch (time)
             {
                 case TaskTimeFilter.Today:
@@ -194,7 +194,7 @@ namespace Admin.Models
         public static List<WorkTask> GetWorkTask(List<long> item, string userId, TaskTimeFilter time, TaskStatusFilter status)
         {
             var workTasks = GetWorkTasksByProjectIds(item, userId);
-            var today = DateTime.Now;
+            var today = DataConstants.LocalNow;
             switch (time)
             {
                 case TaskTimeFilter.Today:

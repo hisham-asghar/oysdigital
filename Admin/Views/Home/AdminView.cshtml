@@ -2,6 +2,7 @@
 @model Tuple<List<WorkTask>, StatsModel>
 
 @{
+    var LocalNow = Generics.Common.DataConstants.LocalNow;
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Home/_DashboardView.cshtml";
     ViewBag.StatsModel = Model.Item2;
@@ -78,17 +79,17 @@
                         <span class="btn btn-primary">@schedlingTime.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
                     }
                     <span>(</span>
-                    @if (item.Key.Date == DateTime.UtcNow.AddHours(5).ToString("MMMM dd, yyyy"))
+                    @if (item.Key.Date == LocalNow.ToString("MMMM dd, yyyy"))
                     {
                         <span class="btn btn-primary bg-pink">Today</span>
 
                     }
-                    else if (item.Key.Date == DateTime.UtcNow.AddDays(1).AddHours(5).ToString("MMMM dd, yyyy"))
+                    else if (item.Key.Date == LocalNow.AddDays(1).ToString("MMMM dd, yyyy"))
                     {
                         <span class="btn btn-primary bg-pink">Tomorrow</span>
 
                     }
-                    else if (item.Key.Date == DateTime.UtcNow.AddDays(-1).AddHours(5).ToString("MMMM dd, yyyy"))
+                    else if (item.Key.Date == LocalNow.AddDays(-1).ToString("MMMM dd, yyyy"))
                     {
                         <span class="btn btn-primary bg-pink">Yesterday</span>
                     }

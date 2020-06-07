@@ -1,4 +1,5 @@
 ﻿using Admin.Models;
+using Generics.Common;
 using Generics.DataModels.AdminModels;
 using Generics.DataModels.Enums;
 using Generics.WebHelper.Extensions;
@@ -36,7 +37,7 @@ namespace Admin.Controllers
 
             var counts = WorkTaskBao.GetGenerateTasksCount(myId);
 
-            var today = DateTime.UtcNow.AddHours(5);
+            var today = DataConstants.LocalNow;
             ViewBag.GenerateTomorrow = ViewBag.GenerateToday = false;
             foreach (var c in counts)
             {

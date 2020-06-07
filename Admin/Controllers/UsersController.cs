@@ -72,27 +72,33 @@ namespace Admin.Controllers
             }
             else
             {
-                applicationUser.UserName = applicationUser.Email;
-                userDb.UserName = userDb.Email = applicationUser.Email;
-                userDb.Name = applicationUser.Name;
-                if (!string.IsNullOrWhiteSpace(applicationUser.PasswordHash) && applicationUser.PasswordHash.Length > 5)
+                var user = await _userManager.FindByIdAsync(id);
+                if (user != null)
                 {
-                    userDb.PasswordHash = applicationUser.PasswordHash;
-                }
-                var result = AspNetUserBao.Update(userDb);
-                if (result)
-                {
-                    AspNetUserRolesBao.Delete(id);
-                    foreach (var item in Roles)
+                    user.Name = applicationUser.Name;
+                    user.UserName = user.Email = applicationUser.Email;
+                    user.NormalizedUserName = user.NormalizedEmail = applicationUser.Email.ToUpper();
+                    var updateResult = await _userManager.UpdateAsync(user);
+                    if (updateResult.Succeeded)
                     {
-                        var role = new AspNetUserRoles
+                        if (!string.IsNullOrWhiteSpace(applicationUser.PasswordHash))
                         {
-                            UserId = id,
-                            RoleId = item
-                        };
-                        AspNetUserRolesBao.Insert(role);
+                            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                            var setPasswordResult = await _userManager.ResetPasswordAsync(user, code, applicationUser.PasswordHash);
+                            System.Console.WriteLine(setPasswordResult.Succeeded);
+                        }
+                        AspNetUserRolesBao.Delete(id);
+                        foreach (var item in Roles)
+                        {
+                            var role = new AspNetUserRoles
+                            {
+                                UserId = id,
+                                RoleId = item
+                            };
+                            AspNetUserRolesBao.Insert(role);
+                        }
+                        return RedirectToAction("Index");
                     }
-                    return RedirectToAction("Index");
                 }
                 else
                 {

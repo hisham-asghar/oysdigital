@@ -1,4 +1,5 @@
-﻿using Generics.DataModels.AdminModels;
+﻿using Generics.Common;
+using Generics.DataModels.AdminModels;
 using Generics.Services.DatabaseService.AdoNet;
 using LayerDao.DatabaseInfo;
 using System;
@@ -21,14 +22,14 @@ namespace LayerDao
         }
         public static List<WorkTask> GetByProjectId(long id)
         {
-            var today = DateTime.Now.Date;
-            var tomorrow = DateTime.Now.AddDays(1).Date;
+            var today = DataConstants.LocalNow;
+            var tomorrow = DataConstants.LocalNow.AddDays(1).Date;
             var query = $"select WorkTask.*,Project.Name as ProjectName from WorkTask join Project on Project.Id=WorkTask.ProjectId where WorkTask.ProjectId={id} AND WorkTask.OnCreated BETWEEN '{today}' AND '{tomorrow}' OR IsCompleted='false';";
             return QueryExecutor.List<WorkTask>(query);
         }
         public static List<WorkTask> GetByProjectIdAll(long id)
         {
-            var today = DateTime.Now.Date;
+            var today = DataConstants.LocalNow.Date;
             var query = $"select WorkTask.*,Project.Name as ProjectName from WorkTask join Project on Project.Id=WorkTask.ProjectId where WorkTask.ProjectId={id} AND WorkTask.OnCreated='{today}';";
             return QueryExecutor.List<WorkTask>(query);
         }
@@ -58,13 +59,13 @@ namespace LayerDao
 
         public static bool MarkDesignDone(int projectId, string userId, DateTime date)
         {
-            if (date < DateTime.UtcNow.AddHours(5).Date) return false;
+            if (date < DataConstants.LocalNow.Date) return false;
             var query = $"EXEC dbo.MarkDesignDone {projectId},'{userId}', '{(date.ToString("MM-dd-yyyy"))}'";
             return QueryExecutor.ExecuteDml(query);
         }
         public static bool MarkPlatformScheduleDone(int projectId, string userId, DateTime date, string platformIds)
         {
-            if (date < DateTime.UtcNow.AddHours(5).Date) return false;
+            if (date < DataConstants.LocalNow.Date) return false;
             var query = $"EXEC [dbo].[MarkScheduleDone] {projectId},'{userId}', '{(date.ToString("MM-dd-yyyy"))}', '{platformIds}'";
             return QueryExecutor.ExecuteDml(query);
         }
@@ -91,7 +92,7 @@ namespace LayerDao
 
         public static List<GenertableTaskCount> GetGenerateTasksCount(string userId)
         {
-            var today = DateTime.UtcNow.AddHours(5);
+            var today = DataConstants.LocalNow;
             var str = $"{today.ToString("MM-dd-yyyy")},{today.AddDays(1).ToString("MM-dd-yyyy")}";
             var query = $"EXEC dbo.GetGenerateableTasksCount '{str}', '{userId}'";
             var counts = QueryExecutor.List<GenertableTaskCount>(query) ?? new List<GenertableTaskCount>();

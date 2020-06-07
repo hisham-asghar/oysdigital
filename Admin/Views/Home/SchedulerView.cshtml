@@ -4,6 +4,7 @@
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Home/_DashboardView.cshtml";
     ViewBag.StatsModel = Model.Item2;
+    var LocalNow = Generics.Common.DataConstants.LocalNow;
 
     var projects = Model.Item1.OrderBy(o => o.ProjectSchedulingTime).GroupBy(t => new { ProjectId = t.ProjectId, Date = t.ProjectSchedulingTime.Date.ToString("MMMM dd, yyyy") }).ToDictionary(k => k.Key, v => new Tuple<WorkTask, List<WorkTask>>(v.FirstOrDefault(), v.Skip(1).ToList()));
 
@@ -76,17 +77,17 @@
                         <span class="btn btn-primary">@schedlingTime.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
                     }
                     <span>(</span>
-                    @if (item.Key.Date == DateTime.UtcNow.AddHours(5).ToString("MMMM dd, yyyy"))
+                    @if (item.Key.Date == LocalNow.ToString("MMMM dd, yyyy"))
                     {
                         <span class="btn btn-primary bg-pink">Today</span>
 
                     }
-                    else if (item.Key.Date == DateTime.UtcNow.AddDays(1).AddHours(5).ToString("MMMM dd, yyyy"))
+                    else if (item.Key.Date == LocalNow.AddDays(1).ToString("MMMM dd, yyyy"))
                     {
                         <span class="btn btn-primary bg-pink">Tomorrow</span>
 
                     }
-                    else if (item.Key.Date == DateTime.UtcNow.AddDays(-1).AddHours(5).ToString("MMMM dd, yyyy"))
+                    else if (item.Key.Date == LocalNow.AddDays(-1).ToString("MMMM dd, yyyy"))
                     {
                         <span class="btn btn-primary bg-pink">Yesterday</span>
                     }
@@ -112,7 +113,7 @@
                     }
                 </td>
                 <td>
-                    @if (!isCompleted && isDesigned && task.ProjectSchedulingTime.Date >= DateTime.UtcNow.AddHours(5).Date)
+                    @if (!isCompleted && isDesigned && task.ProjectSchedulingTime.Date >= LocalNow.Date)
                     {
                         <button type="button" class="btn btn-success btn-mark-schedule-done-popup">Mark Done</button>
                     }
