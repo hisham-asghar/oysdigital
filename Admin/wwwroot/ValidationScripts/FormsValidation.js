@@ -4,10 +4,10 @@
         // It has the name attribute "registration"
         $("form[name='customer']").validate({
             rules: {
-                Name: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z'.\\s]{1,40}$" },
-                Email: { required: true, regex: "^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z.]{2,5}$" },
-                Address: { required: true, minlength: 5, maxlength: 45 },
-                PhoneNumber: { required: true, minlength: 10, maxlength: 30, regex: "^[0-9'.\\s]+[0-9]{1,40}$" }
+                Name: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.\\s]{1,40}$" },
+                Email: { required: false, regex: "^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z.]{2,5}$" },
+                Address: { required: false, minlength: 5, maxlength: 45 },
+                PhoneNumber: { required: false, minlength: 10, maxlength: 30, regex: "^[0-9'.\\s]+[0-9]{1,40}$" }
             },
             // Specify validation error messages
             messages: {
@@ -41,7 +41,7 @@
         });
         $("form[name='mobile']").validate({
             rules: {
-                Name: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.\\s]{1,25}$" }
+                Name: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.-\\s]{1,25}$" }
             },
             messages: {
                 Name: {
@@ -59,7 +59,7 @@
         });
         $("form[name='mobilespaces']").validate({
             rules: {
-                Name: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.\\s]{1,25}$" },
+                Name: { required: true, minlength: 3, maxlength: 25, regex: "^[a-zA-Z0-9'.-\\s]{1,25}$" },
                 MobileId: "required"
             },
             messages: {

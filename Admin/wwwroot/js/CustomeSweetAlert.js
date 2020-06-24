@@ -1,3 +1,4 @@
+
 var ProjectView = {
     PlatformType: '',
     Quantity: 0,
@@ -83,9 +84,8 @@ async function Rangerswal() {
     })
     var schedulerhtml = "";
     for (var x = 0; x < ProjectView.Quantity; x++) {
-        schedulerhtml += "<div class='input-group'><div class='input-group-prepend'><span class='input-group-text'><i class='zmdi zmdi-time'></i></span></div><input type='text' class='form-control timepicker' placeholder='Please choose a time...'></div></br>";
+        schedulerhtml += "<div class='row clearfix'><div class='col-sm-6'><div class='input-group'><div class='input-group-prepend'><span class='input-group-text'><i class='zmdi zmdi-time'></i></span></div><input type='text' class='form-control timepicker' id='" + x + "timer' placeholder='Please choose a time...'></div></div><div class='col-sm-6'><select class='form-control show-tick' id='" + x +"selecttime' onchange='Settime("+x+")'><option value=''>-- Time --</option><option value='10:00:00 AM'>Morning 10:00 am</option><option value='12:00:00 AM'>Afternoon 12:00 am</option><option value='3:00:00 PM'>Afternoon 3:00 pm</option><option value='5:00:00 PM'>Evening 5:00 pm</option><option value='7:00:00 PM'>Evening 7:00 m</option></select></div></div><br />";
     }
-
     await Swal.fire({
         title: 'Select time',
         html: schedulerhtml,
@@ -114,7 +114,9 @@ async function Rangerswal() {
                 {
                     var schedulingtime = "";
                     for (var i = 0; i < data.projectTaskScheduling.length; i++) {
-                        schedulingtime += "<span class='btn btn-primary'>" + data.projectTaskScheduling[0].time + "</span>";
+                        var mydate = new time(data.projectTaskScheduling[0].time);
+                        var str = mydate.toString("hh:mm tt")
+                        schedulingtime += "<span class='btn btn-primary'>" + str + "</span>";
                     }
                     var projecttask = "<tr id = " + data.id + "><td>"+data.taskType+"-"+data.frequencyType+"</td><td>" + schedulingtime + "</td><td><a role='button' onclick=DeletePlatformTask(" + data.id + ") class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></td></tr>";
                     $('#myTask').append(projecttask);
@@ -124,6 +126,13 @@ async function Rangerswal() {
 
         });
     });
+}
+function date() {
+
+}
+function Settime(id) {
+    var data = $("#"+id+"selecttime").val();
+    $("#" + id +"timer").val(data);
 }
 function DeletePlatformTask(id) {
     Swal.fire({
@@ -526,4 +535,22 @@ function removeElement(elementId) {
     // Removes an element from the document
     var element = document.getElementById(elementId);
     element.parentNode.removeChild(element);
+}
+function Notesfilter() {
+    var noteType = $("#Notes").val();
+    if (noteType == 0) {
+        $("#myNotes div[lable]").show();
+    } else {
+        $("#myNotes div[lable]").hide();
+        $("#myNotes div[lable=" + noteType + "]").show();
+    }
+}
+function Alertfilter() {
+    var alertType = $("#Alerts").val();
+    if (alertType == 0) {
+        $("#myAlertMessages div[lable]").show();
+    } else {
+        $("#myAlertMessages div[lable]").hide();
+        $("#myAlertMessages div[lable=" + alertType + "]").show();
+    }
 }

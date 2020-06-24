@@ -13,8 +13,7 @@
         {            
             @Html.TrHtml("td", item.Name,$"<div style='width:40px;height:40px;background-color:{item.ColorCode};'></div>", item.OnCreated.ToString(dddd_dd_MMMM_yyyy),
              @ButtonHelper.EditSmall("/LabelType/Edit/" + item.Id) + "" +
-             @ButtonHelper.DeleteSmall("/LabelType/Delete/" + item.Id) + "" +
-             @ButtonHelper.DetailSmall("/LabelType/Detail/" + item.Id).ToString());
+             @ButtonHelper.DeleteSmall("/LabelType/Delete/" + item.Id).ToString());
         }
     </tbody>
 </table>

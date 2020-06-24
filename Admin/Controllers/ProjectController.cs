@@ -1,6 +1,7 @@
 ﻿using Generics.Common;
 using Generics.DataModels.AdminModels;
 using Generics.DataModels.Constants;
+using Generics.DataModels.Enums;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Authorization;
@@ -14,9 +15,11 @@ namespace Admin.Controllers
     [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class ProjectController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(ProjectFilter status = ProjectFilter.All)
         {
+            var project = new List<Project>();
             var projects = new List<Project>();
+            ViewBag.Status = status;
             if (User.IsInRole(UserRoles.Designer) || User.IsInRole(UserRoles.Scheduler))
             {
                 var usermember = ProjectMembersBao.GetByUserId(User.GetUserId());
@@ -29,12 +32,33 @@ namespace Admin.Controllers
             if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
             {
                 projects = ProjectBao.GetAll();
+                foreach (var c in projects.ToList())
+                {
+                    if (status == ProjectFilter.Active)
+                    {
+                        if (c.IsActive == true)
+                        {
+                            project.Add(c);
+                        }
+                    }
+                    if (status == ProjectFilter.InActive)
+                    {
+                        if (c.IsActive == false)
+                        {
+                            project.Add(c);
+                        }
+                    }
+                    if (status == ProjectFilter.All)
+                    {
+                        project = projects;
+                    }
+                }
+                return View(project);
             }
             else
             {
                 return View(projects);
             }
-            return View(projects);
         }
         [Route("/Project/Create")]
         [Route("/Project/Edit/{id}")]
@@ -149,6 +173,7 @@ namespace Admin.Controllers
                 }
                 project.ProjectNotes = (project.ProjectNotes ?? new List<ProjectNotes>()).OrderByDescending(u => u.OnCreated).ToList();
                 project.ProjectAlertMessages = (project.ProjectAlertMessages ?? new List<ProjectAlertMessage>()).OrderByDescending(u => u.OnCreated).ToList();
+                ViewBag.LabelType = LabelTypeBao.GetAll().CreateDictionaryFromModelList("Id", "Name");
 
                 if (User.IsDesigner() || User.IsScheduler())
                 {

@@ -18,6 +18,8 @@ namespace Generics.DataModels.AdminModels
         public long MobileSpaceId { get; set; }
         [Ignore]
         public string MobileSpaceName { get; set; }
+        [Ignore]
+        public string MobileName { get; set; }
         public List<ProjectMembers> ProjectMembers { get; set; }
         public List<ProjectAlertMessage> ProjectAlertMessages { get; set; }
         public List<ProjectNotes> ProjectNotes { get; set; }

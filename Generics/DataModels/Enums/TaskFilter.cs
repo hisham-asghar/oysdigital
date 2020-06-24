@@ -17,4 +17,12 @@
         Pending,
         Done
     }
+    public enum ProjectFilter
+    {
+        All,
+        Active,
+        InActive,
+        HaveDesigner,
+        HaveScheduler
+    }
 }

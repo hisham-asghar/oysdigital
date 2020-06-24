@@ -12,12 +12,12 @@ namespace LayerDao
     {
         public static List<Project> GetAll()
         {
-            var query = $"select Project.*,MobileSpaces.Name as MobileSpaceName,Customer.Name as CustomerName From Project Join MobileSpaces on Project.MobileSpaceId = MobileSpaces.id join Customer on Customer.Id = Project.CustomerId; ";
+            var query = $"select Project.*,MobileSpaces.Name as MobileSpaceName,Customer.Name as CustomerName ,Mobile.Name as MobileName from Project Join MobileSpaces on Project.MobileSpaceId = MobileSpaces.id join Customer on Customer.Id = Project.CustomerId join Mobile on MobileSpaces.MobileId = Mobile.Id;";
             return QueryExecutor.List<Project>(query);
         }
         public static Project GetById(long id)
         {
-            var query = $"select Project.*,MobileSpaces.Name as MobileSpaceName,Customer.Name as CustomerName From Project Join MobileSpaces on Project.MobileSpaceId = MobileSpaces.id join Customer on Customer.Id = Project.CustomerId where Project.Id = {id}; ";
+            var query = $"select Project.*,MobileSpaces.Name as MobileSpaceName,Customer.Name as CustomerName ,Mobile.Name as MobileName from Project Join MobileSpaces on Project.MobileSpaceId = MobileSpaces.id join Customer on Customer.Id = Project.CustomerId join Mobile on MobileSpaces.MobileId = Mobile.Id where Project.Id = {id}; ";
             return QueryExecutor.FirstOrDefault<Project>(query);
         }
         public static List<Project> GetByCustomerId(long id)

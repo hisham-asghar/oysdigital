@@ -103,6 +103,7 @@
                                 <div class="col-md-6">
                                     @if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
                                     {
+
                                         <div class="pull-right">
                                             @*@ButtonHelper.Create($"/ProjectPlatform/Create?projectId={Model.Id}&returnUrl=/Project/Detail/{Model.Id}")*@
                                             <button class="btn btn-success" onclick="CreatePlatform(@Model.Id)"><i class="zmdi zmdi-plus"></i> Create</button>
@@ -118,8 +119,13 @@
                                     <tr>
 
                                         <td id="myPlat">
-                                            @foreach (var item in Model.ProjectPlatforms)
+                                            <div style="background-color: #0069d9;width: min-content;height: 40px;border-radius: .2875rem;padding: 8px 18px;cursor: pointer;">
+                                            <span class="text-white" style="background-color: #0069d9;padding: 6px;">facebook</span>
+                                            <span class="ti-close text-danger font-bold" style="background-color: #0069d9;padding: 6px;position: relative;top: 0.13em;"></span>
+                                            </div>
+                                                @foreach (var item in Model.ProjectPlatforms)
                                             {
+
                                                 <span id="@item.Id" class="btn"><a href="@item.Link" target="_blank" class="btn"> <i class="@item.PlatformIcon"></i> @item.PlatformName </a> <span class="ti-close text-danger font-bold" onclick="DeletePaltforms(@item.Id, '@item.PlatformName')"></span></span>
                                             }
                                         </td>
@@ -160,7 +166,7 @@
 
                                                 @foreach (var sched in item.ProjectTaskScheduling)
                                                 {
-                                                    <span class="btn btn-primary">@sched.Time.ToString("hh:mm:ss tt")</span>
+                                                    <span class="btn btn-primary">@sched.Time.ToString("hh:mm tt")</span>
                                                 }
 
                                             </td>
@@ -187,13 +193,21 @@
                                         </div>
                                     }
                                 </div>
-
+                                <div class="col-sm-4">
+                                    <select class="form-control show-tick" id="Notes" onchange="Notesfilter()">
+                                        <option value="">-- Note Types --</option>
+                                        @foreach (var n in ViewBag.LabelType)
+                                        {
+                                            <option value="@n.Key">@n.Value</option>
+                                        }
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="responsive" id="myNotes">
                             @foreach (var item in Model.ProjectNotes)
                             {
-                                <div class="row" id="@item.Id">
+                                <div class="row" id="@item.Id" lable="@item.LabelTypeId">
                                     <div class="col-md-10 text-dark">
                                         @item.Message
                                     </div>
@@ -201,7 +215,7 @@
                                         <ul class="social-links list-unstyled">
                                             <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
                                             <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
-                                            <li><div class="press"><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></div></li>
+                                            <li><div class="press"><span class="badge text-white NoteType" style="background-color:@item.LabelColor">@item.LabelName</span></div></li>
                                             <li><a role="button" onclick="DeleteNotes(@item.Id)" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a></li>
                                         </ul>
                                     </div>
@@ -223,12 +237,21 @@
                                         </div>
                                     }
                                 </div>
+                                <div class="col-sm-4">
+                                    <select class="form-control show-tick" id="Alerts" onchange="Alertfilter()">
+                                        <option value="">-- Alert Types --</option>
+                                        @foreach (var n in ViewBag.LabelType)
+                                        {
+                                            <option value="@n.Key">@n.Value</option>
+                                        }
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="responsive" id="myAlertMessages">
                             @foreach (var item in Model.ProjectAlertMessages)
                             {
-                                <div class="row" id="@item.Id">
+                                <div class="row" id="@item.Id" label="@item.LabelTypeId">
                                     <div class="col-md-10 text-dark">
                                         @item.Message
                                     </div>
