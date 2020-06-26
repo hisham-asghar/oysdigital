@@ -6,6 +6,7 @@ using Generics.Common;
 using Generics.Data;
 using Generics.DataModels.AdminModels;
 using Generics.DataModels.Constants;
+using Generics.DataModels.Enums;
 using LayerBao;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,33 @@ namespace Admin.Controllers
    // [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
     public class UserRolesController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(ProjectFilter status=ProjectFilter.All)
         {
-            return View(AspNetUserRolesBao.GetAll() ?? new List<AspNetUserRoles>());
+            ViewBag.Status = status;
+            var user = new List<AspNetUserRoles>();
+            var data = AspNetUserRolesBao.GetAll() ?? new List<AspNetUserRoles>();
+            foreach (var item in data)
+            {
+                if (status == ProjectFilter.HaveDesigner)
+                {
+                    if (item.RoleName == UserRoles.Designer)
+                    {
+                        user.Add(item);
+                    }
+                }
+                if (status == ProjectFilter.HaveScheduler)
+                {
+                    if (item.RoleName == UserRoles.Designer)
+                    {
+                        user.Add(item);
+                    }
+                }
+                if (status == ProjectFilter.All)
+                {
+                    user = data;
+                }
+            }
+            return View(user);
         }
 
         [Route("/UserRoles/Create")]
@@ -48,7 +73,7 @@ namespace Admin.Controllers
         [Route("/UserRoles/Create")]
         [Route("/UserRoles/Edit/{id}")]
         [HttpPost]
-        public IActionResult Create(AspNetUserRoles aspNetUserRoles,List<string> Roles, string id = null)
+        public IActionResult Create(AspNetUserRoles aspNetUserRoles, string id = null)
         {
             AspNetUserRoles aspNetUserRolesDb = AspNetUserRolesBao.GetByUserId(id);
             if (id != null && aspNetUserRolesDb == null)
@@ -65,17 +90,10 @@ namespace Admin.Controllers
 
             if (id == null)
             {
-                foreach(var item in Roles)
+                if (AspNetUserRolesBao.GetByUserId(aspNetUserRoles.UserId) == null)
                 {
-                    var role = new AspNetUserRoles();
-                    role.UserId = aspNetUserRoles.UserId;
-                    role.RoleId = item;
-                    if(AspNetUserRolesBao.IsExist(role.UserId, role.RoleId)==null)
-                    {
-                        AspNetUserRolesBao.Insert(role);
-                    }
+                    AspNetUserRolesBao.Insert(aspNetUserRoles);
                 }
-                
             }
             else
             {

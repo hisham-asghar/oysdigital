@@ -14,6 +14,7 @@ namespace Generics.DataModels.AdminModels
         public string LabelName { get; set; }
         [Ignore]
         public string LabelColor { get; set; }
+        public int AlertTypeId { get; set; }
         public long ProjectId { get; set; }
         public bool IsActive { get; set; }
     }

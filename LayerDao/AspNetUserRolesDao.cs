@@ -26,7 +26,8 @@ namespace LayerDao
         }
         public static bool Update(AspNetUserRoles aspNetUserRoles)
         {
-            return aspNetUserRoles.Update(TableConstants.AspNetUserRoles, aspNetUserRoles.UserId) > 0;
+            var query = $"UPDATE [dbo].[AspNetUserRoles] SET [UserId] = '{aspNetUserRoles.UserId}', [RoleId] = '{aspNetUserRoles.RoleId}' OUTPUT INSERTED.UserId AS Result WHERE UserId = '{aspNetUserRoles.UserId}'";
+            return QueryExecutor.FirstOrDefault<int>(query) > 0;
         }
         public static bool Delete(string userId)
         {

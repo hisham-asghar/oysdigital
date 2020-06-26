@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace Admin.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
+    [Authorize]
     public class ProjectController : Controller
     {
         public IActionResult Index(ProjectFilter status = ProjectFilter.All)
@@ -29,11 +29,26 @@ namespace Admin.Controllers
                     return View(data);
                 }
             }
+            
             if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
             {
                 projects = ProjectBao.GetAll();
+                var members = ProjectMembersBao.GetAll();
+                var alerts = ProjectAlertMessageBao.GetAll();
                 foreach (var c in projects.ToList())
                 {
+                    foreach(var item in members.Where(s=>s.ProjectId==c.Id))
+                    {
+                        if (item.MemberType == UserRoles.Designer)
+                        {
+                            c.Designer = item.MemberName;
+                        }
+                        if (item.MemberType == UserRoles.Scheduler)
+                        {
+                            c.Scheduler = item.MemberName;
+                        }
+                    }
+                    c.IssueCount += alerts.Where(s => s.ProjectId == c.Id).Count();
                     if (status == ProjectFilter.Active)
                     {
                         if (c.IsActive == true)
@@ -44,6 +59,20 @@ namespace Admin.Controllers
                     if (status == ProjectFilter.InActive)
                     {
                         if (c.IsActive == false)
+                        {
+                            project.Add(c);
+                        }
+                    }
+                    if (status == ProjectFilter.HaveDesigner)
+                    {
+                        if (c.Designer != null)
+                        {
+                            project.Add(c);
+                        }
+                    }
+                    if (status == ProjectFilter.HaveScheduler)
+                    {
+                        if (c.Scheduler != null)
                         {
                             project.Add(c);
                         }
@@ -60,6 +89,7 @@ namespace Admin.Controllers
                 return View(projects);
             }
         }
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
         [Route("/Project/Create")]
         [Route("/Project/Edit/{id}")]
         [HttpGet]
@@ -89,7 +119,7 @@ namespace Admin.Controllers
             ViewBag.IsEdit = id > 0;
             return View(project);
         }
-
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
         [Route("/Project/Create")]
         [Route("/Project/Edit/{id}")]
         [HttpPost]
@@ -128,7 +158,7 @@ namespace Admin.Controllers
                 return RedirectPermanent(returnUrl);
 
         }
-
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
         public IActionResult Delete(long id)
         {
             Project project = ProjectBao.GetById(id);
@@ -142,7 +172,7 @@ namespace Admin.Controllers
             }
             return View(project);
         }
-
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
         public IActionResult ConfirmDelete(long id)
         {
             if (id != 0)

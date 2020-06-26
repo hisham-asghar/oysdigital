@@ -13,6 +13,7 @@
     }
     var status = (ProjectFilter)ViewBag.Status;
 }
+
 @if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Hr))
 {
     <div class="row clearfix">
@@ -25,19 +26,20 @@
                     <a href="@(status == ProjectFilter.All ? "#" : $"/Project/?status={(int)ProjectFilter.All}")" class="btn @(status == ProjectFilter.All ? "btn-info" : "")">All</a>
                     <a href="@(status == ProjectFilter.Active ? "#" : $"/Project/?status={(int)ProjectFilter.Active}")" class="btn @(status == ProjectFilter.Active ? "btn-info" : "")">Active</a>
                     <a href="@(status == ProjectFilter.InActive ? "#" : $"/Project/?status={(int)ProjectFilter.InActive}")" class="btn @(status == ProjectFilter.InActive ? "btn-info" : "")">InActive</a>
+                    <a href="@(status == ProjectFilter.HaveDesigner ? "#" : $"/Project/?status={(int)ProjectFilter.HaveDesigner}")" class="btn @(status == ProjectFilter.HaveDesigner ? "btn-info" : "")">Hava Designer</a>
+                    <a href="@(status == ProjectFilter.HaveScheduler ? "#" : $"/Project/?status={(int)ProjectFilter.HaveScheduler}")" class="btn @(status == ProjectFilter.HaveScheduler ? "btn-info" : "")">Have Scheduler</a>
                 </div>
 
             </div>
         </div>
     </div>
-
     <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
-        @CHtmlHelper.TableHead("th", "Name", "Mobile SpaceName", "Created", "Designer", "Scheduler", "Status", "Actions")
-        @CHtmlHelper.TableFoot("th", "Name", "Mobile SpaceName", "Created", "Designer", "Scheduler", "Status", "Actions")
+        @CHtmlHelper.TableHead("th", "Name", "Mobile SpaceName", "Created", "Designer", "Scheduler", "Alert Status","Status", "Actions")
+        @CHtmlHelper.TableFoot("th", "Name", "Mobile SpaceName", "Created", "Designer", "Scheduler", "Alert Status","Status", "Actions")
         <tbody>
             @foreach (var item in Model)
             {
-                @CHtmlHelper.Tr("td", item.Name, item.MobileName.ToString() + "-" + item.MobileSpaceName.ToString(), item.OnCreated.ToString(dddd_dd_MMMM_yyyy), item.IsActive.ToString(), item.IsActive.ToString(), item.IsActive.CheckTag().ToString(),
+                @CHtmlHelper.Tr("td", item.Name, item.MobileName.ToString() + "-" + item.MobileSpaceName.ToString(), item.OnCreated.ToString(dddd_dd_MMMM_yyyy),item.Designer,item.Scheduler,item.IssueCount>0?$"<span class='badge badge-danger text-white'>{item.IssueCount}</span>":"",item.IsActive.CheckTag().ToString(),
                   @ButtonHelper.EditSmall("/Project/Edit/" + item.Id) + "" +
                   @ButtonHelper.DeleteSmall("/Project/Delete/" + item.Id) + "" +
                   @ButtonHelper.DetailSmall("/Project/Detail/" + item.Id).ToString());
@@ -47,13 +49,13 @@
 }
 else
 {
-    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
         @CHtmlHelper.TableHead("th", "Name", "Mobile SpaceName", "Created", "Status")
         @CHtmlHelper.TableFoot("th", "Name", "Mobile SpaceName", "Created", "Status")
         <tbody>
             @foreach (var item in Model)
             {
-                @CHtmlHelper.Tr("td", item.Name, item.MobileSpaceName.ToString(), item.OnCreated.ToString(dddd_dd_MMMM_yyyy), item.IsActive.CheckTag().ToString());
+                @CHtmlHelper.Tr("td", item.Name, item.MobileName.ToString() + "-" + item.MobileSpaceName.ToString(), item.OnCreated.ToString(dddd_dd_MMMM_yyyy), item.IsActive.CheckTag().ToString());
             }
         </tbody>
     </table>

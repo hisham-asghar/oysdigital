@@ -20,6 +20,14 @@ namespace Generics.DataModels.AdminModels
         public string MobileSpaceName { get; set; }
         [Ignore]
         public string MobileName { get; set; }
+
+        [Ignore]
+        public string Designer { get; set; }
+        [Ignore]
+        public string Scheduler { get; set; }
+        [Ignore]
+        public int IssueCount { get; set; }
+
         public List<ProjectMembers> ProjectMembers { get; set; }
         public List<ProjectAlertMessage> ProjectAlertMessages { get; set; }
         public List<ProjectNotes> ProjectNotes { get; set; }

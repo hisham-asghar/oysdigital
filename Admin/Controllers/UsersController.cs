@@ -1,6 +1,8 @@
 ﻿using Generics.Common;
 using Generics.Data;
 using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
+using Generics.DataModels.Enums;
 using LayerBao;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +19,49 @@ namespace Admin.Controllers
         {
             _userManager = userManager;
         }
-        public IActionResult Index()
+        public IActionResult Index(ProjectFilter status = ProjectFilter.All)
         {
-            var userWithRolesDictionary = (AspNetUserRolesBao.GetAll() ?? new List<AspNetUserRoles>()).ToDictionary(k => k.UserId, v => v.Roles);
-            var users = AspNetUserBao.GetAll() ?? new List<ApplicationUser>();
-            var userRoles = users.Select(u => new KeyValuePair<ApplicationUser, List<string>>(u, userWithRolesDictionary.Get(u.Id))).ToList();
-            return View(userRoles);
+            ViewBag.Status = status;
+           // var userWithRolesDictionary = (AspNetUserRolesBao.GetAll() ?? new List<AspNetUserRoles>()).ToDictionary(k => k.UserId, v => v.Roles);
+            var data = AspNetUserRolesBao.GetAll() ?? new List<AspNetUserRoles>();
+            var users = new List<AspNetUserRoles>();
+            foreach (var c in data)
+            {
+                if (status == ProjectFilter.Active)
+                {
+                    if (c.LockoutEnabled == true)
+                    {
+                        users.Add(c);
+                    }
+                }
+                if (status == ProjectFilter.InActive)
+                {
+                    if (c.LockoutEnabled == false)
+                    {
+                        users.Add(c);
+                    }
+                }
+                if (status == ProjectFilter.HaveDesigner)
+                {
+                    if (c.RoleName == UserRoles.Designer)
+                    {
+                        users.Add(c);
+                    }
+                }
+                if (status == ProjectFilter.HaveScheduler)
+                {
+                    if (c.RoleName == UserRoles.Designer)
+                    {
+                        users.Add(c);
+                    }
+                }
+                if (status == ProjectFilter.All)
+                {
+                    users = data;
+                }
+            }
+           // var userRoles = users.Select(u => new KeyValuePair<ApplicationUser, List<string>>(u, userWithRolesDictionary.Get(u.Id))).ToList();
+            return View(users);
         }
 
         [Route("/Users/Create")]
@@ -145,16 +184,18 @@ namespace Admin.Controllers
             }
             return RedirectToAction("Index");
         }
+
         public async Task<IActionResult> UpdateUserStatus(string id, bool status)
         {
 
             if (id != null)
             {
-                var user = AspNetUserBao.GetById(id);
+               // var user = AspNetUserBao.GetById(id);
+                var user=_userManager.FindByIdAsync(id);
                 if (user != null)
                 {
-                    user.LockoutEnabled = status;
-                    await _userManager.UpdateAsync(user);
+                    user.Result.LockoutEnabled = status;
+                    await _userManager.UpdateAsync(user.Result);
                 }
             }
             return RedirectToAction("Index");

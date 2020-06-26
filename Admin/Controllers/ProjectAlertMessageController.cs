@@ -69,6 +69,7 @@ namespace Admin.Controllers
             if (id == 0)
             {
                 projectalertmessage.SetOnCreate(userId);
+                projectalertmessage.AlertTypeId = AlertType.NotDone.ToInt();
                 ProjectAlertMessageBao.Insert(projectalertmessage);
             }
             else

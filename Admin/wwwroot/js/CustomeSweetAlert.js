@@ -114,12 +114,11 @@ async function Rangerswal() {
                 {
                     var schedulingtime = "";
                     for (var i = 0; i < data.projectTaskScheduling.length; i++) {
-                        var mydate = new time(data.projectTaskScheduling[0].time);
-                        var str = mydate.toString("hh:mm tt")
-                        schedulingtime += "<span class='btn btn-primary'>" + str + "</span>";
+                        var time = new Date(data.projectTaskScheduling[0].time).toString("hh:mm tt");
+                        schedulingtime += "<span class='btn btn-primary'>" + time + "</span>";
                     }
                     var projecttask = "<tr id = " + data.id + "><td>"+data.taskType+"-"+data.frequencyType+"</td><td>" + schedulingtime + "</td><td><a role='button' onclick=DeletePlatformTask(" + data.id + ") class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></td></tr>";
-                    $('#myTask').append(projecttask);
+                    $('#myTask').before(projecttask);
                     ShowResult(data);
                 }
             }
@@ -241,37 +240,43 @@ async function CreatePlatform(id) {
     {
         options += "<option value='" + platforms[i].id + "' selected>" + platforms[i].name+"</option>"
     }
-    var selectplatform = "<div class='form-group'><input id='link' class='form-control' placeholder='Platform Link' type='text'/></div><div class='form-group'><select required class='form-control show-tick' id='platform'>" + options + "</select></div>";
+    var selectplatform = "<div class='form-group'><input id='link' class='form-control' placeholder='Platform Link' type='url' required/></div><div class='form-group'><select required class='form-control show-tick' id='platform'>" + options + "</select></div>";
    
     await Swal.fire({
         title: 'Platforms',
         html: selectplatform,
         allowOutsideClick: false,
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
         inputValidator: (value) => {
             if (!value) {
                 return 'You need to choose something!'
             }
         }
-    }).then(() => {
-        projectplatform.PlatformId = $('#platform').val();
-        projectplatform.Link = $('#link').val();
-        $.ajax({ // ajax call starts
-            url: "/Json/PlatformCreate",
-            type: 'post',
-            data: projectplatform,
-            success: function (data) {
-                if (data != null) {
-                    var platf = "<span id='" + data.id + "'><a href='" + data.link + "' target='_blank' class='btn'><i class='" + data.platformIcon + "'></i></a> " + data.platformName + "  <span class='ti-close text-danger font-bold' onclick='DeletePaltforms(" + data.id + "," + data.platformName + ")'></span></span>";
-                    $('#myPlat').append(platf);
-                    Swal.fire(
-                        'Added',
-                        'Your Platform has been Added.',
-                        'success'
-                    )
-                }
-            }
+    }).then((result) => {
+        if (result.isConfirmed) {
 
-        });
+            projectplatform.PlatformId = $('#platform').val();
+            projectplatform.Link = $('#link').val();
+            $.ajax({ // ajax call starts
+                url: "/Json/PlatformCreate",
+                type: 'post',
+                data: projectplatform,
+                success: function (data) {
+                    if (data != null) {
+
+                        var platf = `<span id="${data.id}" class='btn btn-primary btn-lg'><a href='${data.link}' target='_blank' class='text-white-50 btnspan'><i class='${data.platformIcon} fontXLarge'> ${data.platformName}</i></a><i class='ti-close text-danger font-bolde fontLarge' onclick="DeletePaltforms(${data.id},'${data.platformName}' )"></i></span>`;
+                        $('#myPlat').append(platf);
+                        Swal.fire(
+                            'Added',
+                            'Your Platform has been Added.',
+                            'success'
+                        )
+                    }
+                }
+
+            });
+        }
     })
 }
 function DeleteNotes(id) {
@@ -326,34 +331,39 @@ async function CreateNotes(id) {
         title: 'Notes',
         html: selectLabel,
         allowOutsideClick: false,
-
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
         inputValidator: (value) => {
             if (!value) {
                 return 'You need to choose something!'
             }
         }
-    }).then(() => {
-        projectNotes.AccessLevelTypeId = $('#AccessLevelTypeId').val();
-        projectNotes.LabelTypeId = $('#LabelTypeId').val();
-        projectNotes.Message = $('#Message').val();
-     
-        $.ajax({ // ajax call starts
-            url: "/Json/CreateNotes",
-            type: 'post',
-            data: projectNotes,
-            success: function (data) {
-                if (data != null) {
-                    var notes = "<div class='row' id='" + data.id + "'><div class='col-md-10 text-dark'>" + data.message + "</div><div class='col-md-2'><ul class='social-links list-unstyled'><li><span>" + data.onCreated + "</span></li><li><span class='text-muted'>" + data.onCreated+"</span></li><li><div class='press'><span class='badge text-white' style='background-color:"+data.labelColor+"'>"+data.labelName+"</span></div></li><li><a role='button' onclick='DeleteNotes("+data.id+")' class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></li></ul></div></div>";
-                    $('#myNotes').append(notes);
-                    Swal.fire(
-                        'Added',
-                        'Your Note has been Added.',
-                        'success'
-                    )
-                }
-            }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            projectNotes.AccessLevelTypeId = $('#AccessLevelTypeId').val();
+            projectNotes.LabelTypeId = $('#LabelTypeId').val();
+            projectNotes.Message = $('#Message').val();
 
-        });
+            $.ajax({ // ajax call starts
+                url: "/Json/CreateNotes",
+                type: 'post',
+                data: projectNotes,
+                success: function (data) {
+                    if (data != null) {
+                        var date = new Date(data.onCreated).toString("MMM dd,yy");
+                        var time = new Date(data.onCreated).toString("hh:ss tt");
+                        var notes = "<div class='row' id='" + data.id + "'><div class='col-md-9 text-dark'>" + data.message + "</div><div class='col-md-2'><ul class='social-links list-unstyled'><li><span class='text-black-50'>" + date + "</span></li><li><span class='text-muted'>" + time + "</span></li><li><div class='press'><span class='badge text-white' style='background-color:" + data.labelColor + "'>" + data.labelName + "</span></div></li></ul></div><div class='col-md-1'><a role='button' onclick='DeleteNotes(" + data.id + ")' class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></a></li></div></div>";
+                        $('#myNotes').before(notes);
+                        Swal.fire(
+                            'Added',
+                            'Your Note has been Added.',
+                            'success'
+                        )
+                    }
+                }
+
+            });
+        }
     });
 }
 function DeleteAlertMessages(id) {
@@ -406,33 +416,38 @@ async function CreateAlertMessages(id) {
         title: 'Alert Messages',
         html: selectLabel,
         allowOutsideClick: false,
-
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
         inputValidator: (value) => {
             if (!value) {
                 return 'You need to choose something!'
             }
         }
-    }).then(() => {
-        projectAlertMessages.LabelTypeId = $('#LabelTypeId').val();
-        projectAlertMessages.Message = $('#Message').val();
+    }).then((result) => {
+        if (result.isConfirmed) {
+            projectAlertMessages.LabelTypeId = $('#LabelTypeId').val();
+            projectAlertMessages.Message = $('#Message').val();
 
-        $.ajax({ // ajax call starts
-            url: "/Json/CreateAlertMessages",
-            type: 'post',
-            data: projectAlertMessages,
-            success: function (data) {
-                if (data != null) {
-                    var notes = "<div class='row' id='" + data.id + "'><div class='col-md-10 text-dark'>" + data.message + "</div><div class='col-md-2'><ul class='social-links list-unstyled'><li><span>" + data.onCreated + "</span></li><li><span class='text-muted'>" + data.onCreated + "</span></li><li><div class='press'><span class='badge text-white' style='background-color:" + data.labelColor + "'>" + data.labelName + "</span></div></li><li><a role='button' onclick='DeleteNotes(" + data.id + ")' class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></li></ul></div></div>";
-                    $('#myAlertMessages').append(notes);
-                    Swal.fire(
-                        'Added',
-                        'Your Alert Messages has been Added.',
-                        'success'
-                    )
+            $.ajax({ // ajax call starts
+                url: "/Json/CreateAlertMessages",
+                type: 'post',
+                data: projectAlertMessages,
+                success: function (data) {
+                    var date = new Date(data.onCreated).toString("MMM dd,yy");
+                    var time = new Date(data.onCreated).toString("hh:ss tt");
+                    if (data != null) {
+                        var notes = "<div class='row' id='" + data.id + "'><div class='col-md-9 text-dark'>" + data.message + "</div><div class='col-md-2'><ul class='social-links list-unstyled'><li><span class='text-black-50'>" + date + "</span></li><li><span class='text-muted'>" + time + "</span></li><li><div class='press'><span class='badge text-white' style='background-color:" + data.labelColor + "'>" + data.labelName + "</span></div></li></ul></div><div class='col-md-1'><a role='button' onclick='DeleteNotes(" + data.id + ")' class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></div></div>";
+                        $('#myAlertMessages').before(notes);
+                        Swal.fire(
+                            'Added',
+                            'Your Alert Messages has been Added.',
+                            'success'
+                        )
+                    }
                 }
-            }
 
-        });
+            });
+        }
     });
 }
 
@@ -517,7 +532,7 @@ async function CreateMember(id,memberType) {
             data: projectMembers,
             success: function (data) {
                 if (data != null) {
-                    var members = "<tr id='" + data.id + "'><td><div style='width:50px;height:auto' class='rounded-circle'><img src='/images/profile_av.jpg' class='img-fluid' alt=''></div></td><td><ul class='social-links list-unstyled'><li><span>" + data.memberName + "</span></li><li><span class='text-muted'>" + data.memberType + "</span></li></ul></td><td><a onclick=DeleteMember("+data.id+",'"+data.memberName+"','" + data.memberType +"') role='button' class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></td></tr>";
+                    var members = `<tr id="${data.id}"><td><div style="width:50px;height:auto" class="rounded-circle"><img src="/images/profile_av.jpg" class="img-fluid" alt=""></div></td><td><ul class="social-links list-unstyled"><li><span>${data.memberName}</span></li><li><span class="text-muted">${data.memberType}</span></li></ul></td><td><a onclick="DeleteMember(${data.id},'${data.memberName}','${data.memberType}')" role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a></td></tr>`;
                     $('#myMembers').append(members);
                     Swal.fire(
                         'Added',
@@ -532,9 +547,10 @@ async function CreateMember(id,memberType) {
     });
 }
 function removeElement(elementId) {
+    $("#" + elementId).remove();
     // Removes an element from the document
-    var element = document.getElementById(elementId);
-    element.parentNode.removeChild(element);
+    //var element = document.getElementById(elementId);
+   // element.parentNode.removeChild(element);
 }
 function Notesfilter() {
     var noteType = $("#Notes").val();
@@ -553,4 +569,65 @@ function Alertfilter() {
         $("#myAlertMessages div[lable]").hide();
         $("#myAlertMessages div[lable=" + alertType + "]").show();
     }
+}
+function AlertTypefilter() {
+    var alertType = $("#AlertType").val();
+    if (alertType == 0) {
+        $("#myAlertMessages div[alertlabel]").show();
+    } else {
+        $("#myAlertMessages div[alertlabel]").hide();
+        $("#myAlertMessages div[alertlabel=" + alertType + "]").show();
+    }
+}
+function UpdateAlertMessages(id,status) {
+    Swal.fire({
+        title: 'Are you sure to do this ?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: status==1?'Mark as Done':'Mark as Issue'
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'Post',
+                url: "/Json/UpdateAlertStatus",
+                dataType: 'json',
+                data: {id:id,status:status},
+                success: function (data) {
+                    var color = "";
+                    var text = "";
+                    if (data.alertTypeId == 1)
+                        color = "seagreen";
+                    else
+                        color = "red";
+                    if (data.alertTypeId == 1)
+                        text = "Done";
+                    else
+                        text = "Issue";
+                    var status = `<span class="press" id="alert${data.alertTypeId}"><span class="badge text-white" style="background-color:${color}">${text}</span></span>`;
+                    var alert = "#alert" + data.id;
+                    var alertdiv = "#alertdiv" + data.id;
+                    $(alert).remove();
+                    $(alertdiv).append(status);
+                    if (data == false) {
+                        Swal.fire(
+                            'Issue',
+                            'Data not found.',
+                            'danger'
+                        );
+                    } else {
+                        Swal.fire(
+                            'Done',
+                            'Updated Successfully.',
+                            'success'
+                        );
+                    }
+                }
+            });
+
+        }
+    })
+
 }

@@ -445,6 +445,7 @@ namespace Admin.Controllers
             {
                 var userId = User.GetUserId();
                 projectAlertMessage.SetOnCreate(userId);
+                projectAlertMessage.AlertTypeId = AlertType.NotDone.ToInt();
                 var result = ProjectAlertMessageBao.Insert(projectAlertMessage);
                 if (result > 0)
                 {
@@ -474,6 +475,21 @@ namespace Admin.Controllers
                 }
             }
             return Json(null);
+        }
+        [Route("/Json/UpdateAlertStatus")]
+        [HttpPost]
+        public JsonResult UpdateAlertStatus(long id,int status)
+        {
+            var alert = ProjectAlertMessageBao.GetById(id);
+            if (alert != null)
+            {
+                var userId = User.GetUserId();
+                alert.AlertTypeId = status;
+                alert.SetOnUpdate(userId);
+                ProjectAlertMessageBao.Update(alert);
+                return Json(alert);
+            }
+            return Json(false);
         }
     }
 }

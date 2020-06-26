@@ -3,6 +3,8 @@
     ViewData["Title"] = "Project Detail";
     Layout = "_Layout";
     var host = Context.Request.Scheme + "://" + Context.Request.Host;
+    var alertdiv = "alertdiv";
+    var alert = "alert";
 }
 <style>
     .table td, .table th{
@@ -148,12 +150,19 @@
                             <div class="body">
                                 @foreach (var item in Model.ProjectAlertMessages)
                                 {
-                                    <div>
+                                <div class="row">
+                                    <div class="col-md-9">
                                         <p>@item.Message</p>
                                         <span class="badge badge-primary">@item.OnCreated.ToString("MMMM dd,yyyy - hh:mm")</span>
                                         <span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span>
+                                        <span><span id="@alertdiv@item.Id"><span class="press" id="@alert@item.Id"><span class="badge text-white" style="background-color:@AlertType.GetColor(item.AlertTypeId)">@AlertType.CheckAlertType(item.AlertTypeId)</span></span></span></span>
                                     </div>
-                                    <hr />
+                                    <div class="col-md-3">
+                                        <a role="button" onclick="UpdateAlertMessages(@item.Id,1)" class="btn btn-sm btn-success btn-round text-white" title="Mark as done">Mark As Done</a>
+                                        <a role="button" onclick="UpdateAlertMessages(@item.Id,2)" class="btn btn-sm btn-danger btn-round text-white" title="Mark as Issue">Issue</a>
+                                    </div>
+                                </div>
+                                 <hr />
                                 }
                             </div>
                         </div>

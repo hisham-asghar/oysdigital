@@ -1,41 +1,53 @@
-﻿@model IEnumerable<KeyValuePair<Generics.Data.ApplicationUser, List<string>>>
+﻿@model IEnumerable<AspNetUserRoles>
+@using  Generics.DataModels.Enums;
 @{
     ViewData["Title"] = "User";
     Layout = "_TableLayout";
     ViewBag.AddNewLink = "/Users/Create";
-}
+    var status = (ProjectFilter)ViewBag.Status;
+}<div class="row clearfix">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="card project_list">
+            <div class="pull-left">
+                @*<a href="@(status == TaskStatusFilter.All ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.All}")" class="btn @(status == TaskStatusFilter.All ? "btn-info" : "")">All</a>
+        <a href="@(status == TaskStatusFilter.Done ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.Done}")" class="btn @(status == TaskStatusFilter.Done ? "btn-info" : "")">Done</a>
+        <a href="@(status == TaskStatusFilter.Pending ? "#" : $"/?time={(int)time}&status={(int)TaskStatusFilter.Pending}")" class="btn @(status == TaskStatusFilter.Pending ? "btn-info" : "")">Pending</a>*@
+                <a href="@(status == ProjectFilter.All ? "#" : $"/Users/?status={(int)ProjectFilter.All}")" class="btn @(status == ProjectFilter.All ? "btn-info" : "")">All</a>
+                <a href="@(status == ProjectFilter.Active ? "#" : $"/Users/?status={(int)ProjectFilter.Active}")" class="btn @(status == ProjectFilter.Active ? "btn-info" : "")">Active</a>
+                <a href="@(status == ProjectFilter.InActive ? "#" : $"/Users/?status={(int)ProjectFilter.InActive}")" class="btn @(status == ProjectFilter.InActive ? "btn-info" : "")">InActive</a>
+                <a href="@(status == ProjectFilter.HaveDesigner ? "#" : $"/Users/?status={(int)ProjectFilter.HaveDesigner}")" class="btn @(status == ProjectFilter.HaveDesigner ? "btn-info" : "")">Designers</a>
+                <a href="@(status == ProjectFilter.HaveScheduler ? "#" : $"/Users/?status={(int)ProjectFilter.HaveScheduler}")" class="btn @(status == ProjectFilter.HaveScheduler ? "btn-info" : "")">Schedulers</a>
 
-<table class="table table-bordered table-striped table-hover dataTable js-exportable">
+            </div>
+
+        </div>
+    </div>
+</div>
+<table class="table table-bordered table-striped table-hover js-basic-example dataTable">
     @CHtmlHelper.TableHead("th", "Name", "Email", "Roles", "Actions")
     @CHtmlHelper.TableFoot("th", "Name", "Email", "Roles", "Actions")
     <tbody>
-        @foreach (var pair in Model)
+        @foreach (var item in Model)
         {
 
-            var item = pair.Key;
-            var roles = pair.Value;
+            //var item = pair.Key;
+            //var roles = pair.Value;
 
             <tr>
                 <td> @item.UserName</td>
                 <td> @item.Email</td>
-                <td>
-                    @if (roles != null)
-                    {
-                        @foreach (var data in roles)
-                        {
-                            <span>@data, </span>
-                        }
-                    }
-                </td>
+                <td>@item.RoleName</td>
                 <td>
                     @ButtonHelper.EditSmall("/Users/Edit/" + item.Id)
                     @if (!item.LockoutEnabled)
                     {
-                        ButtonHelper.PlainSuccessSmall("Deactivate", "/Users/UpdateUserStatus/" + item.Id + "?status=False");
+                        <a href="/Users/UpdateUserStatus/@item.Id?status=True" class="btn btn-success">Activate</a>
+                        //ButtonHelper.PlainSuccessSmall("Deactivate", "/Users/UpdateUserStatus/" + item.Id + "?status=False");
                     }
                     else
                     {
-                        ButtonHelper.PlainDeleteSmall("Activate", "/Users/UpdateUserStatus/" + item.Id + "?status=True");
+                        <a href="/Users/UpdateUserStatus/@item.Id?status=False" class="btn btn-danger">Dectivate</a>
+                        //ButtonHelper.PlainDeleteSmall("Activate", "/Users/UpdateUserStatus/" + item.Id + "?status=True");
                     }
                 </td>
 

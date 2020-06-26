@@ -14,6 +14,8 @@ namespace Generics.DataModels.AdminModels
         [Ignore]
         public string UserName { get; set; }
         [Ignore]
+        public bool LockoutEnabled { get; set; }
+        [Ignore]
         public string Email { get; set; }
         [Ignore]
         public string RoleName { get; set; }

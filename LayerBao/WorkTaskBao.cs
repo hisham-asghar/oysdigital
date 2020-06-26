@@ -64,7 +64,7 @@ namespace LayerBao
         public static List<WorkTask> GetByUserId(string userId)
         {
             var data = WorkTaskDao.GetByUserId(userId);
-            if (data != null)
+            if (data.Count > 0)
             {
                 var ids = data.Select(d => d.ProjectId).ToList();
                 var platforms = (WorkTaskPlatformsDao.GetByProjectIds(ids) ?? new List<WorkTaskPlatforms>())

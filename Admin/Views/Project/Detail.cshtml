@@ -3,6 +3,8 @@
     ViewData["Title"] = "Project Detail";
     Layout = "_Layout";
     var host = Context.Request.Scheme + "://" + Context.Request.Host;
+    var alertdiv = "alertdiv";
+    var alert = "alert";
 }
 <div class="block-header">
     <div class="row">
@@ -112,28 +114,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="responsive">
-                            <table class="table table-hover c_table">
-                                <tbody>
-
-                                    <tr>
-
-                                        <td id="myPlat">
-                                            <div style="background-color: #0069d9;width: min-content;height: 40px;border-radius: .2875rem;padding: 8px 18px;cursor: pointer;">
-                                            <span class="text-white" style="background-color: #0069d9;padding: 6px;">facebook</span>
-                                            <span class="ti-close text-danger font-bold" style="background-color: #0069d9;padding: 6px;position: relative;top: 0.13em;"></span>
-                                            </div>
-                                                @foreach (var item in Model.ProjectPlatforms)
-                                            {
-
-                                                <span id="@item.Id" class="btn"><a href="@item.Link" target="_blank" class="btn"> <i class="@item.PlatformIcon"></i> @item.PlatformName </a> <span class="ti-close text-danger font-bold" onclick="DeletePaltforms(@item.Id, '@item.PlatformName')"></span></span>
-                                            }
-                                        </td>
-
-                                    </tr>
-
-                                </tbody>
-                            </table>
+                        <div class="body">
+                            <div class="row">
+                                <div class="col-md-12" id="myPlat">
+                                    @foreach (var item in Model.ProjectPlatforms)
+                                    {
+                                        <span id="@item.Id" class="btn btn-primary btn-lg"><a href="@item.Link" target="_blank" class="text-white-50 btnspan"><i class="@item.PlatformIcon fontXLarge"> @item.PlatformName</i></a><i class="ti-close text-danger font-bolde fontLarge" onclick="DeletePaltforms(@item.Id, '@item.PlatformName')"></i></span>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card shadow p-3 mb-5 bg-white rounded">
@@ -196,6 +185,7 @@
                                 <div class="col-sm-4">
                                     <select class="form-control show-tick" id="Notes" onchange="Notesfilter()">
                                         <option value="">-- Note Types --</option>
+                                        <option value="">All</option>
                                         @foreach (var n in ViewBag.LabelType)
                                         {
                                             <option value="@n.Key">@n.Value</option>
@@ -208,18 +198,21 @@
                             @foreach (var item in Model.ProjectNotes)
                             {
                                 <div class="row" id="@item.Id" lable="@item.LabelTypeId">
-                                    <div class="col-md-10 text-dark">
+                                    <div class="col-md-9 text-dark">
                                         @item.Message
                                     </div>
                                     <div class="col-md-2">
                                         <ul class="social-links list-unstyled">
-                                            <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
-                                            <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
+                                            <li><span class="text-black-50">@item.OnCreated.ToString("MMM dd,yy")</span></li>
+                                            <li><span class="text-muted">@item.OnCreated.ToString("hh:ss tt")</span></li>
                                             <li><div class="press"><span class="badge text-white NoteType" style="background-color:@item.LabelColor">@item.LabelName</span></div></li>
-                                            <li><a role="button" onclick="DeleteNotes(@item.Id)" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a></li>
                                         </ul>
                                     </div>
+                                    <div class="col-md-1">
+                                        <a role="button" onclick="DeleteNotes(@item.Id)" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
+                                    </div>
                                 </div>
+                                
                             }
                         </div>
                     </div>
@@ -237,33 +230,54 @@
                                         </div>
                                     }
                                 </div>
-                                <div class="col-sm-4">
-                                    <select class="form-control show-tick" id="Alerts" onchange="Alertfilter()">
-                                        <option value="">-- Alert Types --</option>
-                                        @foreach (var n in ViewBag.LabelType)
-                                        {
-                                            <option value="@n.Key">@n.Value</option>
-                                        }
-                                    </select>
-                                </div>
+                                <div class="col-sm-8">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <select class="form-control show-tick" id="Alerts" onchange="Alertfilter()">
+                                                <option value="">-- Alerts --</option>
+                                                <option value="">All</option>
+                                                @foreach (var n in ViewBag.LabelType)
+                                                {
+                                                    <option value="@n.Key">@n.Value</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control show-tick" id="AlertType" onchange="AlertTypefilter()">
+                                                <option value="">-- Alert Types --</option>
+                                                <option value="">All</option>
+                                                @foreach (var n in AlertType.CreateAlertTypeDictionary())
+                                                {
+                                                    <option value="@n.Key">@n.Value</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>`
+                                </div>`
                             </div>
                         </div>
                         <div class="responsive" id="myAlertMessages">
                             @foreach (var item in Model.ProjectAlertMessages)
                             {
-                                <div class="row" id="@item.Id" label="@item.LabelTypeId">
-                                    <div class="col-md-10 text-dark">
+                                <div class="row" id="@item.Id" label="@item.LabelTypeId" alertlabel="@item.AlertTypeId">
+                                    <div class="col-md-8 text-dark">
                                         @item.Message
                                     </div>
                                     <div class="col-md-2">
                                         <ul class="social-links list-unstyled">
-                                            <li><span>@item.OnCreated.ToString("MMM dd,yy")</span></li>
-                                            <li><span class="text-muted">@item.OnCreated.ToString(HH_mm_ss)</span></li>
+                                            <li><span class="text-black-50">@item.OnCreated.ToString("MMM dd,yy")</span></li>
+                                            <li><span class="text-muted">@item.OnCreated.ToString("hh:ss tt")</span></li>
                                             <li><div class="press"><span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span></div></li>
-                                            <li><a role="button" onclick="DeleteAlertMessages(@item.Id)" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a></li>
+                                            <li><div id="@alertdiv@item.Id"><div class="press" id="@alert@item.Id"><span class="badge text-white" style="background-color:@AlertType.GetColor(item.AlertTypeId)">@AlertType.CheckAlertType(item.AlertTypeId)</span></div></div></li>
                                         </ul>
                                     </div>
+                                    <div class="col-md-2">
+                                        <a role="button" onclick="DeleteAlertMessages(@item.Id)" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
+                                        <a role="button" onclick="UpdateAlertMessages(@item.Id,1)" class="btn btn-sm btn-success btn-round text-white" title="Mark as done"><i class="zmdi zmdi-check"></i></a>
+                                        <a role="button" onclick="UpdateAlertMessages(@item.Id,2)" class="btn btn-sm btn-danger btn-round text-white" title="Mark as Issue">Issue</a>
+                                    </div>
                                 </div>
+                                
                             }
                         </div>
                     </div>
