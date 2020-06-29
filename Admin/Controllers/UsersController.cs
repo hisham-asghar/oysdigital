@@ -84,7 +84,7 @@ namespace Admin.Controllers
         [Route("/Users/Create")]
         [Route("/Users/Edit/{id}")]
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(ApplicationUser applicationUser, List<string> Roles, string id = null)
+        public async Task<IActionResult> CreateAsync(ApplicationUser applicationUser, string RoleId, string id = null)
         {
             var userDb = AspNetUserBao.GetById(id);
             ViewBag.IsEdit = id != null;
@@ -127,15 +127,14 @@ namespace Admin.Controllers
                             System.Console.WriteLine(setPasswordResult.Succeeded);
                         }
                         AspNetUserRolesBao.Delete(id);
-                        foreach (var item in Roles)
-                        {
+                        
                             var role = new AspNetUserRoles
                             {
                                 UserId = id,
-                                RoleId = item
+                                RoleId = RoleId
                             };
                             AspNetUserRolesBao.Insert(role);
-                        }
+                       
                         return RedirectToAction("Index");
                     }
                 }

@@ -113,8 +113,8 @@ async function Rangerswal() {
                 if (data != null)
                 {
                     var schedulingtime = "";
-                    for (var i = 0; i < data.projectTaskScheduling.length; i++) {
-                        var time = new Date(data.projectTaskScheduling[0].time).toString("hh:mm tt");
+                    for (var i = 0; i < document.getElementsByClassName('timepicker').length; i++) {
+                        var time = new Date(data.projectTaskScheduling[i].time).toString("hh:mm tt");
                         schedulingtime += "<span class='btn btn-primary'>" + time + "</span>";
                     }
                     var projecttask = "<tr id = " + data.id + "><td>"+data.taskType+"-"+data.frequencyType+"</td><td>" + schedulingtime + "</td><td><a role='button' onclick=DeletePlatformTask(" + data.id + ") class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></td></tr>";
@@ -436,8 +436,36 @@ async function CreateAlertMessages(id) {
                     var date = new Date(data.onCreated).toString("MMM dd,yy");
                     var time = new Date(data.onCreated).toString("hh:ss tt");
                     if (data != null) {
-                        var notes = "<div class='row' id='" + data.id + "'><div class='col-md-9 text-dark'>" + data.message + "</div><div class='col-md-2'><ul class='social-links list-unstyled'><li><span class='text-black-50'>" + date + "</span></li><li><span class='text-muted'>" + time + "</span></li><li><div class='press'><span class='badge text-white' style='background-color:" + data.labelColor + "'>" + data.labelName + "</span></div></li></ul></div><div class='col-md-1'><a role='button' onclick='DeleteNotes(" + data.id + ")' class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></div></div>";
-                        $('#myAlertMessages').before(notes);
+                        var alertcolor = "orange";
+                        var alerttext = "NotDone";
+                        if (data.alertTypeId == 1) {
+                            alertcolor = "seagreen";
+                            alerttext = "Done";
+                        } if (data.alertTypeId == 2)  {
+                            alertcolor = "red";
+                            alerttext = "Issue";
+                        }
+
+
+                        var alerts = `<div class="row" id="${data.id}" label="${data.labelTypeId}" alertlabel="${data.alertTypeId}">
+                                    <div class="col-md-8 text-dark">
+                                        ${data.message}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <ul class="social-links list-unstyled">
+                                            <li><span class="text-black-50">${date}</span></li>
+                                            <li><span class="text-muted">${time}</span></li>
+                                            <li><div class="press"><span class="badge text-white" style="background-color:${data.labelColor}">${data.labelName}</span></div></li>
+                                            <li><div id="alertdiv${data.id}"><div class="press" id="alert${data.id}"><span class="badge text-white" style="background-color:${alertcolor}">${alerttext}</span></div></div></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a role="button" onclick="DeleteAlertMessages(${data.id})" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
+                                        <a role="button" onclick="UpdateAlertMessages(${data.id},1)" class="btn btn-sm btn-success btn-round text-white" title="Mark as done"><i class="zmdi zmdi-check"></i></a>
+                                        <a role="button" onclick="UpdateAlertMessages(${data.id},2)" class="btn btn-sm btn-danger btn-round text-white" title="Mark as Issue">Issue</a>
+                                    </div>
+                                </div>`;
+                        $('#myAlertMessages').before(alerts);
                         Swal.fire(
                             'Added',
                             'Your Alert Messages has been Added.',
@@ -555,24 +583,24 @@ function removeElement(elementId) {
 function Notesfilter() {
     var noteType = $("#Notes").val();
     if (noteType == 0) {
-        $("#myNotes div[lable]").show();
+        $("#myNotes div[label]").show();
     } else {
-        $("#myNotes div[lable]").hide();
-        $("#myNotes div[lable=" + noteType + "]").show();
+        $("#myNotes div[label]").hide();
+        $("#myNotes div[label=" + noteType + "]").show();
     }
 }
 function Alertfilter() {
     var alertType = $("#Alerts").val();
-    if (alertType == 0) {
-        $("#myAlertMessages div[lable]").show();
+    if (alertType == "") {
+        $("#myAlertMessages div[label]").show();
     } else {
-        $("#myAlertMessages div[lable]").hide();
-        $("#myAlertMessages div[lable=" + alertType + "]").show();
+        $("#myAlertMessages div[label]").hide();
+        $("#myAlertMessages div[label=" + alertType + "]").show();
     }
 }
 function AlertTypefilter() {
     var alertType = $("#AlertType").val();
-    if (alertType == 0) {
+    if (alertType == "") {
         $("#myAlertMessages div[alertlabel]").show();
     } else {
         $("#myAlertMessages div[alertlabel]").hide();
@@ -611,6 +639,7 @@ function UpdateAlertMessages(id,status) {
                     var alertdiv = "#alertdiv" + data.id;
                     $(alert).remove();
                     $(alertdiv).append(status);
+                  //  alertlabel = 1
                     if (data == false) {
                         Swal.fire(
                             'Issue',

@@ -309,6 +309,7 @@ namespace Admin.Controllers
                 var data = ProjectTaskBao.GetById(projectTaskId);
                 data.TaskType = TaskType.CheckTaskType(data.TaskTypeId);
                 data.FrequencyType = FrequencyType.CheckFrequencyType(data.FrequencyTypeId);
+                data.ProjectTaskScheduling = data.ProjectTaskScheduling.OrderByDescending(s => s.Id).ToList();
                 return Json(data);
             }
             return Json(null);

@@ -6,30 +6,17 @@
 }
 @CHtmlHelper.GenerateHeader(title, "/User", "Back to User List")
 @CHtmlHelper.GetCardHeader(12, title)
-<form method="post" name="user">
-    @if (isEdit)
-    {
-        @CHtmlHelper.GenerateInputField("", Model.Id, HtmlInputType.Hidden, "Id")
-    }
-    @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
-    @HtmlInputType.Email.GenerateInputField("Email", Model.Email, "Email")
-    @HtmlInputType.Password.GenerateInputField("Password", "", "PasswordHash", "", false)
-    @if (isEdit)
-    {
-
-        <h4>Roles</h4>
-        @foreach (var item in ViewBag.AspNetRoles)
+    <form method="post" name="user">
+        @if (isEdit)
         {
-            <div class='form-group'>
-                <div class='checkbox'>
-                    <input id='@item.Key' type='checkbox' name='Roles' value="@item.Key">
-                    <label for='@item.Key' name='RoleId'>@item.Value</label>
-                </div>
-            </div>
+            @CHtmlHelper.GenerateInputField("", Model.Id, HtmlInputType.Hidden, "Id")
         }
-    }
-    @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
-</form>
+        @HtmlInputType.Text.GenerateInputField("Name", Model.Name, "Name")
+        @HtmlInputType.Email.GenerateInputField("Email", Model.Email, "Email")
+        @HtmlInputType.Password.GenerateInputField("Password", "", "PasswordHash", "", false)
+        @CHtmlHelper.GenerateSingleSelectFieldString("Roles", "RoleId", ViewBag.AspNetRoles)
+        @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
+    </form>
 @CHtmlHelper.GetCardFooter()
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

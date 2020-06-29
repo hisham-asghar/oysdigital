@@ -159,8 +159,11 @@ namespace Generics.WebHelper.Extensions
             {
                 foreach (var item in dic)
                 {
-                    if (item.Value.ToString() != "" && item.Value.ToString() != "0")
-                        dls += $"<dt>{item.Key}</dt>" + $"<dd>{item.Value}</dd>";
+                    if (item.Value != null)
+                    {
+                        if (item.Value.ToString() != "" && item.Value.ToString() != "0")
+                            dls += $"<dt>{item.Key}</dt>" + $"<dd>{item.Value}</dd>";
+                    }
 
                 }
             }
