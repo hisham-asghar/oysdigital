@@ -118,9 +118,12 @@
                                     <div class="col-md-6">
                                         <h2><strong>Notes</strong></h2>
                                     </div>
-
+                                    <div class="col-md-6">
+                                        <div class="pull-right">
+                                            <button class="btn btn-success" onclick="CreateNotes(@Model.Id)"><i class="zdmi zdmi-plus"></i> Create</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <br />
                                 <div class="col-sm-4">
                                     <select class="form-control show-tick" id="Notes" onchange="Notesfilter()">
                                         <option value="">--NoteTypes--</option>
@@ -155,7 +158,11 @@
                                     <div class="col-md-6">
                                         <h2><strong>Alerts</strong></h2>
                                     </div>
-
+                                    <div class="col-md-6">
+                                        <div class="pull-right">
+                                            <button class="btn btn-success" onclick="CreateAlertMessages(@Model.Id)"><i class="zdmi zdmi-plus"></i> Create</button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <br />
                                 <div class="col-sm-10">
