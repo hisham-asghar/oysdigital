@@ -5,10 +5,7 @@
     Layout = "~/Views/Home/_DashboardView.cshtml";
     ViewBag.StatsModel = Model.Item2;
     var LocalNow = Generics.Common.DataConstants.LocalNow;
-
     var projects = Model.Item1.OrderBy(o => o.ProjectSchedulingTime).GroupBy(t => new { ProjectId = t.ProjectId, Date = t.ProjectSchedulingTime.Date.ToString("MMMM dd, yyyy") }).ToDictionary(k => k.Key, v => new Tuple<WorkTask, List<WorkTask>>(v.FirstOrDefault(), v.Skip(1).ToList()));
-
-
 }
 
 
@@ -16,6 +13,7 @@
     <thead>
         <tr>
             <th>Project</th>
+            <th>Alerts</th>
             <th>Platforms</th>
             <th>Scheduling Time</th>
             <th>Status</th>
@@ -29,62 +27,68 @@
             var isCompleted = item.Value.Item1.IsCompleted && item.Value.Item2.All(a => a.IsCompleted);
             var isDesigned = item.Value.Item1.IsDesigned && item.Value.Item2.All(a => a.IsDesigned);
 
-            <tr class="@(task.IsDesigned ? "bg-success" : "")" title="@task.ProjectName" project-id="@task.ProjectId" date="@Model.Item1.FirstOrDefault().ProjectSchedulingTime.ToString("MM-dd-yyyy")">
-                <td><a href="/Project/Detail/@task.ProjectId"><strong>@task.ProjectName</strong></a></td>
-                <td>
-                    @foreach (var platform in task.WorkTaskPlatforms)
+        <tr class="@(task.IsDesigned ? "bg-success" : "")" title="@task.ProjectName" project-id="@task.ProjectId" date="@Model.Item1.FirstOrDefault().ProjectSchedulingTime.ToString("MM-dd-yyyy")">
+            <td><a href="/Project/Detail/@task.ProjectId"><strong>@task.ProjectName</strong></a></td>
+            <td>
+                <span class="badge-with-extra">
+                    <i class="zmdi zmdi-notifications" style="font-size: xx-large; color: yellow;"></i>
+                    <span class="badge badge-danger">@(task.AlertCount>0?task.AlertCount.ToString():"")</span>
+                </span>
+            </td>
+            <td>
+                @foreach (var platform in task.WorkTaskPlatforms)
+                {
+                    if (platform.IsDesigned)
                     {
-                        if (platform.IsDesigned)
-                        {
-                            <span class="badge badge-success"><i class="@(platform.PlatformIcon)"></i></span>
-                        }
-                        else
-                        {
-                            <span class="badge badge-default"><i class="@(platform.PlatformIcon)"></i></span>
-                        }
-
-                    }
-                </td>
-
-                <td>
-                    <span class="btn btn-primary">@task.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
-                    @foreach (var schedlingTime in item.Value.Item2)
-                    {
-                        <span class="btn btn-primary">@schedlingTime.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
-                    }
-                    <span>(</span>
-                    @if (item.Key.Date == LocalNow.ToString("MMMM dd, yyyy"))
-                    {
-                        <span class="btn btn-primary bg-pink">Today</span>
-
-                    }
-                    else if (item.Key.Date == LocalNow.AddDays(1).ToString("MMMM dd, yyyy"))
-                    {
-                        <span class="btn btn-primary bg-pink">Tomorrow</span>
-
-                    }
-                    else if (item.Key.Date == LocalNow.AddDays(-1).ToString("MMMM dd, yyyy"))
-                    {
-                        <span class="btn btn-primary bg-pink">Yesterday</span>
+                        <span class="badge badge-success"><i class="@(platform.PlatformIcon)"></i></span>
                     }
                     else
                     {
-                        <span class="btn btn-primary bg-pink">@item.Key.Date</span>
+                        <span class="badge badge-default"><i class="@(platform.PlatformIcon)"></i></span>
                     }
-                    <span>)</span>
-                </td>
-                <td>
-                    <span class="badge @(isCompleted || isDesigned ?  "badge-default" : "badge-info")">
-                        @(isCompleted || isDesigned ? "Completed" : "To Do")
-                    </span>
-                </td>
-                <td>
-                    @if (!isDesigned && task.ProjectSchedulingTime.Date >= LocalNow.Date)
-                    {
-                        <button type="button" class="btn btn-success btn-mark-design-done">Mark Done</button>
-                    }
-                </td>
-            </tr>
+
+                }
+            </td>
+
+            <td>
+                <span class="btn btn-primary">@task.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
+                @foreach (var schedlingTime in item.Value.Item2)
+                {
+                    <span class="btn btn-primary">@schedlingTime.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
+                }
+                <span>(</span>
+                @if (item.Key.Date == LocalNow.ToString("MMMM dd, yyyy"))
+                {
+                    <span class="btn btn-primary bg-pink">Today</span>
+
+                }
+                else if (item.Key.Date == LocalNow.AddDays(1).ToString("MMMM dd, yyyy"))
+                {
+                    <span class="btn btn-primary bg-pink">Tomorrow</span>
+
+                }
+                else if (item.Key.Date == LocalNow.AddDays(-1).ToString("MMMM dd, yyyy"))
+                {
+                    <span class="btn btn-primary bg-pink">Yesterday</span>
+                }
+                else
+                {
+                    <span class="btn btn-primary bg-pink">@item.Key.Date</span>
+                }
+                <span>)</span>
+            </td>
+            <td>
+                <span class="badge @(isCompleted || isDesigned ?  "badge-default" : "badge-info")">
+                    @(isCompleted || isDesigned ? "Completed" : "To Do")
+                </span>
+            </td>
+            <td>
+                @if (!isDesigned && task.ProjectSchedulingTime.Date >= LocalNow.Date)
+                {
+                    <button type="button" class="btn btn-success btn-mark-design-done">Mark Done</button>
+                }
+            </td>
+        </tr>
         }
 
     </tbody>

@@ -11,7 +11,6 @@ $(document).ready(function () {
     });
     $(".btn-mark-schedule-done-popup").each(function () {
         $(this).click(function () {
-            debugger;
             var parentRow = $(this).closest("tr");
             //var title = parentRow.attr("title");
             var projectId = parentRow.attr("project-id");

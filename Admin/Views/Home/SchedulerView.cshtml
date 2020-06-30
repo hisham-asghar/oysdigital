@@ -14,6 +14,7 @@
     <thead>
         <tr>
             <th>Project</th>
+            <th>Alerts</th>
             <th>Platforms</th>
             <th>Scheduling Time</th>
             <th>Status</th>
@@ -27,98 +28,104 @@
             var isCompleted = item.Value.Item1.IsCompleted && item.Value.Item2.All(a => a.IsCompleted);
             var isDesigned = item.Value.Item1.IsDesigned && item.Value.Item2.All(a => a.IsDesigned);
 
-            <tr class="@(task.IsCompleted ? "bg-success" : "")" title="@task.ProjectName" project-id="@task.ProjectId" date="@Model.Item1.FirstOrDefault().ProjectSchedulingTime.ToString("MM-dd-yyyy")">
-                <td><a href="/Project/Detail/@task.ProjectId"><strong>@task.ProjectName</strong></a></td>
-                <td>
-                    @foreach (var platform in task.WorkTaskPlatforms.Where(p => !p.PlatformName.ToLower().Contains("instagram")))
+        <tr class="@(task.IsCompleted ? "bg-success" : "")" title="@task.ProjectName" project-id="@task.ProjectId" date="@Model.Item1.FirstOrDefault().ProjectSchedulingTime.ToString("MM-dd-yyyy")">
+            <td><a href="/Project/Detail/@task.ProjectId"><strong>@task.ProjectName</strong></a></td>
+            <td>
+                <span class="badge-with-extra">
+                    <i class="zmdi zmdi-notifications" style="font-size: xx-large; color: yellow;"></i>
+                    <span class="badge badge-danger">@(task.AlertCount>0?task.AlertCount.ToString():"")</span>
+                </span>
+            </td>
+            <td>
+                @foreach (var platform in task.WorkTaskPlatforms.Where(p => !p.PlatformName.ToLower().Contains("instagram")))
+                {
+                    var platformIds = $"{platform.Id}";
+                    var otherSamePlatforms = item.Value.Item2
+                        .Select(pwt => pwt.WorkTaskPlatforms
+                            .FirstOrDefault(pwtp => pwtp.PlatformId == platform.PlatformId))
+                        .Where(p => p != null).ToList();
+                    @foreach (var otherP in otherSamePlatforms)
                     {
-                        var platformIds = $"{platform.Id}";
-                        var otherSamePlatforms = item.Value.Item2
-                            .Select(pwt => pwt.WorkTaskPlatforms
-                                .FirstOrDefault(pwtp => pwtp.PlatformId == platform.PlatformId))
-                            .Where(p => p != null).ToList();
-                        @foreach (var otherP in otherSamePlatforms)
-                        {
-                            platformIds += $",{otherP.Id}";
-                        }
-                        <span platform-ids="@platformIds" platform-name="@platform.PlatformName" class="badge @(platform.IsScheduled ? "badge-success" : "badge-default")">
-                            <i class="@(platform.PlatformIcon)"></i>
-                        </span>
+                        platformIds += $",{otherP.Id}";
                     }
-                    @{var instagram = task.WorkTaskPlatforms.FirstOrDefault(p => p.PlatformName.ToLower().Contains("instagram"));}
-                    @if (instagram != null)
+                    <span platform-ids="@platformIds" platform-name="@platform.PlatformName" class="badge @(platform.IsScheduled ? "badge-success" : "badge-default")">
+                        <i class="@(platform.PlatformIcon)"></i>
+                    </span>
+                }
+                @{var instagram = task.WorkTaskPlatforms.FirstOrDefault(p => p.PlatformName.ToLower().Contains("instagram"));}
+                @if (instagram != null)
+                {
+                    <span platform-ids="@instagram.Id" platform-name="@instagram.PlatformName" class="badge-with-extra badge @(instagram.IsScheduled ? "badge-success" : "badge-default")">
+                        <i class="@(instagram.PlatformIcon)"></i>
+                        <span class="badge badge-danger">1</span>
+                    </span>
+                    var otherInstaPlatforms = item.Value.Item2
+                        .Select(p => p.WorkTaskPlatforms
+                            .FirstOrDefault(p => p.PlatformName.ToLower()
+                            .Contains("instagram")))
+                        .Where(p => p != null).ToList();
+                    @foreach (var instaP in otherInstaPlatforms.Select((p, idx) => new { p, idx }))
                     {
-                        <span platform-ids="@instagram.Id" platform-name="@instagram.PlatformName" class="badge-with-extra badge @(instagram.IsScheduled ? "badge-success" : "badge-default")">
-                            <i class="@(instagram.PlatformIcon)"></i>
-                            <span class="badge badge-danger">1</span>
-                        </span>
-                        var otherInstaPlatforms = item.Value.Item2
-                            .Select(p => p.WorkTaskPlatforms
-                                .FirstOrDefault(p => p.PlatformName.ToLower()
-                                .Contains("instagram")))
-                            .Where(p => p != null).ToList();
-                        @foreach (var instaP in otherInstaPlatforms.Select((p, idx) => new { p, idx }))
-                        {
 
-                            <span platform-ids="@instaP.p.Id" platform-name="@instaP.p.PlatformName" class="badge-with-extra badge @(instaP.p.IsScheduled ? "badge-success" : "badge-default")">
-                                <i class="@(instaP.p.PlatformIcon)"></i>
-                                <span class="badge badge-danger">
-                                    @(instaP.idx + 2)
-                                </span>
+                        <span platform-ids="@instaP.p.Id" platform-name="@instaP.p.PlatformName" class="badge-with-extra badge @(instaP.p.IsScheduled ? "badge-success" : "badge-default")">
+                            <i class="@(instaP.p.PlatformIcon)"></i>
+                            <span class="badge badge-danger">
+                                @(instaP.idx + 2)
                             </span>
-                        }
+                        </span>
                     }
-                </td>
+                }
+            </td>
 
-                <td>
-                    <span class="btn btn-primary">@task.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
-                    @foreach (var schedlingTime in item.Value.Item2)
-                    {
-                        <span class="btn btn-primary">@schedlingTime.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
-                    }
-                    <span>(</span>
-                    @if (item.Key.Date == LocalNow.ToString("MMMM dd, yyyy"))
-                    {
-                        <span class="btn btn-primary bg-pink">Today</span>
+            <td>
+                <span class="btn btn-primary">@task.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
+                @foreach (var schedlingTime in item.Value.Item2)
+                {
+                    <span class="btn btn-primary">@schedlingTime.ProjectSchedulingTime.ToString(hh_mm_tt)</span>
+                }
+                <span>(</span>
+                @if (item.Key.Date == LocalNow.ToString("MMMM dd, yyyy"))
+                {
+                    <span class="btn btn-primary bg-pink">Today</span>
 
-                    }
-                    else if (item.Key.Date == LocalNow.AddDays(1).ToString("MMMM dd, yyyy"))
-                    {
-                        <span class="btn btn-primary bg-pink">Tomorrow</span>
+                }
+                else if (item.Key.Date == LocalNow.AddDays(1).ToString("MMMM dd, yyyy"))
+                {
+                    <span class="btn btn-primary bg-pink">Tomorrow</span>
 
-                    }
-                    else if (item.Key.Date == LocalNow.AddDays(-1).ToString("MMMM dd, yyyy"))
-                    {
-                        <span class="btn btn-primary bg-pink">Yesterday</span>
-                    }
-                    else
-                    {
-                        <span class="btn btn-primary bg-pink">@item.Key.Date</span>
-                    }
-                    <span>)</span>
-                </td>
-                <td>
-                    @if (isCompleted)
-                    {
-                        <span class="badge badge-default">Completed</span>
-                    }
-                    else if (isDesigned)
-                    {
-                        <span class="badge badge-success">Design Done</span>
-                        <span class="badge badge-warning">Schedule Not Done</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-info">To Do</span>
-                    }
-                </td>
-                <td>
-                    @if (!isCompleted && isDesigned && task.ProjectSchedulingTime.Date >= LocalNow.Date)
-                    {
-                        <button type="button" class="btn btn-success btn-mark-schedule-done-popup">Mark Done</button>
-                    }
-                </td>
-            </tr>
+                }
+                else if (item.Key.Date == LocalNow.AddDays(-1).ToString("MMMM dd, yyyy"))
+                {
+                    <span class="btn btn-primary bg-pink">Yesterday</span>
+                }
+                else
+                {
+                    <span class="btn btn-primary bg-pink">@item.Key.Date</span>
+                }
+                <span>)</span>
+            </td>
+            <td>
+                @if (isCompleted)
+                {
+                    <span class="badge badge-default">Completed</span>
+                }
+                else if (isDesigned)
+                {
+                    <span class="badge badge-success">Design Done</span>
+                    <span class="badge badge-warning">Schedule Not Done</span>
+                }
+                else
+                {
+                    <span class="badge badge-info">To Do</span>
+                }
+            </td>
+            <td>
+                @if (!isCompleted && isDesigned && task.ProjectSchedulingTime.Date >= LocalNow.Date)
+                {
+                    <button type="button" class="btn btn-success btn-mark-schedule-done-popup">Mark Done</button>
+                }
+            </td>
+        </tr>
         }
     </tbody>
 </table>

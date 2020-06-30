@@ -4,7 +4,7 @@
     var title = (isEdit ? "Edit " : "Create ") + " User";
     ViewData["Title"] = title;
 }
-@CHtmlHelper.GenerateHeader(title, "/User", "Back to User List")
+@CHtmlHelper.GenerateHeader(title, "/Users", "Back to User List")
 @CHtmlHelper.GetCardHeader(12, title)
     <form method="post" name="user">
         @if (isEdit)

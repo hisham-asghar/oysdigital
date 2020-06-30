@@ -3,9 +3,20 @@
     ViewData["Title"] = "Customer";
     Layout = "_TableLayout";
     ViewBag.AddNewLink = "/Customer/Create";
+    var status = (ProjectFilter)ViewBag.Status;
 }
-
-    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+    <div class="row clearfix">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="card project_list">
+                <div class="pull-left">
+                    <a href="@(status == ProjectFilter.All ? "#" : $"/Customer/?status={(int)ProjectFilter.All}")" class="btn @(status == ProjectFilter.All ? "btn-info" : "")">All</a>
+                    <a href="@(status == ProjectFilter.Active ? "#" : $"/Customer/?status={(int)ProjectFilter.Active}")" class="btn @(status == ProjectFilter.Active ? "btn-info" : "")">Active</a>
+                    <a href="@(status == ProjectFilter.InActive ? "#" : $"/Customer/?status={(int)ProjectFilter.InActive}")" class="btn @(status == ProjectFilter.InActive ? "btn-info" : "")">InActive</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
     @CHtmlHelper.TableHead("th", "Name", "Email", "Number", "Address", "Created", "Status", "Actions")
     @CHtmlHelper.TableFoot("th", "Name", "Email", "Number", "Address", "Created", "Status", "Actions")
     <tbody>

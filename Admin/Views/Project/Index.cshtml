@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<Generics.DataModels.AdminModels.Project>
-@using  Generics.DataModels.Enums;
 @{
     ViewData["Title"] = "Projects";
     Layout = "_TableLayout";
@@ -28,6 +27,7 @@
                     <a href="@(status == ProjectFilter.InActive ? "#" : $"/Project/?status={(int)ProjectFilter.InActive}")" class="btn @(status == ProjectFilter.InActive ? "btn-info" : "")">InActive</a>
                     <a href="@(status == ProjectFilter.HaveDesigner ? "#" : $"/Project/?status={(int)ProjectFilter.HaveDesigner}")" class="btn @(status == ProjectFilter.HaveDesigner ? "btn-info" : "")">Hava Designer</a>
                     <a href="@(status == ProjectFilter.HaveScheduler ? "#" : $"/Project/?status={(int)ProjectFilter.HaveScheduler}")" class="btn @(status == ProjectFilter.HaveScheduler ? "btn-info" : "")">Have Scheduler</a>
+                    <a href="@(status == ProjectFilter.Alert ? "#" : $"/Project/?status={(int)ProjectFilter.Alert}")" class="btn @(status == ProjectFilter.Alert ? "btn-info" : "")">Alerts</a>
                 </div>
 
             </div>
@@ -39,7 +39,7 @@
         <tbody>
             @foreach (var item in Model)
             {
-                @CHtmlHelper.Tr("td", item.Name, item.MobileName.ToString() + "-" + item.MobileSpaceName.ToString(), item.OnCreated.ToString(dddd_dd_MMMM_yyyy),item.Designer,item.Scheduler,item.IssueCount>0?$"<span class='badge badge-danger text-white'>{item.IssueCount}</span>":"",item.IsActive.CheckTag().ToString(),
+                @CHtmlHelper.Tr("td", item.Name, item.MobileName.ToString() + "-" + item.MobileSpaceName.ToString(), item.OnCreated.ToString(dddd_dd_MMMM_yyyy),item.Designer,item.Scheduler,item.IssueCount>0?$"<div class='text-center'><span class='badge badge-danger text-white'>{item.IssueCount}</span></div>":"",item.IsActive.CheckTag().ToString(),
                   @ButtonHelper.EditSmall("/Project/Edit/" + item.Id) + "" +
                   @ButtonHelper.DeleteSmall("/Project/Delete/" + item.Id) + "" +
                   @ButtonHelper.DetailSmall("/Project/Detail/" + item.Id).ToString());

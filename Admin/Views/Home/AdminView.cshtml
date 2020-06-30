@@ -14,6 +14,7 @@
     <thead>
         <tr>
             <th>Project</th>
+            <th>Alerts</th>
             <th>Platforms</th>
             <th>Scheduling Time</th>
             <th>Status</th>
@@ -31,6 +32,12 @@
 
             <tr class="@(task.IsCompleted ? "bg-success" : (isMemberMissing ? "bg-danger" : "") )" title="@task.ProjectName" project-id="@task.ProjectId" date="@Model.Item1.FirstOrDefault().ProjectSchedulingTime.ToString("MM-dd-yyyy")">
                 <td><a href="/Project/Detail/@task.ProjectId"><strong>@task.ProjectName</strong></a></td>
+                <td>
+                    <span class="badge-with-extra">
+                        <i class="zmdi zmdi-notifications" style="font-size: xx-large; color: yellow;"></i>
+                        <span class="badge badge-danger">@(task.AlertCount>0?task.AlertCount.ToString():"")</span>
+                    </span>
+                </td>
                 <td>
                     @foreach (var platform in task.WorkTaskPlatforms.Where(p => !p.PlatformName.ToLower().Contains("instagram")))
                     {

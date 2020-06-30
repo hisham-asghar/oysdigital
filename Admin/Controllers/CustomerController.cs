@@ -8,6 +8,7 @@ using Generics.Common;
 using Generics.Data;
 using Generics.DataModels.AdminModels;
 using Generics.DataModels.Constants;
+using Generics.DataModels.Enums;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Authorization;
@@ -23,10 +24,33 @@ namespace Admin.Controllers
     public class CustomerController : Controller
     {
         // GET: /<controller>/
-        public IActionResult Index()
+        public IActionResult Index(ProjectFilter status = ProjectFilter.All)
         {
             var customers = CustomerBao.GetAll();
-            return View(customers);
+            ViewBag.Status = status;
+            var ListCustomer = new List<Customer>();
+            foreach (var item in customers)
+            {
+                if (status == ProjectFilter.Active)
+                {
+                    if (item.IsActive == true)
+                    {
+                        ListCustomer.Add(item);
+                    }
+                }
+                if (status == ProjectFilter.InActive)
+                {
+                    if (item.IsActive == false)
+                    {
+                        ListCustomer.Add(item);
+                    }
+                }
+                if (status == ProjectFilter.All)
+                {
+                    ListCustomer = customers;
+                }
+            }
+            return View(ListCustomer);
         }
 
         [Route("/Customer/Create")]

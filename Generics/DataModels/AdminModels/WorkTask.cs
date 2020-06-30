@@ -26,6 +26,8 @@ namespace Generics.DataModels.AdminModels
 
         [Ignore]
         public string MemberType { get; set; }
+        [Ignore]
+        public int AlertCount { get; set; }
 
         [Ignore]
         public bool IsDone()

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Admin.Controllers
 {
@@ -34,7 +35,22 @@ namespace Admin.Controllers
             var statsModel = TaskHelper.GetUserStats(myId);
 
             var workTask = TaskHelper.GetWorkTask(myId, time, status);
-
+            var projectAlerts = ProjectAlertMessageBao.GetAll()?? new List<ProjectAlertMessage>();
+            var li = new List<long>();
+            foreach(var item in workTask)
+            {
+                if (!li.Contains(item.ProjectId))
+                {
+                    foreach(var alert in projectAlerts.Where(s=>s.ProjectId==item.ProjectId).ToList())
+                    {
+                        if (alert.AlertTypeId == 2) {
+                            item.AlertCount += 1;
+                        }
+                    }
+                    
+                    li.Add(item.ProjectId);
+                }
+            }
             var counts = WorkTaskBao.GetGenerateTasksCount(myId);
 
             var today = DataConstants.LocalNow;

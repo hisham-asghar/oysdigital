@@ -20,7 +20,7 @@
         @HtmlInputType.Text.GenerateInputField("Email", Model.Email, "Email")
         @HtmlInputType.Text.GenerateInputField("Address", Model.Address, "Address")
         @HtmlInputType.Text.GenerateInputField("PhoneNumber", Model.PhoneNumber, "PhoneNumber")
-        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive")
+        @HtmlInputType.Checbox.GenerateInputField("Is Active", Model.IsActive.ToString(), "IsActive", "IsActive")
         @CHtmlHelper.GenerateButton(isEdit ? "Update" : "Save", HtmlButtonType.SUBMIT)
 
         </form>

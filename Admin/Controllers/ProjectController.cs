@@ -48,10 +48,17 @@ namespace Admin.Controllers
                             c.Scheduler = item.MemberName;
                         }
                     }
-                    c.IssueCount += alerts.Where(s => s.ProjectId == c.Id).Count();
+                    c.IssueCount += alerts.Where(s => s.ProjectId == c.Id && s.AlertTypeId==2).Count();
                     if (status == ProjectFilter.Active)
                     {
                         if (c.IsActive == true)
+                        {
+                            project.Add(c);
+                        }
+                    }
+                    if (status == ProjectFilter.Alert)
+                    {
+                        if (c.IssueCount > 0)
                         {
                             project.Add(c);
                         }

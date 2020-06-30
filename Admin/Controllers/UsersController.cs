@@ -102,11 +102,17 @@ namespace Admin.Controllers
                 var result = await _userManager.CreateAsync(applicationUser, applicationUser.PasswordHash);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Edit", new { id = applicationUser.Id });
+                    var role = new AspNetUserRoles
+                    {
+                        UserId = applicationUser.Id,
+                        RoleId = RoleId
+                    };
+                    AspNetUserRolesBao.Insert(role);
+                    return RedirectToAction("Index");
                 }
                 else
                 {
-
+                    return View(applicationUser);
                 }
             }
             else

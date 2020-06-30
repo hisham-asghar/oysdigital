@@ -223,5 +223,21 @@
                 form.submit();
             }
         });
+
+        $("form[name='platformUrl']").validate({
+            rules: {
+                Url: { required: true, maxlength: 150, regex: "/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;" }
+            },
+            messages: {
+                Url: {
+                    required: "Please enter platform Url",
+                    maxlength: "Url in between 150 characters long",
+                    regex: "Only Url allowed"
+                }
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
     })    
 });

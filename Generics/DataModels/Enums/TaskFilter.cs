@@ -23,6 +23,7 @@
         Active,
         InActive,
         HaveDesigner,
-        HaveScheduler
+        HaveScheduler,
+        Alert
     }
 }

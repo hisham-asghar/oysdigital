@@ -123,7 +123,7 @@ namespace Admin.Controllers
         {
             if (id != null)
             {
-                AspNetUserRolesBao.Delete(id);
+                AspNetUserBao.Delete(id);
             }
             return RedirectToAction("Index");
         }
