@@ -16,18 +16,33 @@ namespace Admin.Models
 
             return WorkTaskMembersBao.GetUserTasks(userId);
         }
+        public static List<List<UserTask>> GetUserTasks(List<string> userId)
+        {
+            if (userId == null) return new List<List<UserTask>>();
+
+            return WorkTaskMembersBao.GetUserTasks(userId);
+        }
+        public static List<StatsModel> GetUserStats(List<string> userId)
+        {
+            var data = GetUserTasks(userId);
+            if (data == null) return null;
+            //return GetStats(data);
+            return null;
+        }
         public static StatsModel GetUserStats(string userId)
         {
             var data = GetUserTasks(userId);
             if (data == null) return null;
+            return GetStats(data);
+        }
 
+        private static StatsModel GetStats(List<UserTask> data)
+        {
             var groupedData = data.GroupBy(d => new
             {
                 d.ProjectId,
                 d.ProjectSchedulingTime.Date,
             }).ToDictionary(k => k.Key, v => v.ToList());
-
-
             var today = DataConstants.LocalNow;
             var statsModel = new StatsModel();
             statsModel.OverallTotal = groupedData.Count();

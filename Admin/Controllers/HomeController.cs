@@ -1,10 +1,12 @@
 ﻿using Admin.Models;
 using Generics.Common;
+using Generics.Data;
 using Generics.DataModels.AdminModels;
 using Generics.DataModels.Enums;
 using Generics.WebHelper.Extensions;
 using LayerBao;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,7 +19,7 @@ namespace Admin.Controllers
     [Authorize]
     public class HomeController : BaseController
     {
-
+        UserManager<ApplicationUser> userManager;
         public HomeController(ILogger<HomeController> logger) : base(logger)
         {
         }
@@ -77,6 +79,17 @@ namespace Admin.Controllers
                 return View("AdminView", tuple);
 
             return View("RoleRequestView");
+        }
+        public IActionResult UserStats()
+        {
+            var Users = AspNetUserBao.GetAll();
+            var id = new List<string>();
+            foreach(var item in Users)
+            {
+                id.Add(item.Id);
+            }
+            var statsModel = TaskHelper.GetUserStats(id);
+            return View();
         }
         public IActionResult Privacy()
         {

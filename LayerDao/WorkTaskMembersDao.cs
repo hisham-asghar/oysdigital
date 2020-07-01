@@ -34,6 +34,16 @@ namespace LayerDao
             var where = $" AspNetUserId='{id}'";
             return ViewConstants.USER_TASK_VIEW.SelectList<UserTask>(where);
         }
+        public static List<List<UserTask>> GetUserTasks(List<string> id)
+        {   
+            
+            foreach(var item in id)
+            {
+
+            }
+            var where = $" AspNetUserId IN '{id}'";
+            return ViewConstants.USER_TASK_VIEW.SelectList<List<UserTask>>(where);
+        }
         public static List<WorkTaskMembers> GetByUserId(string userId)
         {
             var where = $"where AspNetUserId='{userId}';";

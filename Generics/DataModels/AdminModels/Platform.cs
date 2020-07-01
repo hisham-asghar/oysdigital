@@ -19,15 +19,29 @@ namespace Generics.DataModels.AdminModels
         {
             var dictionary = new Dictionary<string, string>();
             dictionary.Add("zmdi zmdi-facebook", "facebook");
-            dictionary.Add("zmdi zmdi-whatsapp", "whatsApp");
-            dictionary.Add("zmdi zmdi-youtube-play", "youtube play");
-            dictionary.Add("zmdi zmdi-google-plus", "Google Plus");
+            dictionary.Add("zmdi zmdi-instagram", "instagram");
             dictionary.Add("zmdi zmdi-twitter", "twitter");
             dictionary.Add("zmdi zmdi-linkedin", "linked In");
-            dictionary.Add("zmdi zmdi-instagram", "instagram");
-            dictionary.Add("zmdi zmdi-flickr", "flickr");
+            dictionary.Add("zmdi zmdi-skype", "skype");
+            dictionary.Add("zmdi zmdi-pinterest", "pinterest");
+            dictionary.Add("zmdi zmdi-tumblr", "tumblr");
+            dictionary.Add("zmdi zmdi-whatsapp", "whatsApp");
+
             dictionary.Add("zmdi zmdi-youtube", "youtube");
-            dictionary.Add("zmdi zmdi-google", "google");
+
+
+            dictionary.Add("zmdi zmdi-reddit", "reddit");
+
+
+            dictionary.Add("zmdi zmdi-google-drive", "google-drive");
+            
+           
+            dictionary.Add("zmdi zmdi-flickr", "flickr");
+            
+            dictionary.Add("zmdi zmdi-google", "Google my business");
+            
+            
+           
             return dictionary;
         }
     }
