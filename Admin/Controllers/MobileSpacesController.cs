@@ -74,6 +74,8 @@ namespace Admin.Controllers
             }
             else
             {
+                mobilespaces.CreatedBy = mobilespacesDb.CreatedBy;
+                mobilespaces.OnCreated = mobilespacesDb.OnCreated;
                 mobilespaces.SetOnUpdate(userId);
                 MobileSpacesBao.Update(mobilespaces);
             }

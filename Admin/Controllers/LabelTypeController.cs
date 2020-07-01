@@ -71,6 +71,8 @@ namespace Admin.Controllers
             }
             else
             {
+                labeltype.OnCreated = labeltypeDb.OnCreated;
+                labeltype.CreatedBy = labeltypeDb.CreatedBy;
                 labeltype.SetOnUpdate(userId);
                 LabelTypeBao.Update(labeltype);
             }

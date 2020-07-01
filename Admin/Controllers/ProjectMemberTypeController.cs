@@ -69,6 +69,8 @@ namespace Admin.Controllers
             }
             else
             {
+                projectmembertypes.OnCreated = projectmembertypeDb.OnCreated;
+                projectmembertypes.CreatedBy = projectmembertypeDb.CreatedBy;
                 projectmembertypes.SetOnUpdate(userId);
                 ProjectMemberTypeBao.Update(projectmembertypes);
             }

@@ -71,6 +71,8 @@ namespace Admin.Controllers
             }
             else
             {
+                platform.OnCreated = platformDb.OnCreated;
+                platform.CreatedBy = platformDb.CreatedBy;
                 platform.SetOnUpdate(userId);
                 PlatformBao.Update(platform);
             }

@@ -95,6 +95,9 @@ namespace Admin.Controllers
             }
             else
             {
+                customer.OnCreated = customerDb.OnCreated;
+                customer.Guid = customerDb.Guid;
+                customer.CreatedBy = customerDb.CreatedBy;
                 customer.SetOnUpdate(userId);
                 CustomerBao.Update(customer);
             }

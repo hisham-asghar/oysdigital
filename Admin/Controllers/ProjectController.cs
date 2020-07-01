@@ -158,6 +158,8 @@ namespace Admin.Controllers
             }
             else
             {
+                project.CreatedBy = projectDb.CreatedBy;
+                project.OnCreated = projectDb.OnCreated;
                 project.SetOnUpdate(userId);
                 ProjectBao.Update(project);
             }

@@ -66,6 +66,8 @@ namespace Admin.Controllers
             }
             else
             {
+                mobile.OnCreated = mobileDb.OnCreated;
+                mobile.CreatedBy = mobileDb.CreatedBy;
                 mobile.SetOnUpdate(userId);
                 MobileBao.Update(mobile);
             }
