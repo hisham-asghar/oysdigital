@@ -14,7 +14,6 @@
     <thead>
         <tr>
             <th>Project</th>
-            <th>Alerts</th>
             <th>Platforms</th>
             <th>Scheduling Time</th>
             <th>Status</th>
@@ -29,12 +28,15 @@
             var isDesigned = item.Value.Item1.IsDesigned && item.Value.Item2.All(a => a.IsDesigned);
 
         <tr class="@(task.IsCompleted ? "bg-success" : "")" title="@task.ProjectName" project-id="@task.ProjectId" date="@Model.Item1.FirstOrDefault().ProjectSchedulingTime.ToString("MM-dd-yyyy")">
-            <td><a href="/Project/Detail/@task.ProjectId"><strong>@task.ProjectName</strong></a></td>
             <td>
-                <span class="badge-with-extra">
-                    <i class="zmdi zmdi-notifications" style="font-size: xx-large; color: yellow;"></i>
-                    <span class="badge badge-danger">@(task.AlertCount>0?task.AlertCount.ToString():"")</span>
-                </span>
+            <a href="/Project/Detail/@task.ProjectId"><strong>@task.ProjectName</strong></a>
+            <span class="badge-with-extra badge badge-default">
+                <i class="zmdi zmdi-notifications fa-2x"></i>
+                @if (task.AlertCount > 0)
+                {
+                    <span class="badge badge-danger">@task.AlertCount</span>
+                }
+            </span>
             </td>
             <td>
                 @foreach (var platform in task.WorkTaskPlatforms.Where(p => !p.PlatformName.ToLower().Contains("instagram")))
@@ -49,14 +51,14 @@
                         platformIds += $",{otherP.Id}";
                     }
                     <span platform-ids="@platformIds" platform-name="@platform.PlatformName" class="badge @(platform.IsScheduled ? "badge-success" : "badge-default")">
-                        <i class="@(platform.PlatformIcon)"></i>
+                        <i class="@(platform.PlatformIcon) fa-2x"></i>
                     </span>
                 }
                 @{var instagram = task.WorkTaskPlatforms.FirstOrDefault(p => p.PlatformName.ToLower().Contains("instagram"));}
                 @if (instagram != null)
                 {
                     <span platform-ids="@instagram.Id" platform-name="@instagram.PlatformName" class="badge-with-extra badge @(instagram.IsScheduled ? "badge-success" : "badge-default")">
-                        <i class="@(instagram.PlatformIcon)"></i>
+                        <i class="@(instagram.PlatformIcon) fa-2x"></i>
                         <span class="badge badge-danger">1</span>
                     </span>
                     var otherInstaPlatforms = item.Value.Item2
@@ -68,7 +70,7 @@
                     {
 
                         <span platform-ids="@instaP.p.Id" platform-name="@instaP.p.PlatformName" class="badge-with-extra badge @(instaP.p.IsScheduled ? "badge-success" : "badge-default")">
-                            <i class="@(instaP.p.PlatformIcon)"></i>
+                            <i class="@(instaP.p.PlatformIcon) fa-2x"></i>
                             <span class="badge badge-danger">
                                 @(instaP.idx + 2)
                             </span>

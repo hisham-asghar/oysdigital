@@ -13,7 +13,6 @@
     <thead>
         <tr>
             <th>Project</th>
-            <th>Alerts</th>
             <th>Platforms</th>
             <th>Scheduling Time</th>
             <th>Status</th>
@@ -28,11 +27,14 @@
             var isDesigned = item.Value.Item1.IsDesigned && item.Value.Item2.All(a => a.IsDesigned);
 
         <tr class="@(task.IsDesigned ? "bg-success" : "")" title="@task.ProjectName" project-id="@task.ProjectId" date="@Model.Item1.FirstOrDefault().ProjectSchedulingTime.ToString("MM-dd-yyyy")">
-            <td><a href="/Project/Detail/@task.ProjectId"><strong>@task.ProjectName</strong></a></td>
             <td>
-                <span class="badge-with-extra">
-                    <i class="zmdi zmdi-notifications" style="font-size: xx-large; color: yellow;"></i>
-                    <span class="badge badge-danger">@(task.AlertCount>0?task.AlertCount.ToString():"")</span>
+                <a href="/Project/Detail/@task.ProjectId"><strong>@task.ProjectName</strong></a>
+                <span class="badge-with-extra badge badge-default">
+                    <i class="zmdi zmdi-notifications fa-2x"></i>
+                    @if (task.AlertCount > 0)
+                    {
+                        <span class="badge badge-danger">@task.AlertCount</span>
+                    }
                 </span>
             </td>
             <td>
@@ -40,11 +42,11 @@
                 {
                     if (platform.IsDesigned)
                     {
-                        <span class="badge badge-success"><i class="@(platform.PlatformIcon)"></i></span>
+                        <span class="badge badge-success"><i class="@(platform.PlatformIcon) fa-2x"></i></span>
                     }
                     else
                     {
-                        <span class="badge badge-default"><i class="@(platform.PlatformIcon)"></i></span>
+                        <span class="badge badge-default"><i class="@(platform.PlatformIcon) fa-2x"></i></span>
                     }
 
                 }

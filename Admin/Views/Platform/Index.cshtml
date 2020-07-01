@@ -11,7 +11,7 @@
         <tbody>
             @foreach (var item in Model)
             {
-                @CHtmlHelper.Tr("td", item.Name, $"<i class='{item.IconClass}'></i>")
+                @CHtmlHelper.Tr("td", item.Name, $"<i class='{item.IconClass} iconsize'></i>")
             }
         </tbody>
     </table>

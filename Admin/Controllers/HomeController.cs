@@ -2,6 +2,7 @@
 using Generics.Common;
 using Generics.Data;
 using Generics.DataModels.AdminModels;
+using Generics.DataModels.Constants;
 using Generics.DataModels.Enums;
 using Generics.WebHelper.Extensions;
 using LayerBao;
@@ -33,9 +34,8 @@ namespace Admin.Controllers
             //var roles = AspNetUserRolesBao.GetByUserId(myId);
 
             if (!User.HaveAnyRole()) return View("RoleRequestView");
-
-            var statsModel = TaskHelper.GetUserStats(myId);
-
+            var statsModel = new StatsModel();
+            statsModel = TaskHelper.GetUserStats(myId);
             var workTask = TaskHelper.GetWorkTask(myId, time, status);
             var projectAlerts = ProjectAlertMessageBao.GetAll()?? new List<ProjectAlertMessage>();
             var li = new List<long>();
@@ -80,16 +80,63 @@ namespace Admin.Controllers
 
             return View("RoleRequestView");
         }
-        public IActionResult UserStats()
+        [Route("UserStats")]
+        public IActionResult UserStats(ProjectFilter status = ProjectFilter.Active)
         {
-            var Users = AspNetUserBao.GetAll();
-            var id = new List<string>();
-            foreach(var item in Users)
+            ViewBag.TimeFilter = TaskTimeFilter.Today;
+            ViewBag.StatusFilter = TaskStatusFilter.All;
+            ViewBag.Status = status;
+            var Users = AspNetUserRolesBao.GetAll();
+            var stats = TaskHelper.GetUserStats(Users.Select(s=>s.Id).ToList());
+            var Userlist = new List<StatsView>();
+            foreach(var item in stats)
             {
-                id.Add(item.Id);
+                var list = new StatsView();
+                var u= Users.SingleOrDefault(s => s.Id == item.Key && s.RoleName != UserRoles.Admin);
+                if (u != null)
+                {
+                    list.User = u;
+                    list.Stats = item.Value;
+                    Userlist.Add(list);
+                }
             }
-            var statsModel = TaskHelper.GetUserStats(id);
-            return View();
+            var statuslist = new List<StatsView>();
+            foreach (var c in Userlist)
+            {
+                if (status == ProjectFilter.Active)
+                {
+                    if (c.User.LockoutEnabled == true)
+                    {
+                        statuslist.Add(c);
+                    }
+                }
+                if (status == ProjectFilter.InActive)
+                {
+                    if (c.User.LockoutEnabled == false)
+                    {
+                        statuslist.Add(c);
+                    }
+                }
+                if (status == ProjectFilter.HaveDesigner)
+                {
+                    if (c.User.RoleName ==UserRoles.Designer )
+                    {
+                        statuslist.Add(c);
+                    }
+                }
+                if (status == ProjectFilter.HaveScheduler)
+                {
+                    if (c.User.RoleName == UserRoles.Scheduler)
+                    {
+                        statuslist.Add(c);
+                    }
+                }
+                if (status == ProjectFilter.All)
+                {
+                    statuslist = Userlist;
+                }
+            }
+            return View(statuslist);
         }
         public IActionResult Privacy()
         {

@@ -15,7 +15,7 @@ namespace Admin.Controllers
     [Authorize]
     public class ProjectController : Controller
     {
-        public IActionResult Index(ProjectFilter status = ProjectFilter.All)
+        public IActionResult Index(ProjectFilter status = ProjectFilter.Active)
         {
             var project = new List<Project>();
             var projects = new List<Project>();
@@ -49,6 +49,8 @@ namespace Admin.Controllers
                         }
                     }
                     c.IssueCount += alerts.Where(s => s.ProjectId == c.Id && s.AlertTypeId==2).Count();
+                    c.DoneCount += alerts.Where(s => s.ProjectId == c.Id && s.AlertTypeId == 1).Count();
+                    c.NotDoneCount += alerts.Where(s => s.ProjectId == c.Id && s.AlertTypeId == 0).Count();
                     if (status == ProjectFilter.Active)
                     {
                         if (c.IsActive == true)

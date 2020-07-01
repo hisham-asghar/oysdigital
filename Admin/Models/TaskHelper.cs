@@ -16,18 +16,22 @@ namespace Admin.Models
 
             return WorkTaskMembersBao.GetUserTasks(userId);
         }
-        public static List<List<UserTask>> GetUserTasks(List<string> userId)
+        public static Dictionary<string,List<UserTask>> GetUserTasks(List<string> userId)
         {
-            if (userId == null) return new List<List<UserTask>>();
+            if (userId == null) return null;
 
             return WorkTaskMembersBao.GetUserTasks(userId);
         }
-        public static List<StatsModel> GetUserStats(List<string> userId)
+        public static Dictionary<string, StatsModel> GetUserStats(List<string> userId)
         {
             var data = GetUserTasks(userId);
+            var dic = new Dictionary<string,StatsModel>();
             if (data == null) return null;
-            //return GetStats(data);
-            return null;
+            foreach(var item in data)
+            {
+                dic.Add(item.Key, GetStats(item.Value));
+            }
+            return dic;
         }
         public static StatsModel GetUserStats(string userId)
         {

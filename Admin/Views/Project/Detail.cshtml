@@ -21,7 +21,7 @@
                     <a href="profile.html"><img src="/images/profile_av.jpg" class="rounded-circle" alt="profile-image"></a>
                     <h4 class="m-t-10">@Model.Name</h4>
                     <h5 class="m-t-10">Created: @Model.OnModified.ToString(MMMM_dd_yyyy)</h5>
-                    <span>Mobile Sapce: @Model.MobileSpaceName</span>
+                    <span>Mobile Sapce: @(Model.MobileName!=""?Model.MobileName+"-"+Model.MobileSpaceName:"None")</span>
                 </div>
             </div>
             <div class="card shadow p-3 mb-5 bg-white rounded">
@@ -36,14 +36,6 @@
                                 <div class="pull-right">
                                     <button class="btn btn-success" style="display:@(Model.ProjectMembers.Where(s => s.MemberType == UserRoles.Designer).Count() == 0?"block":"none")" id="btndesigner" onclick="CreateMember(@Model.Id,'Designer')"><i class="zmdi zmdi-plus"> Designer</i></button>
                                     <button class="btn btn-success" style="display:@(Model.ProjectMembers.Where(s => s.MemberType == UserRoles.Scheduler).Count() == 0?"block":"none")" id="btnscheduler" onclick="CreateMember(@Model.Id,'Scheduler')"><i class="zmdi zmdi-plus"> Scheduler</i></button>
-                                    @*@if (Model.ProjectMembers.Where(s => s.MemberType == UserRoles.Scheduler).Count() == 0)
-                                    {
-                                        <button class="btn btn-success" id="btnscheduler" onclick="CreateMember(@Model.Id,'Scheduler')">
-                                            <i class="zmdi zmdi-plus"></i>
-                                            Scheduler
-                                        </button>
-                                    }*@
-                                    
                                 </div>
                             }
                         </div>

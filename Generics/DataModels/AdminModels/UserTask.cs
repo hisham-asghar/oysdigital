@@ -1,5 +1,6 @@
 ﻿using Generics.Common.Attributes;
 using System;
+using System.Collections.Generic;
 
 namespace Generics.DataModels.AdminModels
 {
@@ -13,6 +14,8 @@ namespace Generics.DataModels.AdminModels
         public int ProjectMemberTypeId { get; set; }
         public string MemberType { get; set; }
         public string AspNetUserId { get; set; }
+        [Ignore]
+        public List<UserTask> UserDeatil { get; set; }
         public DateTime ProjectSchedulingTime { get; set; }
         [Ignore]
         public bool IsDone()

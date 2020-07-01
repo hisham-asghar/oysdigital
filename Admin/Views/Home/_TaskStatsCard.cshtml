@@ -6,11 +6,11 @@
 </style>
 <div class="col-md-2 col-sm-4 col-xs-6" style="zoom:66%;text-align: center;">
     <div class="card state_w1">
-        <a href="@stats.Link">
+        <a href="@(stats.Link==null?"#":stats.Link)">
             <div class="body d-flex justify-content-between @(stats.IsActive ? "bg-info text-white" : "")" style="padding:16px 8px;">
                 <div class="col-md-12 p-0">
                     <h5>@stats.Title</h5>
-                    <div class="row">
+                    <div class="row col-md-12">
                         <div class="col-md-4">
                             <h5>@stats.Total</h5>
                             <span>Total</span>

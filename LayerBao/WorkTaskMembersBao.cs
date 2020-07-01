@@ -22,7 +22,7 @@ namespace LayerBao
         {
             return WorkTaskMembersDao.GetUserTasks(id);
         }
-        public static List<List<UserTask>> GetUserTasks(List<string> id)
+        public static Dictionary<string,List<UserTask>> GetUserTasks(List<string> id)
         {
             return WorkTaskMembersDao.GetUserTasks(id);
         }

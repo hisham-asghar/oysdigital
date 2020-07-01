@@ -27,6 +27,7 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
             if (isAdminOrHr)
             {
                 data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
+                data.Add(new LeftSidebarDto("User Statistics", "/UserStats", "chart"));
                 data.Add(new LeftSidebarDto("Customers", "/Customer", "accounts"));
                 data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
                 data.Add(new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"));
@@ -61,6 +62,7 @@ namespace Admin.Models.ThemeViewModels.LeftSidebar
                 if (user.NormalizedRoles.Contains(UserRoles.Admin.ToUpper()) || user.NormalizedRoles.Contains(UserRoles.Hr.ToUpper()))
                 {
                     data.Add(new LeftSidebarDto("Dashboard", "/", "home"));
+                    data.Add(new LeftSidebarDto("User Statistics", "/UserStats", "chart"));
                     data.Add(new LeftSidebarDto("Customers", "/Customer", "accounts"));
                     data.Add(new LeftSidebarDto("Projects", "/Project", "assignment"));
                     data.Add(new LeftSidebarDto("Mobiles", "/Mobile", "smartphone-android"));

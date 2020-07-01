@@ -78,7 +78,6 @@ namespace Generics.Services.DatabaseService.AdoNet
             var query = GenericQueries.SelectAll(tableName, schema);
             if (!string.IsNullOrWhiteSpace(where))
                 query += $" WHERE {where}";
-
             return QueryExecutor.List<T>(query, query);
         }
         public static T Select<T>(this string tableName, string where, string schema = DefaultSchema) where T : new()

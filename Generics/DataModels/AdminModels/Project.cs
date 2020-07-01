@@ -27,6 +27,10 @@ namespace Generics.DataModels.AdminModels
         public string Scheduler { get; set; }
         [Ignore]
         public int IssueCount { get; set; }
+        [Ignore]
+        public int DoneCount { get; set; }
+        [Ignore]
+        public int NotDoneCount { get; set; }
 
         public List<ProjectMembers> ProjectMembers { get; set; }
         public List<ProjectAlertMessage> ProjectAlertMessages { get; set; }

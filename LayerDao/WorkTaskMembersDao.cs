@@ -32,17 +32,32 @@ namespace LayerDao
         public static List<UserTask> GetUserTasks(string id)
         {
             var where = $" AspNetUserId='{id}'";
-            return ViewConstants.USER_TASK_VIEW.SelectList<UserTask>(where);
+            var data= ViewConstants.USER_TASK_VIEW.SelectList<UserTask>(where);
+            return data;
         }
-        public static List<List<UserTask>> GetUserTasks(List<string> id)
-        {   
-            
-            foreach(var item in id)
+        public static Dictionary<string,List<UserTask>> GetUserTasks(List<string> id)
+        {
+            string ids = "";
+            int count = 0;
+            foreach (var item in id)
             {
-
+                count++;
+                if (count != id.Count)
+                {
+                    ids += "'" + item + "',";
+                }
+                else
+                {
+                    ids += "'" + item + "'";
+                }
+                
             }
-            var where = $" AspNetUserId IN '{id}'";
-            return ViewConstants.USER_TASK_VIEW.SelectList<List<UserTask>>(where);
+            
+            var where = $" AspNetUserId IN ({ids})";
+            var data= ViewConstants.USER_TASK_VIEW.SelectList<UserTask>(where);
+            var stats =new Dictionary<string,List<UserTask>> ();
+            var liss=data.GroupBy(s => s.AspNetUserId).ToDictionary(p => p.Key, c => c.ToList());
+            return liss;
         }
         public static List<WorkTaskMembers> GetByUserId(string userId)
         {
