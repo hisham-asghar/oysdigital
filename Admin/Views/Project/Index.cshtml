@@ -40,10 +40,10 @@
             @foreach (var item in Model)
             {
                 @CHtmlHelper.Tr("td", item.Name, item.MobileName.ToString() + "-" + item.MobileSpaceName.ToString(), item.OnCreated.ToString(dddd_dd_MMMM_yyyy),item.Designer,item.Scheduler,$"<ul class='text-center list-unstyled'><li><span class='badge badge-danger text-white'>Issue {item.IssueCount}</span></li><li><span class='badge badge-success text-white'>Done {item.DoneCount}</span></li><li><span class='badge badge-warning text-white'>NotDone {item.NotDoneCount}</span></li></ul>",item.IsActive.CheckTag().ToString(),
-                  @ButtonHelper.EditSmall("/Project/Edit/" + item.Id) + "" +
-                  @ButtonHelper.DeleteSmall("/Project/Delete/" + item.Id) + "" +
-                  @ButtonHelper.DetailSmall("/Project/Detail/" + item.Id).ToString());
-            }
+                  ButtonHelper.EditSmall("/Project/Edit/" + item.Id) + "" +
+                   (!item.IsActive?$"<a href='/Project/Delete/{item.Id}?status=True' class='btn btn-success'>Activate</a>": $"<a href='/Project/Delete/{item.Id}?status=False' class='btn btn-danger'>DeActivate</a>") +
+                  ButtonHelper.DetailSmall("/Project/Detail/" + item.Id).ToString());
+                }
         </tbody>
     </table>
 }

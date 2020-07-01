@@ -168,7 +168,7 @@ namespace Admin.Controllers
 
         }
         [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
-        public IActionResult Delete(long id)
+        public IActionResult Delete(long id,bool Status)
         {
             Project project = ProjectBao.GetById(id);
             if (id > 0 && project == null)
@@ -177,16 +177,9 @@ namespace Admin.Controllers
             }
             else
             {
-                ViewBag.ProjectDictionary = Functions.CreateDictionaryFromModel(project);
-            }
-            return View(project);
-        }
-        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
-        public IActionResult ConfirmDelete(long id)
-        {
-            if (id != 0)
-            {
-                ProjectBao.Delete(id);
+                project.IsActive = Status;
+                project.MobileSpaceId = 0;
+                ProjectBao.Update(project);
             }
             return RedirectToAction("Index");
         }

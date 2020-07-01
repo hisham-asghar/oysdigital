@@ -202,6 +202,14 @@ namespace Admin.Controllers
                     user.Result.LockoutEnabled = status;
                     await _userManager.UpdateAsync(user.Result);
                 }
+                if (status == false)
+                {
+                    var data = ProjectMembersBao.GetListByUserId(id)?? new List<ProjectMembers>();
+                    foreach(var item in data)
+                    {
+                        ProjectMembersBao.Delete(item.Id);
+                    }
+                }
             }
             return RedirectToAction("Index");
         }

@@ -699,3 +699,25 @@ function UpdateAlertMessages(id,status) {
     })
 
 }
+function ActivateUser(text,url) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "User data will be removed from every project but not from projectTasks.!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes,' + text +' it!'
+    }).then((result) => {
+        if (result.value) {
+            window.location=url;
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Your work has been saved',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        }
+    })
+}

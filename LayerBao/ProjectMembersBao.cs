@@ -20,6 +20,10 @@ namespace LayerBao
         {
             return ProjectMembersDao.GetByUserId(id);
         }
+        public static List<ProjectMembers> GetListByUserId(string id)
+        {
+            return ProjectMembersDao.GetListByUserId(id);
+        }
         public static List<ProjectMembers> GetByProjectId(long id)
         {
             return ProjectMembersDao.GetByProjectId(id);

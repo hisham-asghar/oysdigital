@@ -38,12 +38,14 @@
                 @ButtonHelper.EditSmall("/Users/Edit/" + item.Id)
                 @if (!item.LockoutEnabled)
                 {
-                    <a href="/Users/UpdateUserStatus/@item.Id?status=True" class="btn btn-success">Activate</a>
+                    <button class="btn btn-success" onclick="ActivateUser('Activate','/Users/UpdateUserStatus/@item.Id?status=True')">Activate</button>
+                    @*<a href="/Users/UpdateUserStatus/@item.Id?status=True" class="btn btn-success">Activate</a>*@
                     //ButtonHelper.PlainSuccessSmall("Deactivate", "/Users/UpdateUserStatus/" + item.Id + "?status=False");
                 }
                 else
                 {
-                    <a href="/Users/UpdateUserStatus/@item.Id?status=False" class="btn btn-danger">Dectivate</a>
+                    <button class="btn btn-danger" onclick="ActivateUser('Deactivate','/Users/UpdateUserStatus/@item.Id?status=False')">Deactivate</button>
+                    @*<a href="/Users/UpdateUserStatus/@item.Id?status=False" class="btn btn-danger">Dectivate</a>*@
                     //ButtonHelper.PlainDeleteSmall("Activate", "/Users/UpdateUserStatus/" + item.Id + "?status=True");
                 }
             </td>

@@ -15,6 +15,13 @@ namespace LayerDao
             var query = $"SELECT  ProjectMembers.*,ProjectMemberTypes.Name as MemberType,AspNetUsers.Name as MemberName  FROM [dbo].[ProjectMembers] Join dbo.ProjectMemberTypes on ProjectMemberTypes.Id=ProjectMembers.ProjectMemberTypeId Join dbo.AspNetUsers on AspNetUsers.Id=ProjectMembers.AspNetUserId;";
             return QueryExecutor.List<ProjectMembers>(query);
         }
+
+        public static List<ProjectMembers> GetListByUserId(string id)
+        {
+            var where = $"AspNetUserId='{id}'";
+            return TableConstants.ProjectMembers.SelectList<ProjectMembers>(where);
+        }
+
         public static ProjectMembers GetById(long id)
         {
             var query = $"SELECT  ProjectMembers.*,ProjectMemberTypes.Name as MemberType,AspNetUsers.Name as MemberName  FROM [dbo].[ProjectMembers] Join dbo.ProjectMemberTypes on ProjectMemberTypes.Id=ProjectMembers.ProjectMemberTypeId Join dbo.AspNetUsers on AspNetUsers.Id=ProjectMembers.AspNetUserId where ProjectMembers.Id={id};";

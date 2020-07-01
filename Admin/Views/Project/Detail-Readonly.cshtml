@@ -93,14 +93,14 @@
 
                     @foreach (var item in Model.projectTasks)
                     {
-                    <div>
-                        <strong>@TaskType.CheckTaskType(item.TaskTypeId)-@FrequencyType.CheckFrequencyType(item.FrequencyTypeId)</strong>
-                        &nbsp;&nbsp;
-                        @foreach (var sched in item.ProjectTaskScheduling)
-                        {
-                            <span class="badge badge-info">@sched.Time.ToString("hh:mm:ss tt")</span><span>&nbsp;</span>
-                        }
-                    </div>
+                        <div>
+                            <strong>@TaskType.CheckTaskType(item.TaskTypeId)-@FrequencyType.CheckFrequencyType(item.FrequencyTypeId)</strong>
+                            &nbsp;&nbsp;
+                            @foreach (var sched in item.ProjectTaskScheduling)
+                            {
+                                <span class="badge badge-info">@sched.Time.ToString("hh:mm:ss tt")</span><span>&nbsp;</span>
+                            }
+                        </div>
                     }
                 </div>
             </div>
@@ -109,90 +109,87 @@
         <div class="col-xl-7 col-lg-7 col-md-12">
             <div class="row clearfix">
                 <div class="col-md-12 col-sm-12">
-                    @if (Model?.ProjectNotes != null && Model.ProjectNotes.Count > 0)
-                    {
 
-                        <div class="card shadow p-3 mb-5 bg-white rounded">
-                            <div class="header">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h2><strong>Notes</strong></h2>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="pull-right">
-                                            <button class="btn btn-success" onclick="CreateNotes(@Model.Id)"><i class="zdmi zdmi-plus"></i> Create</button>
-                                        </div>
-                                    </div>
+                    <div class="card shadow p-3 mb-5 bg-white rounded">
+                        <div class="header">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h2><strong>Notes</strong></h2>
                                 </div>
-                                <div class="col-sm-4">
-                                    <select class="form-control show-tick" id="Notes" onchange="Notesfilter()">
-                                        <option value="">--NoteTypes--</option>
-                                        <option value="">All</option>
-                                        @foreach (var n in ViewBag.LabelType)
-                                        {
-                                            <option value="@n.Key">@n.Value</option>
-                                        }
-                                    </select>
+                                <div class="col-md-6">
+                                    <div class="pull-right">
+                                        <button class="btn btn-success" onclick="CreateNotes(@Model.Id)"><i class="zdmi zdmi-plus"></i> Create</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="body" id="myNotes">
-                                @foreach (var item in Model.ProjectNotes.Where(p => p.AccessLevelTypeId == (int)Generics.DataModels.Enums.NoteType.Member))
-                                {
-                                    <div id="@item.Id" label="@item.LabelTypeId">
-                                        <p>@item.Message</p>
-                                        <span class="badge badge-primary">@item.OnCreated.ToString("MMMM dd,yyyy - hh:mm")</span>
-                                        <span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span>
-                                    </div>
-                                    <hr />
-                                }
+                            <div class="col-sm-4">
+                                <select class="form-control show-tick" id="Notes" onchange="Notesfilter()">
+                                    <option value="">--NoteTypes--</option>
+                                    <option value="">All</option>
+                                    @foreach (var n in ViewBag.LabelType)
+                                    {
+                                        <option value="@n.Key">@n.Value</option>
+                                    }
+                                </select>
                             </div>
                         </div>
-                    }
-
-                    @if (Model?.ProjectAlertMessages != null && Model.ProjectAlertMessages.Count > 0)
-                    {
-
-                        <div class="card shadow p-3 mb-5 bg-white rounded">
-                            <div class="header">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h2><strong>Alerts</strong></h2>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="pull-right">
-                                            <button class="btn btn-success" onclick="CreateAlertMessages(@Model.Id)"><i class="zdmi zdmi-plus"></i> Create</button>
-                                        </div>
-                                    </div>
+                        <div class="body" id="myNotes">
+                            @foreach (var item in Model.ProjectNotes.Where(p => p.AccessLevelTypeId == (int)Generics.DataModels.Enums.NoteType.Member))
+                            {
+                                <div id="@item.Id" label="@item.LabelTypeId">
+                                    <p>@item.Message</p>
+                                    <span class="badge badge-primary">@item.OnCreated.ToString("MMMM dd,yyyy - hh:mm")</span>
+                                    <span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span>
                                 </div>
-                                <br />
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-sm-5">
-                                            <select class="form-control show-tick" id="Alerts" onchange="Alertfilter()">
-                                                <option value="">--Alerts--</option>
-                                                <option value="">All</option>
-                                                @foreach (var n in ViewBag.LabelType)
-                                                {
-                                                    <option value="@n.Key">@n.Value</option>
-                                                }
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-5">
-                                            <select class="form-control show-tick" id="AlertType" onchange="AlertTypefilter()">
-                                                <option value="">--AlertTypes--</option>
-                                                <option value="">All</option>
-                                                @foreach (var n in AlertType.CreateAlertTypeDictionary())
-                                                {
-                                                    <option value="@n.Key">@n.Value</option>
-                                                }
-                                            </select>
-                                        </div>
+                                <hr />
+                            }
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="card shadow p-3 mb-5 bg-white rounded">
+                        <div class="header">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h2><strong>Alerts</strong></h2>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="pull-right">
+                                        <button class="btn btn-success" onclick="CreateAlertMessages(@Model.Id)"><i class="zdmi zdmi-plus"></i> Create</button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="body" id="myAlertMessages">
-                                @foreach (var item in Model.ProjectAlertMessages)
-                                {
+                            <br />
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <select class="form-control show-tick" id="Alerts" onchange="Alertfilter()">
+                                            <option value="">--Alerts--</option>
+                                            <option value="">All</option>
+                                            @foreach (var n in ViewBag.LabelType)
+                                            {
+                                                <option value="@n.Key">@n.Value</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <select class="form-control show-tick" id="AlertType" onchange="AlertTypefilter()">
+                                            <option value="">--AlertTypes--</option>
+                                            <option value="">All</option>
+                                            @foreach (var n in AlertType.CreateAlertTypeDictionary())
+                                            {
+                                                <option value="@n.Key">@n.Value</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="body" id="myAlertMessages">
+                            @foreach (var item in Model.ProjectAlertMessages)
+                            {
                                 <div class="row" id="@item.Id" label="@item.LabelTypeId" alertlabel="@item.AlertTypeId">
                                     <div class="col-md-9">
                                         <p>@item.Message</p>
@@ -205,18 +202,13 @@
                                         <a role="button" onclick="UpdateAlertMessages(@item.Id,2)" class="btn btn-sm btn-danger btn-round text-white" title="Mark as Issue">Issue</a>
                                     </div>
                                 </div>
-                                 <hr />
-                                }
-                            </div>
+                                <hr />
+                            }
                         </div>
-                    }
                     </div>
+
                 </div>
             </div>
         </div>
-
     </div>
 </div>
-<script>
-
-</script>
