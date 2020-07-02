@@ -133,15 +133,21 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="body" id="myNotes">
+                        <div class="body responsive" id="myNotes">
                             @foreach (var item in Model.ProjectNotes.Where(p => p.AccessLevelTypeId == (int)Generics.DataModels.Enums.NoteType.Member))
                             {
-                                <div id="@item.Id" label="@item.LabelTypeId">
-                                    <p>@item.Message</p>
-                                    <span class="badge badge-primary">@item.OnCreated.ToString("MMMM dd,yyyy - hh:mm")</span>
-                                    <span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span>
+                            <div class="row col-md-12" id="@item.Id" label="@item.LabelTypeId">
+                                <div class="col-md-8 text-dark">
+                                    @item.Message
                                 </div>
-                                <hr />
+                                <div class="col-md-3">
+                                    <ul class="social-links list-unstyled">
+                                        <li><span class="text-black-50">@item.OnCreated.ToString("MMM dd,yy")</span></li>
+                                        <li><span class="text-muted">@item.OnCreated.ToString("hh:ss tt")</span></li>
+                                        <li><div class="press"><span class="badge text-white NoteType" style="background-color:@item.LabelColor">@item.LabelName</span></div></li>
+                                    </ul>
+                                </div>
+                            </div>
                             }
                         </div>
                     </div>
@@ -190,15 +196,15 @@
                         <div class="body" id="myAlertMessages">
                             @foreach (var item in Model.ProjectAlertMessages)
                             {
-                                <div class="row" id="@item.Id" label="@item.LabelTypeId" alertlabel="@item.AlertTypeId">
-                                    <div class="col-md-9">
+                                <div class="row col-md-12" id="@item.Id" label="@item.LabelTypeId" alertlabel="@item.AlertTypeId">
+                                    <div class="col-md-7">
                                         <p>@item.Message</p>
                                         <span class="badge badge-primary">@item.OnCreated.ToString("MMMM dd,yyyy - hh:mm")</span>
                                         <span class="badge text-white" style="background-color:@item.LabelColor">@item.LabelName</span>
                                         <span><span id="@alertdiv@item.Id"><span class="press" id="@alert@item.Id"><span class="badge text-white" style="background-color:@AlertType.GetColor(item.AlertTypeId)">@AlertType.CheckAlertType(item.AlertTypeId)</span></span></span></span>
                                     </div>
                                     <div class="col-md-3">
-                                        <a role="button" onclick="UpdateAlertMessages(@item.Id,1)" class="btn btn-sm btn-success btn-round text-white" title="Mark as done">Mark As Done</a>
+                                        <a role="button" onclick="UpdateAlertMessages(@item.Id,1)" class="btn btn-sm btn-success btn-round text-white" title="Mark as done"><i class="zmdi zmdi-check"></i></a>
                                         <a role="button" onclick="UpdateAlertMessages(@item.Id,2)" class="btn btn-sm btn-danger btn-round text-white" title="Mark as Issue">Issue</a>
                                     </div>
                                 </div>

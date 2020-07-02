@@ -116,7 +116,7 @@ async function Rangerswal() {
                         var time = new Date(data.projectTaskScheduling[i].time).toString("hh:mm tt");
                         schedulingtime += "<span class='btn btn-primary'>" + time + "</span>";
                     }
-                    var projecttask = "<tr id = " + data.id + "><td>" + data.taskType + "-" + data.frequencyType + "</td><td>" + schedulingtime + "</td><td><a role='button' onclick=DeletePlatformTask(" + data.id + ") class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></td></tr>";
+                    var projecttask = "<tr id = " + data.id + " class='row col-md-12 text-center' style='margin:auto'><td class='col-md-2'>" + data.taskType + "-" + data.frequencyType + "</td><td class='col-md-8'>" + schedulingtime + "</td><td class='col-md-2'><a role='button' onclick=DeletePlatformTask(" + data.id + ") class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></i></a></td></tr>";
                     $('#myTask').prepend(projecttask);
                     ShowResult(data);
                     ProjectView = {
@@ -319,7 +319,7 @@ function DeleteNotes(id) {
     })
     
 }
-async function CreateNotes(id) {
+async function CreateNotes(id,check) {
     projectNotes = {
         AccessLevelTypeId: 0,
         ProjectId: id,
@@ -378,7 +378,11 @@ async function CreateNotes(id) {
                         if (data != null) {
                             var date = new Date(data.onCreated).toString("MMM dd,yy");
                             var time = new Date(data.onCreated).toString("hh:ss tt");
-                            var notes = "<div class='row' id='" + data.id + "' label='" + data.labelTypeId + "'><div class='col-md-9 text-dark'>" + data.message + "</div><div class='col-md-2'><ul class='social-links list-unstyled'><li><span class='text-black-50'>" + date + "</span></li><li><span class='text-muted'>" + time + "</span></li><li><div class='press'><span class='badge text-white' style='background-color:" + data.labelColor + "'>" + data.labelName + "</span></div></li></ul></div><div class='col-md-1'><a role='button' onclick='DeleteNotes(" + data.id + ")' class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></a></li></div></div>";
+                            var btn = "";
+                            if (check == 1) {
+                                btn = "<div class='col-md-1'><a role='button' onclick='DeleteNotes(" + data.id + ")' class='btn btn-sm btn-danger btn-round text-white'><i class='zmdi zmdi-delete'></a></li></div>"
+                            }
+                            var notes = "<div class='row col-md-12' id='" + data.id + "' label='" + data.labelTypeId + "'><div class='col-md-8 text-dark'>" + data.message + "</div><div class='col-md-3'><ul class='social-links list-unstyled'><li><span class='text-black-50'>" + date + "</span></li><li><span class='text-muted'>" + time + "</span></li><li><div class='press'><span class='badge text-white' style='background-color:" + data.labelColor + "'>" + data.labelName + "</span></div></li></ul></div>"+btn+"</div>";
                             $('#myNotes').prepend(notes);
                             // $('#myNotes').html(notes + $('#myNotes').html());
                             Swal.fire(
@@ -418,7 +422,7 @@ function DeleteAlertMessages(id) {
     })
 
 }
-async function CreateAlertMessages(id) {
+async function CreateAlertMessages(id,check) {
     projectAlertMessages = {
         ProjectId: id,
         LabelTypeId: 0,
@@ -473,6 +477,10 @@ async function CreateAlertMessages(id) {
                     success: function (data) {
                         var date = new Date(data.onCreated).toString("MMM dd,yy");
                         var time = new Date(data.onCreated).toString("hh:ss tt");
+                        var btn = "";
+                        if (check == 1) {
+                            btn = `<a role="button" onclick="DeleteAlertMessages(${data.id})" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>`;
+                        }
                         if (data != null) {
                             var alertcolor = "orange";
                             var alerttext = "NotDone";
@@ -485,11 +493,11 @@ async function CreateAlertMessages(id) {
                             }
 
 
-                            var alerts = `<div class="row" id="${data.id}" label="${data.labelTypeId}" alertlabel="${data.alertTypeId}">
-                                    <div class="col-md-8 text-dark">
+                            var alerts = `<div class="row col-md-12" id="${data.id}" label="${data.labelTypeId}" alertlabel="${data.alertTypeId}">
+                                    <div class="col-md-7 text-dark">
                                         ${data.message}
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <ul class="social-links list-unstyled">
                                             <li><span class="text-black-50">${date}</span></li>
                                             <li><span class="text-muted">${time}</span></li>
@@ -498,7 +506,7 @@ async function CreateAlertMessages(id) {
                                         </ul>
                                     </div>
                                     <div class="col-md-2">
-                                        <a role="button" onclick="DeleteAlertMessages(${data.id})" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a>
+                                        ${btn}
                                         <a role="button" onclick="UpdateAlertMessages(${data.id},1)" class="btn btn-sm btn-success btn-round text-white" title="Mark as done"><i class="zmdi zmdi-check"></i></a>
                                         <a role="button" onclick="UpdateAlertMessages(${data.id},2)" class="btn btn-sm btn-danger btn-round text-white" title="Mark as Issue">Issue</a>
                                     </div>
@@ -599,7 +607,7 @@ async function CreateMember(id,memberType) {
             data: projectMembers,
             success: function (data) {
                 if (data != null) {
-                    var members = `<tr id="${data.id}"><td><div style="width:50px;height:auto" class="rounded-circle"><img src="/images/profile_av.jpg" class="img-fluid" alt=""></div></td><td><ul class="social-links list-unstyled"><li><span>${data.memberName}</span></li><li><span class="text-muted">${data.memberType}</span></li></ul></td><td><a onclick="DeleteMember(${data.id},'${data.memberName}','${data.memberType}')" role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a></td></tr>`;
+                    var members = `<tr id="${data.id}" class="row col-md-12 unsetmargin text-center"><td class="col-md-3" style="text-align: -webkit-center;"><div class="rounded-circle imagesize"><img src="/images/profile_av.jpg" class="img-fluid" alt=""></div></td><td class="col-md-6"><ul class="social-links list-unstyled"><li><span>${data.memberName}</span></li><li><span class="text-muted">${data.memberType}</span></li></ul></td><td class="col-md-3 flexendalign"><a onclick="DeleteMember(${data.id},'${data.memberName}','${data.memberType}')" role="button" class="btn btn-sm btn-danger btn-round text-white"><i class="zmdi zmdi-delete"></i></a></td></tr>`;
                     $('#myMembers').append(members);
                     Swal.fire(
                         'Added',
@@ -673,7 +681,7 @@ function UpdateAlertMessages(id,status) {
                         text = "Done";
                     else
                         text = "Issue";
-                    var status = `<span class="press" id="alert${data.alertTypeId}"><span class="badge text-white" style="background-color:${color}">${text}</span></span>`;
+                    var status = `<div class="press" id="alert${data.id}"><span class="badge text-white" style="background-color:${color}">${text}</span></div>`;
                     var alert = "#alert" + data.id;
                     var alertdiv = "#alertdiv" + data.id;
                     $(alert).remove();

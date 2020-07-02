@@ -28,7 +28,7 @@ namespace Generics.DataModels.AdminModels
             dictionary.Add("zmdi zmdi-whatsapp", "whatsApp");
             dictionary.Add("zmdi zmdi-google", "Google my business");
             dictionary.Add("zmdi zmdi-youtube", "youtube");
-            dictionary.Add("fab fa-facebook-messanger", "messanger");
+            dictionary.Add("fab fa-facebook-messenger", "messanger");
             dictionary.Add("fab fa-wechat", "wechat");
             dictionary.Add("fab fa-tiktok", "tiktok");
             dictionary.Add("zmdi zmdi-reddit", "reddit");

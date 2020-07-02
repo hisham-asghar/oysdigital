@@ -97,8 +97,18 @@ namespace Admin.Controllers
             }
             else
             {
-                // aspNetUserRoles.NormalizedName = aspNetUserRoles.Name.ToUpper();
-                AspNetUserRolesBao.Update(aspNetUserRoles);
+                if (aspNetUserRolesDb.RoleName == "")
+                {
+                    AspNetUserRolesBao.Insert(aspNetUserRoles);
+                }
+                else
+                {
+                    // aspNetUserRoles.NormalizedName = aspNetUserRoles.Name.ToUpper();
+                    if (aspNetUserRolesDb.RoleName != aspNetUserRoles.RoleName)
+                    {
+                        AspNetUserRolesBao.Update(aspNetUserRoles);
+                    }
+                }
             }
 
             return RedirectToAction("Index");
