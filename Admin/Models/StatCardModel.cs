@@ -9,6 +9,10 @@
         public string Link { get; set; }
         public string Title { get; set; }
         public bool IsActive { get; set; }
+        public string UserName { get; set; }
+        public string RoleName { get; set; }
+        public bool status { get; set; }
+
 
     }
 }

@@ -1,0 +1,39 @@
+﻿@model StatCardModel
+@{
+    var stats = Model;
+}
+
+    
+        <div class="col-md-12" style="zoom:66%;">
+            <div class="card state_w1">
+
+                <div class="body d-flex justify-content-between" style="padding:16px 8px;">
+                    <div class="col-md-12">
+                        <h3 style="margin-bottom:auto !important"><strong>@stats.UserName.ToUpper()</strong></h3>
+                        <span class="badge @(stats.RoleName == UserRoles.Designer ? "badge-info" : "badge-warning")" style="font-size:inherit"> @stats.RoleName</span>
+                        <span class="badge @(stats.status == false ? "badge-danger" : "badge-success")" style="font-size:inherit">@(stats.status == false ? "InActive" : "Active")</span>
+
+                        <div style="padding-top:4px">
+                            <h5>Total ___ <span>@stats.Total</span></h5>
+                        </div>
+                        <div>
+                            <h5>Done ___ <span>@stats.Done</span></h5>
+                        </div>
+                        <div>
+                            <h5>Persentage ___ <span>@stats.DonePercent %</span></h5>
+
+                        </div>
+                        <div>
+                            <h5>Pending ___ <span>@stats.Pending</span></h5>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+   

@@ -20,7 +20,6 @@ namespace Admin.Controllers
     [Authorize]
     public class HomeController : BaseController
     {
-        UserManager<ApplicationUser> userManager;
         public HomeController(ILogger<HomeController> logger) : base(logger)
         {
         }
@@ -81,18 +80,17 @@ namespace Admin.Controllers
             return View("RoleRequestView");
         }
         [Route("UserStats")]
-        public IActionResult UserStats(ProjectFilter status = ProjectFilter.Active)
+        public IActionResult UserStats(TaskTimeFilter time = TaskTimeFilter.Today, ProjectFilter status = ProjectFilter.Active)
         {
-            ViewBag.TimeFilter = TaskTimeFilter.Today;
-            ViewBag.StatusFilter = TaskStatusFilter.All;
+            ViewBag.TimeFilter = time;
             ViewBag.Status = status;
             var Users = AspNetUserRolesBao.GetAll();
-            var stats = TaskHelper.GetUserStats(Users.Select(s=>s.Id).ToList());
+            var stats = TaskHelper.GetUserStats(Users.Select(s => s.Id).ToList());
             var Userlist = new List<StatsView>();
-            foreach(var item in stats)
+            foreach (var item in stats)
             {
                 var list = new StatsView();
-                var u= Users.SingleOrDefault(s => s.Id == item.Key && s.RoleName != UserRoles.Admin);
+                var u = Users.SingleOrDefault(s => s.Id == item.Key && s.RoleName != UserRoles.Admin);
                 if (u != null)
                 {
                     list.User = u;
@@ -100,6 +98,7 @@ namespace Admin.Controllers
                     Userlist.Add(list);
                 }
             }
+
             var statuslist = new List<StatsView>();
             foreach (var c in Userlist)
             {
@@ -119,7 +118,7 @@ namespace Admin.Controllers
                 }
                 if (status == ProjectFilter.HaveDesigner)
                 {
-                    if (c.User.RoleName ==UserRoles.Designer )
+                    if (c.User.RoleName == UserRoles.Designer)
                     {
                         statuslist.Add(c);
                     }
@@ -136,6 +135,8 @@ namespace Admin.Controllers
                     statuslist = Userlist;
                 }
             }
+            
+
             return View(statuslist);
         }
         public IActionResult Privacy()

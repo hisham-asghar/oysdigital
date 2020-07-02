@@ -1,0 +1,94 @@
+﻿@using Generics.DataModels.Enums;
+@model StatsView
+@{
+    var stats = Model.Stats;
+    var user = Model.User;
+    var time = (TaskTimeFilter)ViewBag.TimeFilter;
+    var status = (ProjectFilter)ViewBag.Status;
+
+    var overall = new StatCardModel()
+    {
+        UserName=user.Name,
+        RoleName=user.RoleName,
+        status=user.LockoutEnabled,
+        Total = stats.OverallTotal,
+        Done = stats.OverallDone,
+        DonePercent = stats.OverallDonePercent,
+        Pending = stats.OverallPending,
+        Title = "Over All",
+        IsActive = time == Generics.DataModels.Enums.TaskTimeFilter.Overall
+    };
+
+    var currentMonth = new StatCardModel()
+    {
+         UserName=user.Name,
+        RoleName=user.RoleName,
+        status=user.LockoutEnabled,
+        Total = stats.CurrentMonthTotal,
+        Done = stats.CurrentMonthDone,
+        DonePercent = stats.CurrentMonthDonePercent,
+        Pending = stats.CurrentMonthPending,
+        Title = "Current Month",
+        IsActive = time == TaskTimeFilter.CurrentMonth
+    };
+
+    var currentWeek = new StatCardModel()
+    {
+        UserName=user.Name,
+        RoleName=user.RoleName,
+        status=user.LockoutEnabled,
+        Total = stats.CurrentWeekTotal,
+        Done = stats.CurrentWeekDone,
+        DonePercent = stats.CurrentWeekDonePercent,
+        Pending = stats.CurrentWeekPending,
+        Title = "Current Week",
+        IsActive = time == TaskTimeFilter.CurrentWeek
+    };
+
+    var today = new StatCardModel()
+    {
+         UserName=user.Name,
+        RoleName=user.RoleName,
+        status=user.LockoutEnabled,
+        Total = stats.TodayTotal,
+        Done = stats.TodayDone,
+        DonePercent = stats.TodayDonePercent,
+        Pending = stats.TodayPending,
+        Title = "Today",
+        IsActive = time == TaskTimeFilter.Today
+    };
+
+    var tomorrow = new StatCardModel()
+    {
+         UserName=user.Name,
+        RoleName=user.RoleName,
+        status=user.LockoutEnabled,
+        Total = stats.TomorrowTotal,
+        Done = stats.TomorrowDone,
+        DonePercent = stats.TomorrowDonePercent,
+        Pending = stats.TomorrowPending,
+        Title = "Tomorrow",
+        IsActive = time == TaskTimeFilter.Tomorrow
+    };
+
+}
+    <div class="row clearfix">
+        @if (time == TaskTimeFilter.Overall)
+        {
+            <partial name="_UserTaskCardsView" model="overall" />
+        }
+        @if (time == TaskTimeFilter.CurrentWeek)
+        {
+            <partial name="_UserTaskCardsView" model="currentWeek" />
+        }@if (time == TaskTimeFilter.CurrentMonth)
+        {
+            <partial name="_UserTaskCardsView" model="currentMonth" />
+        }@if (time == TaskTimeFilter.Today)
+        {
+            <partial name="_UserTaskCardsView" model="today" />
+        }@if (time == TaskTimeFilter.Tomorrow)
+        {
+            <partial name="_UserTaskCardsView" model="tomorrow" />
+        }
+        
+    </div>

@@ -3,8 +3,8 @@
 @{
     var stats = Model;
 
-    var time = (Generics.DataModels.Enums.TaskTimeFilter)ViewBag.TimeFilter;
-    var status = (Generics.DataModels.Enums.TaskStatusFilter)ViewBag.StatusFilter;
+    var time = (TaskTimeFilter)ViewBag.TimeFilter;
+    var status = (TaskStatusFilter)ViewBag.StatusFilter;
 
     var overall = new StatCardModel()
     {
@@ -62,10 +62,10 @@
     };
 
 }
-<div class="row clearfix">
-    <partial name="_TaskStatsCard" model="overall" />
-    <partial name="_TaskStatsCard" model="currentMonth" />
-    <partial name="_TaskStatsCard" model="currentWeek" />
-    <partial name="_TaskStatsCard" model="today" />
-    <partial name="_TaskStatsCard" model="tomorrow" />
-</div>
+    <div class="row clearfix">
+        <partial name="_TaskStatsCard" model="overall" />
+        <partial name="_TaskStatsCard" model="currentMonth" />
+        <partial name="_TaskStatsCard" model="currentWeek" />
+        <partial name="_TaskStatsCard" model="today" />
+        <partial name="_TaskStatsCard" model="tomorrow" />
+    </div>

@@ -3,113 +3,57 @@
 @{
     ViewData["Title"] = "UserStats";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var tstatus = (ProjectFilter)ViewBag.Status;
+    var time = (TaskTimeFilter)ViewBag.TimeFilter;
+    var status = (ProjectFilter)ViewBag.Status;
 }
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="card">
-            <div class="header">
-                <h3><strong>User</strong> Tasks</h3>
-            </div>
-            <div class="body">
-                <div class="row clearfix">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="card project_list">
-                            <div class="pull-left">
-                                <a href="@(tstatus == ProjectFilter.All ? "#" : $"/UserStats/?status={(int)ProjectFilter.All}")" class="btn @(tstatus == ProjectFilter.All ? "btn-info" : "")">All</a>
-                                <a href="@(tstatus == ProjectFilter.Active ? "#" : $"/UserStats/?status={(int)ProjectFilter.Active}")" class="btn @(tstatus == ProjectFilter.Active ? "btn-info" : "")">Active</a>
-                                <a href="@(tstatus == ProjectFilter.InActive ? "#" : $"/UserStats/?status={(int)ProjectFilter.InActive}")" class="btn @(tstatus == ProjectFilter.InActive ? "btn-info" : "")">InActive</a>
-                                <a href="@(tstatus == ProjectFilter.HaveDesigner ? "#" : $"/UserStats/?status={(int)ProjectFilter.HaveDesigner}")" class="btn @(tstatus == ProjectFilter.HaveDesigner ? "btn-info" : "")">Designers</a>
-                                <a href="@(tstatus == ProjectFilter.HaveScheduler ? "#" : $"/UserStats/?status={(int)ProjectFilter.HaveScheduler}")" class="btn @(tstatus == ProjectFilter.HaveScheduler ? "btn-info" : "")">Schedulers</a>
-                            </div>
+<div class="col-lg-12 col-md-12 col-sm-12">
+       <h3><strong>User Statistics</strong></h3>
+            <div class="row clearfix">
+                <div class="col-md-6 col-sm-12 col-xs-12" style="zoom:85%">
+                    <h3>User Filters</h3>
+                    <div class="card project_list">
+                        <div class="pull-left">
+                            <a href="@(status == ProjectFilter.All ? "#" : $"/UserStats/?time={(int)time}&status={(int)ProjectFilter.All}")" class="btn @(status == ProjectFilter.All ? "btn-info" : "")">All</a>
+                            <a href="@(status == ProjectFilter.Active ? "#" : $"/UserStats/?time={(int)time}&status={(int)ProjectFilter.Active}")" class="btn @(status == ProjectFilter.Active ? "btn-info" : "")">Active</a>
+                            <a href="@(status == ProjectFilter.InActive ? "#" : $"/UserStats/?time={(int)time}&status={(int)ProjectFilter.InActive}")" class="btn @(status == ProjectFilter.InActive ? "btn-info" : "")">InActive</a>
+                            <a href="@(status == ProjectFilter.HaveDesigner ? "#" : $"/UserStats/?time={(int)time}&status={(int)ProjectFilter.HaveDesigner}")" class="btn @(status == ProjectFilter.HaveDesigner ? "btn-info" : "")">Designers</a>
+                            <a href="@(status == ProjectFilter.HaveScheduler ? "#" : $"/UserStats/?time={(int)time}&status={(int)ProjectFilter.HaveScheduler}")" class="btn @(status == ProjectFilter.HaveScheduler ? "btn-info" : "")">Schedulers</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12 col-xs-12" style="zoom:85%">
+                    <h3>User Tasks</h3>
+                    <div class="card project_list">
+                        <div class="pull-rigth">
+                            <a href="@(time == TaskTimeFilter.Overall ? "#" : $"/UserStats/?time={(int)TaskTimeFilter.Overall}&status={(int)status}")" class="btn @(time == TaskTimeFilter.Overall ? "btn-info" : "")">Overall</a>
+                            <a href="@(time == TaskTimeFilter.CurrentWeek ? "#" : $"/UserStats/?time={(int)TaskTimeFilter.CurrentWeek}&status={(int)status}")" class="btn @(time == TaskTimeFilter.CurrentWeek ? "btn-info" : "")">CurrentWeek</a>
+                            <a href="@(time == TaskTimeFilter.CurrentMonth ? "#" : $"/UserStats/?time={(int)TaskTimeFilter.CurrentMonth}&status={(int)status}")" class="btn @(time == TaskTimeFilter.CurrentMonth ? "btn-info" : "")">CurrentMonth</a>
+                            <a href="@(time == TaskTimeFilter.Today ? "#" : $"/UserStats/?time={(int)TaskTimeFilter.Today}&status={(int)status}")" class="btn @(time == TaskTimeFilter.Today ? "btn-info" : "")">Today</a>
+                            <a href="@(time == TaskTimeFilter.Tomorrow ? "#" : $"/UserStats/?time={(int)TaskTimeFilter.Tomorrow}&status={(int)status}")" class="btn @(time == TaskTimeFilter.Tomorrow ? "btn-info" : "")">Tomorrow</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-@foreach (var item in Model)
-{
-    
-    var stats = item.Stats;
-    var time = (Generics.DataModels.Enums.TaskTimeFilter)ViewBag.TimeFilter;
-    var status = (Generics.DataModels.Enums.TaskStatusFilter)ViewBag.StatusFilter;
+       
+</div>
+<div class="container-fluid">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-3">
 
-    var overall = new StatCardModel()
-    {
-        Total = stats.OverallTotal,
-        Done = stats.OverallDone,
-        DonePercent = stats.OverallDonePercent,
-        Pending = stats.OverallPending,
-        Title = "Over All",
-        IsActive = time == Generics.DataModels.Enums.TaskTimeFilter.Overall,
-        Link = null
-    };
+                <partial name="_UserStatsView" model="item" />
 
-    var currentMonth = new StatCardModel()
-    {
-        Total = stats.CurrentMonthTotal,
-        Done = stats.CurrentMonthDone,
-        DonePercent = stats.CurrentMonthDonePercent,
-        Pending = stats.CurrentMonthPending,
-        Title = "Current Month",
-        IsActive = time == TaskTimeFilter.CurrentMonth,
-        Link = null
-    };
-
-    var currentWeek = new StatCardModel()
-    {
-        Total = stats.CurrentWeekTotal,
-        Done = stats.CurrentWeekDone,
-        DonePercent = stats.CurrentWeekDonePercent,
-        Pending = stats.CurrentWeekPending,
-        Title = "Current Week",
-        IsActive = time == TaskTimeFilter.CurrentWeek,
-        Link = null
-    };
-
-    var today = new StatCardModel()
-    {
-        Total = stats.TodayTotal,
-        Done = stats.TodayDone,
-        DonePercent = stats.TodayDonePercent,
-        Pending = stats.TodayPending,
-        Title = "Today",
-        IsActive = time == TaskTimeFilter.Today,
-        Link = null
-    };
-
-    var tomorrow = new StatCardModel()
-    {
-        Total = stats.TomorrowTotal,
-        Done = stats.TomorrowDone,
-        DonePercent = stats.TomorrowDonePercent,
-        Pending = stats.TomorrowPending,
-        Title = "Tomorrow",
-        IsActive = time == TaskTimeFilter.Tomorrow,
-        Link = null
-    };
-    
-    <h5><strong>@item.User.Name.ToUpper()</strong><span class="badge @(item.User.RoleName==UserRoles.Designer?"badge-info":"badge-warning") badgestyle"> @item.User.RoleName</span></h5>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-11">
-                <div class="row clearfix">
-                    <partial name="_TaskStatsCard" model="overall" />
-                    <partial name="_TaskStatsCard" model="currentMonth" />
-                    <partial name="_TaskStatsCard" model="currentWeek" />
-                    <partial name="_TaskStatsCard" model="today" />
-                    <partial name="_TaskStatsCard" model="tomorrow" />
-                </div>
+                
             </div>
-            <div class="col-md-1 align-self-center">
-                <span class="badge @(item.User.LockoutEnabled==false?"badge-dander":"badge-success")">@(item.User.LockoutEnabled==false?"Active":"InActive")</span>
-            </div>
+        }
         </div>
     </div>
 
 
 
-}
+
+
 
 
 
