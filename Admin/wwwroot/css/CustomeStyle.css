@@ -27,3 +27,20 @@
     height: auto;
     contain:paint;
 }
+.tiles {
+    zoom: 66%;
+    text-align: center;
+    /*flex: 0 0 20% !important;
+    max-width: 0% !important;*/
+}
+@media only screen and (max-width: 600px) {
+    .tiles{
+        width:50%;
+    }
+}
+@media (min-width: 768px) {
+    .mycard .col-md-2 {
+        flex: 0 0 20% !important;
+        max-width: 20% !important;
+    }
+}

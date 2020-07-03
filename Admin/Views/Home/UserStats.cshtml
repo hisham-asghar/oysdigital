@@ -1,16 +1,17 @@
 ﻿@model IEnumerable<Generics.DataModels.AdminModels.StatsView>
 @using  Generics.DataModels.Enums;
 @{
-    ViewData["Title"] = "UserStats";
+    ViewData["Title"] = "User Statistics";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var time = (TaskTimeFilter)ViewBag.TimeFilter;
     var status = (ProjectFilter)ViewBag.Status;
 }
-<div class="col-lg-12 col-md-12 col-sm-12">
-       <h3><strong>User Statistics</strong></h3>
-            <div class="row clearfix">
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="row">
                 <div class="col-md-6 col-sm-12 col-xs-12" style="zoom:85%">
-                    <h3>User Filters</h3>
+                    <h5>User Filters</h5>
                     <div class="card project_list">
                         <div class="pull-left">
                             <a href="@(status == ProjectFilter.All ? "#" : $"/UserStats/?time={(int)time}&status={(int)ProjectFilter.All}")" class="btn @(status == ProjectFilter.All ? "btn-info" : "")">All</a>
@@ -22,7 +23,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-sm-12 col-xs-12" style="zoom:85%">
-                    <h3>User Tasks</h3>
+                    <h5>Task Time</h5>
                     <div class="card project_list">
                         <div class="pull-rigth">
                             <a href="@(time == TaskTimeFilter.Overall ? "#" : $"/UserStats/?time={(int)TaskTimeFilter.Overall}&status={(int)status}")" class="btn @(time == TaskTimeFilter.Overall ? "btn-info" : "")">Overall</a>
@@ -34,24 +35,24 @@
                     </div>
                 </div>
             </div>
-       
-</div>
-<div class="container-fluid">
-    <div class="row">
-        @foreach (var item in Model)
-        {
-            <div class="col-md-3">
 
-                <partial name="_UserStatsView" model="item" />
-
-                
-            </div>
-        }
         </div>
     </div>
+</div>
+<div class="container-fluid">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3">
+
+                    <partial name="_UserStatsView" model="item" />
 
 
+                </div>
+            }
+        </div>
 
+    </div>
 
 
 

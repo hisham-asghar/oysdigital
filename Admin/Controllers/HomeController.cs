@@ -79,6 +79,7 @@ namespace Admin.Controllers
 
             return View("RoleRequestView");
         }
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Hr)]
         [Route("UserStats")]
         public IActionResult UserStats(TaskTimeFilter time = TaskTimeFilter.Today, ProjectFilter status = ProjectFilter.Active)
         {
@@ -90,7 +91,7 @@ namespace Admin.Controllers
             foreach (var item in stats)
             {
                 var list = new StatsView();
-                var u = Users.SingleOrDefault(s => s.Id == item.Key && s.RoleName != UserRoles.Admin);
+                var u = Users.SingleOrDefault(s => s.Id == item.Key && s.RoleName != UserRoles.Admin && s.RoleName != UserRoles.Hr);
                 if (u != null)
                 {
                     list.User = u;
